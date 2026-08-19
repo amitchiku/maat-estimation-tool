@@ -313,17 +313,45 @@ const getItemPricing = (item) => {
   });
 
   (raw.materialRequirements || []).forEach(r => {
-    const mat = appStore.getMaterialById(r.materialId) || { netPrice: r.price || 0 };
-    const p = (mat.netPrice || 0) * (1 + (r.tax || 0.25)) * 1.25;
-    unitVal += (r.qty || 0) * p;
-    if (r.allow) unitAllow += (r.qty || 0) * p;
+    const mat = appStore.getMaterialById(r.materialId) || {};
+    const net = mat.netPrice !== undefined ? mat.netPrice : (r.price || 0);
+    const tax = mat.tax !== undefined ? mat.tax : (r.tax !== undefined ? r.tax : 0.06);
+    const markup = mat.markup !== undefined ? mat.markup : (r.markup !== undefined ? r.markup : 0.25);
+
+    const allowP = net * (1 + tax);
+    const grossP = allowP * (1 + markup);
+    const reqQty = r.qty || 1;
+
+    if (r.base) {
+      baseVal += reqQty * grossP;
+    } else {
+      unitVal += reqQty * grossP;
+    }
+
+    if (r.allow) {
+      unitAllow += reqQty * allowP;
+    }
   });
 
   (raw.equipmentRequirements || []).forEach(r => {
-    const eq = appStore.getEquipmentById(r.equipmentId) || { netPrice: r.price || 0 };
-    const p = (eq.netPrice || 0) * (1 + (r.tax || 0.25)) * 1.25;
-    unitVal += (r.qty || 0) * p;
-    if (r.allow) unitAllow += (r.qty || 0) * p;
+    const eq = appStore.getEquipmentById(r.equipmentId) || {};
+    const net = eq.netPrice !== undefined ? eq.netPrice : (r.price || 0);
+    const tax = eq.tax !== undefined ? eq.tax : (r.tax !== undefined ? r.tax : 0.0);
+    const markup = eq.markup !== undefined ? eq.markup : (r.markup !== undefined ? r.markup : 0.25);
+
+    const allowP = net * (1 + tax);
+    const grossP = allowP * (1 + markup);
+    const reqQty = r.qty || 1;
+
+    if (r.base) {
+      baseVal += reqQty * grossP;
+    } else {
+      unitVal += reqQty * grossP;
+    }
+
+    if (r.allow) {
+      unitAllow += reqQty * allowP;
+    }
   });
 
   const totalAmount = (qty * unitVal) + baseVal;

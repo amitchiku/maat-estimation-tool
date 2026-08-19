@@ -54,6 +54,24 @@ Implemented a 4-step wizard workflow in `QuoteBuilder.vue`:
   - **Tag & Category Summary Box**: Tag summary chips displaying item counts and total costs per group.
   - **Grand Totals Footer Box**: Overall proposal grand total & allowance subtotal.
 
+### 7. Material & Equipment Tax, Markup & Allowance Model Overhaul
+- **Removed Allowance % from Material/Equipment Models**: Removed database `allowance` % field from materials and equipment.
+- **Tax % Defaults**:
+  - Material Tax: **6% by default** (`0.06`).
+  - Equipment Tax: **0% by default** (`0`).
+- **Markup % Defaults**:
+  - Material & Equipment Markup: **25% by default** (`0.25`).
+- **Updated Pricing Formulas**:
+  - **Allowance Price** = `Net Price + Tax` = `Net Price * (1 + Tax)`
+  - **Gross Price (Client Price)** = `Net Price + Tax + Markup` = `Net Price * (1 + Tax) * (1 + Markup)`
+- **Updated Components & Data Stores**:
+  - `src/stores/app.js`: Updated `defaults`, `quoteTotals`, `roomTotals`, `addItemToRoom`, and `calculateAssemblyTotals`.
+  - `src/components/CatalogManager.vue`: Updated form inputs (`Tax %`, `Markup %`), table headers, dialog pricing computeds, and save logic.
+  - `src/components/line-items/LineItemRequirementsEditor.vue`: Updated recipe table headers, cells, and helper price functions.
+  - `src/components/line-items/LineItemPricingSummary.vue` & `LineItems.vue`: Updated summary rollups for `Allowance Price` (`Price + Tax`) and `Gross Price` (`Price + Tax + Markup`).
+  - `src/components/quote-builder/QuoteProposalWorksheet.vue`: Updated `getItemPricing` for proposal line items.
+  - `data/catalog.json` & `data/seed.json`: Migrated all catalog entries to match the new pricing schema.
+
 ---
 
 ## Verification Status

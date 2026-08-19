@@ -146,11 +146,11 @@
           <thead>
             <tr>
               <th>Material</th>
-              <th>Price</th>
-              <th class="text-center" style="width: 125px;">Required Qty</th>
-              <th class="text-right">Total</th>
+              <th class="text-right">Net Price</th>
+              <th class="text-center" style="width: 110px;">Required Qty</th>
               <th class="text-center">Base Flat?</th>
-              <th class="text-right">Allowance</th>
+              <th class="text-right">Allowance Price (Net + Tax)</th>
+              <th class="text-right">Gross Total (Client Price)</th>
               <th class="text-center">Use Allowance?</th>
               <th class="text-center">Actions</th>
             </tr>
@@ -160,8 +160,8 @@
               <td colspan="8" class="text-center py-4 text-medium-emphasis">No materials added yet.</td>
             </tr>
             <tr v-for="(req, idx) in form.materialRequirements" :key="req.materialId">
-              <td>{{ getMaterialName(req.materialId) }}</td>
-              <td>${{ formatMoney(getMaterialClientPrice(req.materialId)) }}</td>
+              <td class="font-weight-medium">{{ getMaterialName(req.materialId) }}</td>
+              <td class="text-right">${{ formatMoney(appStore.getMaterialById(req.materialId)?.netPrice || 0) }}</td>
               <td>
                 <v-text-field
                   v-model.number="req.qty"
@@ -172,17 +172,16 @@
                   class="ghost-cell-input"
                 ></v-text-field>
               </td>
-              <td class="text-right font-weight-medium">
-                ${{ formatMoney(req.qty * getMaterialClientPrice(req.materialId)) }}
-              </td>
               <td class="text-center">
                 <div class="d-flex justify-center align-center">
                   <v-checkbox-btn v-model="req.base" color="blue" class="ma-0"></v-checkbox-btn>
                 </div>
               </td>
-              <td class="text-right font-weight-medium text-body-2">
-                ${{ formatMoney(req.qty * getMaterialClientPrice(req.materialId) *
-                  ((appStore.getMaterialById(req.materialId)?.allowance ?? req.allowance) || 0)) }}
+              <td class="text-right font-weight-medium text-amber-darken-3">
+                ${{ formatMoney((req.qty || 1) * getMaterialAllowancePrice(req.materialId)) }}
+              </td>
+              <td class="text-right font-weight-bold text-teal">
+                ${{ formatMoney((req.qty || 1) * getMaterialGrossPrice(req.materialId)) }}
               </td>
               <td class="text-center">
                 <div class="d-flex justify-center align-center">
@@ -191,7 +190,7 @@
               </td>
               <td class="text-center">
                 <v-btn
-                  icon="mdi-delete"
+                  icon="mdi-delete-outline"
                   variant="text"
                   color="red"
                   size="small"
@@ -235,11 +234,11 @@
           <thead>
             <tr>
               <th>Equipment</th>
-              <th>Price</th>
-              <th class="text-center" style="width: 125px;">Required Qty</th>
-              <th class="text-right">Total</th>
+              <th class="text-right">Net Price</th>
+              <th class="text-center" style="width: 110px;">Required Qty</th>
               <th class="text-center">Base Flat?</th>
-              <th class="text-right">Allowance</th>
+              <th class="text-right">Allowance Price (Net + Tax)</th>
+              <th class="text-right">Gross Total (Client Price)</th>
               <th class="text-center">Use Allowance?</th>
               <th class="text-center">Actions</th>
             </tr>
@@ -249,8 +248,8 @@
               <td colspan="8" class="text-center py-4 text-medium-emphasis">No equipment added yet.</td>
             </tr>
             <tr v-for="(req, idx) in form.equipmentRequirements" :key="req.equipmentId">
-              <td>{{ getEquipmentName(req.equipmentId) }}</td>
-              <td>${{ formatMoney(getEquipmentClientPrice(req.equipmentId)) }}</td>
+              <td class="font-weight-medium">{{ getEquipmentName(req.equipmentId) }}</td>
+              <td class="text-right">${{ formatMoney(appStore.getEquipmentById(req.equipmentId)?.netPrice || 0) }}</td>
               <td>
                 <v-text-field
                   v-model.number="req.qty"
@@ -261,17 +260,16 @@
                   class="ghost-cell-input"
                 ></v-text-field>
               </td>
-              <td class="text-right font-weight-medium">
-                ${{ formatMoney(req.qty * getEquipmentClientPrice(req.equipmentId)) }}
-              </td>
               <td class="text-center">
                 <div class="d-flex justify-center align-center">
                   <v-checkbox-btn v-model="req.base" color="blue" class="ma-0"></v-checkbox-btn>
                 </div>
               </td>
-              <td class="text-right font-weight-medium text-body-2">
-                ${{ formatMoney(req.qty * getEquipmentClientPrice(req.equipmentId) *
-                  ((appStore.getEquipmentById(req.equipmentId)?.allowance ?? req.allowance) || 0)) }}
+              <td class="text-right font-weight-medium text-amber-darken-3">
+                ${{ formatMoney((req.qty || 1) * getEquipmentAllowancePrice(req.equipmentId)) }}
+              </td>
+              <td class="text-right font-weight-bold text-teal">
+                ${{ formatMoney((req.qty || 1) * getEquipmentGrossPrice(req.equipmentId)) }}
               </td>
               <td class="text-center">
                 <div class="d-flex justify-center align-center">
@@ -333,18 +331,34 @@ const getLaborRate = (id) => appStore.getLaborById(id)?.rate || 0;
 
 // Material Helpers
 const getMaterialName = (id) => appStore.getMaterialById(id)?.name || 'Unknown Material';
-const getMaterialClientPrice = (id) => {
+const getMaterialAllowancePrice = (id) => {
   const item = appStore.getMaterialById(id);
   if (!item) return 0;
-  return item.netPrice * (1 + item.tax) * 1.25;
+  const tax = item.tax !== undefined ? item.tax : 0.06;
+  return item.netPrice * (1 + tax);
+};
+const getMaterialGrossPrice = (id) => {
+  const item = appStore.getMaterialById(id);
+  if (!item) return 0;
+  const tax = item.tax !== undefined ? item.tax : 0.06;
+  const markup = item.markup !== undefined ? item.markup : 0.25;
+  return item.netPrice * (1 + tax) * (1 + markup);
 };
 
 // Equipment Helpers
 const getEquipmentName = (id) => appStore.getEquipmentById(id)?.name || 'Unknown Equipment';
-const getEquipmentClientPrice = (id) => {
+const getEquipmentAllowancePrice = (id) => {
   const item = appStore.getEquipmentById(id);
   if (!item) return 0;
-  return item.netPrice * (1 + item.tax) * 1.25;
+  const tax = item.tax !== undefined ? item.tax : 0.0;
+  return item.netPrice * (1 + tax);
+};
+const getEquipmentGrossPrice = (id) => {
+  const item = appStore.getEquipmentById(id);
+  if (!item) return 0;
+  const tax = item.tax !== undefined ? item.tax : 0.0;
+  const markup = item.markup !== undefined ? item.markup : 0.25;
+  return item.netPrice * (1 + tax) * (1 + markup);
 };
 
 // Insertions

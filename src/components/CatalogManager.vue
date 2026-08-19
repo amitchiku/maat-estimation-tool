@@ -45,15 +45,16 @@
               <th class="font-weight-bold">Name</th>
               <th class="font-weight-bold">Unit</th>
               <th class="font-weight-bold text-right">Net Price</th>
-              <th class="font-weight-bold text-right">Allow %</th>
               <th class="font-weight-bold text-right">Tax %</th>
+              <th class="font-weight-bold text-right">Markup %</th>
+              <th class="font-weight-bold text-right">Allowance Price</th>
               <th class="font-weight-bold text-right">Gross Price</th>
               <th class="font-weight-bold text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr v-if="paginatedItems.length === 0">
-              <td colspan="9" class="text-center py-6 text-medium-emphasis">
+              <td colspan="11" class="text-center py-6 text-medium-emphasis">
                 No catalog items found matching your filters.
               </td>
             </tr>
@@ -69,9 +70,10 @@
               <td>{{ item.name }}</td>
               <td>{{ item.unit }}</td>
               <td class="text-right">${{ formatMoney(item.netPrice) }}</td>
-              <td class="text-right">{{ ((item.allowance || 0) * 100).toFixed(0) }}%</td>
               <td class="text-right">{{ ((item.tax || 0) * 100).toFixed(0) }}%</td>
-              <td class="text-right">${{ formatMoney(item.grossPrice) }}</td>
+              <td class="text-right">{{ ((item.markup || 0.25) * 100).toFixed(0) }}%</td>
+              <td class="text-right font-weight-medium">${{ formatMoney(item.netPrice * (1 + (item.tax || 0))) }}</td>
+              <td class="text-right font-weight-bold text-teal">${{ formatMoney(item.grossPrice || (item.netPrice * (1 + (item.tax || 0)) * (1 + (item.markup || 0.25)))) }}</td>
               <td class="text-center">
                 <v-btn icon="mdi-pencil" variant="text" color="blue" size="small" @click="openEditDialog(item)"></v-btn>
                 <v-btn icon="mdi-delete" variant="text" color="red" size="small" @click="confirmDelete(item)"></v-btn>
@@ -94,18 +96,19 @@
       </v-card-text>
     </v-card>
 
-    <!-- Add/Edit Modal Dialog -->
-    <v-dialog v-model="catalogDialog" max-width="540" transition="dialog-bottom-transition">
-      <v-card class="rounded-xl pa-2" elevation="10" border>
+    <!-- Dialog for Add / Edit Item -->
+    <v-dialog v-model="catalogDialog" max-width="600px">
+      <v-card border elevation="10" class="rounded-xl pa-2">
         <div class="d-flex align-center pa-4 pb-2">
-          <v-avatar color="teal-lighten-5" size="44" class="mr-3">
-            <v-icon :icon="isEdit ? 'mdi-pencil-outline' : 'mdi-plus-box-outline'" color="teal" size="24"></v-icon>
+          <v-avatar :color="isEdit ? 'blue-lighten-5' : 'teal-lighten-5'" size="40" class="mr-3">
+            <v-icon :icon="isEdit ? 'mdi-pencil-outline' : 'mdi-plus-box-outline'"
+              :color="isEdit ? 'blue-darken-1' : 'teal'"></v-icon>
           </v-avatar>
           <div>
-            <div class="text-subtitle-1 font-weight-bold text-slate-800">
-              {{ isEdit ? 'Edit Catalog Item' : 'Add Catalog Item' }}
-            </div>
-            <div class="text-caption text-medium-emphasis">Configure catalog material or equipment details</div>
+            <h2 class="text-h6 font-weight-bold text-slate-800">{{ isEdit ? 'Edit Catalog Item' : 'Add New Catalog Item' }}</h2>
+            <p class="text-caption text-medium-emphasis mb-0">
+              {{ isEdit ? 'Update catalog asset rates and configuration' : 'Create a new material or equipment catalog asset' }}
+            </p>
           </div>
         </div>
 
@@ -131,16 +134,16 @@
                 density="compact"></v-text-field>
             </v-col>
             <v-col cols="12" sm="4">
-              <v-text-field v-model.number="form.allowancePercent" type="number" label="Allowance (%)" variant="outlined"
+              <v-text-field v-model.number="form.taxPercent" type="number" label="Tax (%)" variant="outlined"
                 density="compact"
-                :hint="'= $' + formatMoney(computedAllowanceAbs)"
+                :hint="'= $' + formatMoney(computedTaxAbs)"
                 persistent-hint
               ></v-text-field>
             </v-col>
             <v-col cols="12" sm="4">
-              <v-text-field v-model.number="form.taxPercent" type="number" label="Tax (%)" variant="outlined"
+              <v-text-field v-model.number="form.markupPercent" type="number" label="Markup (%)" variant="outlined"
                 density="compact"
-                :hint="'= $' + formatMoney(computedTaxAbs)"
+                :hint="'= $' + formatMoney(computedMarkupAbs)"
                 persistent-hint
               ></v-text-field>
             </v-col>
@@ -152,7 +155,8 @@
               <v-text-field v-model="form.note" label="Note" variant="outlined" density="compact"></v-text-field>
             </v-col>
             <v-col cols="12" class="text-subtitle-2 text-right pt-2">
-              Computed Gross Price: <span class="font-weight-bold text-teal">${{ formatMoney(computedGrossPrice) }}</span>
+              Allowance Price (Price + Tax): <span class="font-weight-bold text-amber-darken-3 mr-3">${{ formatMoney(computedAllowancePrice) }}</span>
+              Gross Price (Price + Tax + Markup): <span class="font-weight-bold text-teal">${{ formatMoney(computedGrossPrice) }}</span>
             </v-col>
           </v-row>
         </v-card-text>
@@ -226,19 +230,18 @@ const form = ref({
 
 const categories = computed(() => appStore.settings?.categories || []);
 
-// Computed Gross Price inside dialog
+// Computed Allowance & Gross Prices inside dialog
+const computedAllowancePrice = computed(() => {
+  const net = parseFloat(form.value.netPrice) || 0;
+  const tax = (parseFloat(form.value.taxPercent) || 0) / 100;
+  return net * (1 + tax);
+});
+
 const computedGrossPrice = computed(() => {
   const net = parseFloat(form.value.netPrice) || 0;
   const tax = (parseFloat(form.value.taxPercent) || 0) / 100;
-  const allowance = (parseFloat(form.value.allowancePercent) || 0) / 100;
-  return net * (1 + tax) * (1 + allowance);
-});
-
-// Absolute dollar values for allowance and tax
-const computedAllowanceAbs = computed(() => {
-  const net = parseFloat(form.value.netPrice) || 0;
-  const allowance = (parseFloat(form.value.allowancePercent) || 0) / 100;
-  return net * allowance;
+  const markup = (parseFloat(form.value.markupPercent) || 0) / 100;
+  return net * (1 + tax) * (1 + markup);
 });
 
 const computedTaxAbs = computed(() => {
@@ -247,9 +250,15 @@ const computedTaxAbs = computed(() => {
   return net * tax;
 });
 
+const computedMarkupAbs = computed(() => {
+  const net = parseFloat(form.value.netPrice) || 0;
+  const tax = (parseFloat(form.value.taxPercent) || 0) / 100;
+  const markup = (parseFloat(form.value.markupPercent) || 0) / 100;
+  return net * (1 + tax) * markup;
+});
+
 // Compile total items
 const combinedCatalogItems = computed(() => {
-  // Flag materials
   const mats = appStore.materials.map(m => ({ ...m, type: 'Material' }));
   const eqs = appStore.equipment.map(e => ({ ...e, type: 'Equipment' }));
   return [...mats, ...eqs];
@@ -294,7 +303,6 @@ const endRange = computed(() => Math.min(page.value * itemsPerPage, filteredItem
 // Modal Form Actions
 const openAddDialog = () => {
   isEdit.value = false;
-  const isEquipment = false; // default to Material
   form.value = {
     id: '',
     type: 'Material',
@@ -302,8 +310,8 @@ const openAddDialog = () => {
     name: '',
     desc: '',
     netPrice: 0,
-    allowancePercent: appStore.settings.defaults?.materialAllowance ?? 6,
-    taxPercent: appStore.settings.defaults?.materialTax ?? 25,
+    taxPercent: appStore.settings.defaults?.materialTax ?? 6,
+    markupPercent: appStore.settings.defaults?.materialMarkup ?? 25,
     unit: 'each',
     note: ''
   };
@@ -319,8 +327,8 @@ const openEditDialog = (item) => {
     name: item.name,
     desc: item.desc,
     netPrice: item.netPrice,
-    allowancePercent: Math.round((item.allowance || 0) * 100),
-    taxPercent: Math.round((item.tax || 0) * 100),
+    taxPercent: Math.round((item.tax !== undefined ? item.tax : (item.type === 'Equipment' ? 0 : 0.06)) * 100),
+    markupPercent: Math.round((item.markup !== undefined ? item.markup : 0.25) * 100),
     unit: item.unit,
     note: item.note || ''
   };
@@ -332,7 +340,7 @@ const saveCatalogItem = async () => {
 
   const targetArray = form.value.type === 'Material' ? appStore.materials : appStore.equipment;
   const itemTax = (parseFloat(form.value.taxPercent) || 0) / 100;
-  const itemAllowance = (parseFloat(form.value.allowancePercent) || 0) / 100;
+  const itemMarkup = (parseFloat(form.value.markupPercent) || 0) / 100;
   const itemNet = parseFloat(form.value.netPrice) || 0;
 
   const updatedItem = {
@@ -345,9 +353,9 @@ const saveCatalogItem = async () => {
     defaultQty: 1,
     unit: form.value.unit,
     netPrice: itemNet,
-    allowance: itemAllowance,
     tax: itemTax,
-    grossPrice: Math.round(itemNet * (1 + itemTax) * (1 + itemAllowance) * 100) / 100,
+    markup: itemMarkup,
+    grossPrice: Math.round(itemNet * (1 + itemTax) * (1 + itemMarkup) * 100) / 100,
     note: form.value.note
   };
 
@@ -391,14 +399,14 @@ const executeDelete = async () => {
   }
 };
 
-// Auto-switch allowance default when type changes
+// Auto-switch defaults when type changes
 watch(() => form.value.type, (newType) => {
   if (newType === 'Equipment') {
-    form.value.allowancePercent = appStore.settings.defaults?.equipmentAllowance ?? 0;
-    form.value.taxPercent = appStore.settings.defaults?.equipmentTax ?? 25;
+    form.value.taxPercent = appStore.settings.defaults?.equipmentTax ?? 0;
+    form.value.markupPercent = appStore.settings.defaults?.equipmentMarkup ?? 25;
   } else {
-    form.value.allowancePercent = appStore.settings.defaults?.materialAllowance ?? 6;
-    form.value.taxPercent = appStore.settings.defaults?.materialTax ?? 25;
+    form.value.taxPercent = appStore.settings.defaults?.materialTax ?? 6;
+    form.value.markupPercent = appStore.settings.defaults?.materialMarkup ?? 25;
   }
 });
 

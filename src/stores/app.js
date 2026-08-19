@@ -168,10 +168,10 @@ export const useAppStore = defineStore("app", () => {
       phone: "(301) 252-1355",
     },
     defaults: {
-      materialAllowance: 6,
-      materialTax: 25,
-      equipmentAllowance: 0,
-      equipmentTax: 25,
+      materialTax: 6,
+      materialMarkup: 25,
+      equipmentTax: 0,
+      equipmentMarkup: 25,
     },
   });
 
@@ -208,8 +208,8 @@ export const useAppStore = defineStore("app", () => {
           const itemMarkup = parseFloat(item.markup) || 0;
           const unitNet = itemNet;
 
-          const unitGross = unitNet * (1 + itemTax);
-          const unitClient = unitGross * (1 + itemMarkup);
+          const unitAllowance = unitNet * (1 + itemTax);
+          const unitClient = unitAllowance * (1 + itemMarkup);
 
           const totalItemNet = unitNet * itemQty;
           const totalItemClient =
@@ -264,8 +264,8 @@ export const useAppStore = defineStore("app", () => {
         const itemTax = parseFloat(item.taxRate) || 0;
         const itemMarkup = parseFloat(item.markup) || 0;
 
-        const unitGross = itemNet * (1 + itemTax);
-        const unitClient = unitGross * (1 + itemMarkup);
+        const unitAllowance = itemNet * (1 + itemTax);
+        const unitClient = unitAllowance * (1 + itemMarkup);
 
         const totalNet = itemNet * itemQty;
         const totalClient =
@@ -291,117 +291,110 @@ export const useAppStore = defineStore("app", () => {
 
   // Actions
   const loadCatalog = async () => {
-    isLoading.value = true;
     try {
+      isLoading.value = true;
       const data = await api.getCatalog();
       materials.value = data.materials || [];
       equipment.value = data.equipment || [];
       labor.value = data.labor || [];
       assemblies.value = data.assemblies || [];
-      if (data.settings) {
-        settings.value = {
-          costTypes: data.settings.costTypes || settings.value.costTypes,
-          unitTypes: data.settings.unitTypes || settings.value.unitTypes,
-          acctCodes: data.settings.acctCodes || settings.value.acctCodes,
-          activities: data.settings.activities || settings.value.activities,
-          categories: data.settings.categories || settings.value.categories,
-          trades: data.settings.trades || settings.value.trades,
-          rooms: data.settings.rooms || settings.value.rooms,
-          defaults: data.settings.defaults
-            ? { ...settings.value.defaults, ...data.settings.defaults }
-            : settings.value.defaults,
-        };
-      }
     } catch (err) {
-      error.value = err.message;
+      error.value = `Failed to load catalog: ${err.message}`;
     } finally {
       isLoading.value = false;
     }
   };
 
   const saveCatalog = async () => {
-    isLoading.value = true;
     try {
-      const catalog = {
+      isLoading.value = true;
+      await api.saveCatalog({
         materials: materials.value,
         equipment: equipment.value,
         labor: labor.value,
         assemblies: assemblies.value,
-        settings: settings.value,
-      };
-      await api.saveCatalog(catalog);
+      });
     } catch (err) {
-      error.value = err.message;
-      throw err;
+      error.value = `Failed to save catalog: ${err.message}`;
     } finally {
       isLoading.value = false;
     }
   };
 
   const loadQuotes = async () => {
-    isLoading.value = true;
     try {
-      quotes.value = await api.getQuotes();
+      isLoading.value = true;
+      const data = await api.getQuotes();
+      quotes.value = data || [];
     } catch (err) {
-      error.value = err.message;
+      error.value = `Failed to load quotes: ${err.message}`;
     } finally {
       isLoading.value = false;
     }
   };
 
   const loadQuote = async (id) => {
-    isLoading.value = true;
     try {
-      currentQuote.value = await api.getQuote(id);
-      activeTab.value = "quotes";
+      isLoading.value = true;
+      const data = await api.getQuote(id);
+      currentQuote.value = data;
+      activeTab.value = "builder";
     } catch (err) {
-      error.value = err.message;
+      error.value = `Failed to load quote: ${err.message}`;
     } finally {
       isLoading.value = false;
     }
   };
 
-  const newQuote = () => {
-    currentQuote.value = {
+  const newQuote = (name = "New Estimate") => {
+    const q = {
       id: `quote_${Date.now()}`,
-      name: "New Estimating Quote",
-      clientName: "",
-      date: new Date().toISOString().split("T")[0],
+      name,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       status: "Draft",
       rooms: [
-        { id: `room_${Date.now()}_1`, name: "Kitchen", order: 0, items: [] },
-        { id: `room_${Date.now()}_2`, name: "Primary Bath", order: 1, items: [] },
+        {
+          id: `room_${Date.now()}_1`,
+          name: "General",
+          order: 1,
+          items: [],
+        },
       ],
     };
+    quotes.value.push(q);
+    currentQuote.value = q;
     activeTab.value = "builder";
   };
 
   const saveCurrentQuote = async () => {
     if (!currentQuote.value) return;
-    isLoading.value = true;
     try {
-      const totals = quoteTotals.value;
-      currentQuote.value.grandTotal = totals.clientPrice;
+      isLoading.value = true;
+      currentQuote.value.updatedAt = new Date().toISOString();
       await api.saveQuote(currentQuote.value);
-      await loadQuotes();
+      const idx = quotes.value.findIndex((q) => q.id === currentQuote.value.id);
+      if (idx !== -1) {
+        quotes.value[idx] = { ...currentQuote.value };
+      }
     } catch (err) {
-      error.value = err.message;
-      throw err;
+      error.value = `Failed to save quote: ${err.message}`;
     } finally {
       isLoading.value = false;
     }
   };
 
   const deleteQuote = async (id) => {
-    isLoading.value = true;
     try {
+      isLoading.value = true;
       await api.deleteQuote(id);
+      quotes.value = quotes.value.filter((q) => q.id !== id);
       if (currentQuote.value?.id === id) {
         currentQuote.value = null;
+        activeTab.value = "quotes";
       }
-      await loadQuotes();
     } catch (err) {
-      error.value = err.message;
+      error.value = `Failed to delete quote: ${err.message}`;
     } finally {
       isLoading.value = false;
     }
@@ -409,13 +402,13 @@ export const useAppStore = defineStore("app", () => {
 
   const addRoom = (name) => {
     if (!currentQuote.value) return;
-    const order = currentQuote.value.rooms.length;
-    currentQuote.value.rooms.push({
+    const newR = {
       id: `room_${Date.now()}`,
-      name: name || `Room ${order + 1}`,
-      order,
+      name,
+      order: currentQuote.value.rooms.length + 1,
       items: [],
-    });
+    };
+    currentQuote.value.rooms.push(newR);
   };
 
   const removeRoom = (roomId) => {
@@ -425,88 +418,87 @@ export const useAppStore = defineStore("app", () => {
 
   const renameRoom = (roomId, newName) => {
     if (!currentQuote.value) return;
-    const room = currentQuote.value.rooms.find((r) => r.id === roomId);
-    if (room) {
-      room.name = newName;
-    }
+    const r = currentQuote.value.rooms.find((rm) => rm.id === roomId);
+    if (r) r.name = newName;
   };
 
   const reorderRoom = (roomId, direction) => {
     if (!currentQuote.value) return;
-    const index = currentQuote.value.rooms.findIndex((r) => r.id === roomId);
-    if (index === -1) return;
-    const targetIndex = index + direction;
-    if (targetIndex < 0 || targetIndex >= currentQuote.value.rooms.length) return;
+    const rooms = currentQuote.value.rooms;
+    const idx = rooms.findIndex((r) => r.id === roomId);
+    if (idx === -1) return;
 
-    const temp = currentQuote.value.rooms[index];
-    currentQuote.value.rooms[index] = currentQuote.value.rooms[targetIndex];
-    currentQuote.value.rooms[targetIndex] = temp;
-
-    currentQuote.value.rooms.forEach((r, idx) => {
-      r.order = idx;
-    });
+    if (direction === "up" && idx > 0) {
+      const temp = rooms[idx].order;
+      rooms[idx].order = rooms[idx - 1].order;
+      rooms[idx - 1].order = temp;
+    } else if (direction === "down" && idx < rooms.length - 1) {
+      const temp = rooms[idx].order;
+      rooms[idx].order = rooms[idx + 1].order;
+      rooms[idx + 1].order = temp;
+    }
   };
 
-  const addItemToRoom = (roomId, catalogItem, type) => {
+  const addItemToRoom = (roomId, catalogItem, isAssembly = false) => {
     if (!currentQuote.value) return;
     const room = currentQuote.value.rooms.find((r) => r.id === roomId);
     if (!room) return;
 
-    let quoteItem = {
-      id: `item_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
-      catalogId: catalogItem.id,
-      type,
+    const quoteItem = {
+      id: `item_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
       name: catalogItem.name,
-      quantity: catalogItem.defaultQty || 1,
+      category: catalogItem.category,
+      type: isAssembly ? "assembly" : catalogItem.type || "material",
+      quantity: 1,
       allowanceOverride: null,
     };
 
-    if (type === "assembly") {
-      quoteItem.description = catalogItem.desc;
-      quoteItem.unit = catalogItem.unitType;
-
+    if (isAssembly) {
+      quoteItem.unit = catalogItem.unitType || "each";
       quoteItem.assemblyData = {
         laborRequirements: (catalogItem.laborRequirements || []).map((req) => {
-          const laborRole = getLaborById(req.classificationId);
+          const role = labor.value.find((l) => l.id === req.classificationId) || {};
           return {
             classificationId: req.classificationId,
-            name: laborRole?.name || "Unknown Labor",
-            rate: laborRole?.rate || 0,
+            name: role.name || "Labor Role",
+            rate: role.rate || 0,
             unitHours: parseFloat(req.unitHours) || 0,
             baseHours: parseFloat(req.baseHours) || 0,
             allowMode: req.allowMode || "None",
           };
         }),
         materialRequirements: (catalogItem.materialRequirements || []).map((req) => {
-          const mat = getMaterialById(req.materialId);
+          const mat = materials.value.find((m) => m.id === req.materialId) || {};
           return {
             materialId: req.materialId,
-            name: mat?.name || "Unknown Material",
-            price: mat?.netPrice || 0,
-            tax: mat?.tax !== undefined ? mat.tax : 0.25,
-            allowance: mat?.allowance !== undefined ? mat.allowance : 0.06,
+            name: mat.name || "Material Item",
+            price: mat.netPrice || 0,
+            tax: mat.taxPercent !== undefined ? mat.taxPercent / 100 : 0.06,
+            markup: mat.markupPercent !== undefined ? mat.markupPercent / 100 : 0.25,
             qty: parseFloat(req.qty) || 0,
             base: !!req.base,
+            allow: !!req.allow,
           };
         }),
         equipmentRequirements: (catalogItem.equipmentRequirements || []).map((req) => {
-          const eq = getEquipmentById(req.equipmentId);
+          const eq = equipment.value.find((e) => e.id === req.equipmentId) || {};
           return {
             equipmentId: req.equipmentId,
-            name: eq?.name || "Unknown Equipment",
-            price: eq?.netPrice || 0,
-            tax: eq?.tax !== undefined ? eq.tax : 0.25,
-            allowance: eq?.allowance !== undefined ? eq.allowance : 0,
+            name: eq.name || "Equipment Item",
+            price: eq.netPrice || 0,
+            tax: eq.taxPercent !== undefined ? eq.taxPercent / 100 : 0,
+            markup: eq.markupPercent !== undefined ? eq.markupPercent / 100 : 0.25,
             qty: parseFloat(req.qty) || 0,
             base: !!req.base,
+            allow: !!req.allow,
           };
         }),
       };
     } else {
       quoteItem.unit = catalogItem.unit;
       quoteItem.netCost = catalogItem.netPrice;
-      quoteItem.taxRate = catalogItem.tax !== undefined ? catalogItem.tax : 0.25;
-      quoteItem.markup = catalogItem.markup !== undefined ? catalogItem.markup : 0.25;
+      quoteItem.taxRate = catalogItem.taxPercent !== undefined ? catalogItem.taxPercent / 100 : 0.06;
+      quoteItem.markup = catalogItem.markupPercent !== undefined ? catalogItem.markupPercent / 100 : 0.25;
       quoteItem.isAllowance = false;
     }
 
@@ -562,7 +554,7 @@ export function calculateAssemblyTotals(assemblyData, assemblyQty) {
   if (!assemblyData) return { netCost, clientPrice, allowanceTotal };
 
   // Labor
-  assemblyData.laborRequirements.forEach((req) => {
+  (assemblyData.laborRequirements || []).forEach((req) => {
     const totalHours = req.unitHours * assemblyQty + req.baseHours;
     const cost = totalHours * req.rate;
     netCost += cost;
@@ -578,30 +570,38 @@ export function calculateAssemblyTotals(assemblyData, assemblyQty) {
     }
   });
 
-  // Materials
-  assemblyData.materialRequirements.forEach((req) => {
+  // Materials: Tax defaults to 6%, Markup defaults to 25%
+  // Allowance Price = Price + Tax = Price * (1 + Tax)
+  // Gross Price = Price + Tax + Markup = Price * (1 + Tax) * (1 + Markup)
+  (assemblyData.materialRequirements || []).forEach((req) => {
     const totalQty = req.base ? req.qty : req.qty * assemblyQty;
     const itemNet = req.price * totalQty;
-    const itemGross = itemNet * (1 + req.tax);
-    const itemClient = itemGross * 1.25;
+    const itemTax = req.tax !== undefined ? req.tax : 0.06;
+    const itemMarkup = req.markup !== undefined ? req.markup : 0.25;
+
+    const itemAllowance = itemNet * (1 + itemTax);
+    const itemGross = itemAllowance * (1 + itemMarkup);
 
     netCost += itemNet;
-    clientPrice += itemClient;
-    const allowPct = req.allowance !== undefined ? req.allowance : 0;
-    if (req.allow) allowanceTotal += itemClient * allowPct;
+    clientPrice += itemGross;
+    if (req.allow) allowanceTotal += itemAllowance;
   });
 
-  // Equipment
-  assemblyData.equipmentRequirements.forEach((req) => {
+  // Equipment: Tax defaults to 0%, Markup defaults to 25%
+  // Allowance Price = Price + Tax = Price * (1 + Tax)
+  // Gross Price = Price + Tax + Markup = Price * (1 + Tax) * (1 + Markup)
+  (assemblyData.equipmentRequirements || []).forEach((req) => {
     const totalQty = req.base ? req.qty : req.qty * assemblyQty;
     const itemNet = req.price * totalQty;
-    const itemGross = itemNet * (1 + req.tax);
-    const itemClient = itemGross * 1.25;
+    const itemTax = req.tax !== undefined ? req.tax : 0.0;
+    const itemMarkup = req.markup !== undefined ? req.markup : 0.25;
+
+    const itemAllowance = itemNet * (1 + itemTax);
+    const itemGross = itemAllowance * (1 + itemMarkup);
 
     netCost += itemNet;
-    clientPrice += itemClient;
-    const allowPct = req.allowance !== undefined ? req.allowance : 0;
-    if (req.allow) allowanceTotal += itemClient * allowPct;
+    clientPrice += itemGross;
+    if (req.allow) allowanceTotal += itemAllowance;
   });
 
   return { netCost, clientPrice, allowanceTotal };

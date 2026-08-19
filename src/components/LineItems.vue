@@ -173,44 +173,54 @@ const lineItemSummary = computed(() => {
     }
   });
 
-  // Materials
+  // Materials: Tax default 6%, Markup default 25%
+  // Allowance Price = Price + Tax
+  // Gross Price = Price + Tax + Markup
   lineItemForm.value.materialRequirements.forEach(req => {
     const mat = appStore.getMaterialById(req.materialId);
     if (!mat) return;
 
-    const clientPrice = mat.netPrice * (1 + mat.tax) * 1.25;
-    const itemVal = req.qty * clientPrice;
+    const matTax = mat.tax !== undefined ? mat.tax : 0.06;
+    const matMarkup = mat.markup !== undefined ? mat.markup : 0.25;
+    const allowancePrice = mat.netPrice * (1 + matTax);
+    const grossPrice = allowancePrice * (1 + matMarkup);
+
+    const qty = req.qty || 1;
+    const grossVal = qty * grossPrice;
+    const allowVal = req.allow ? qty * allowancePrice : 0;
 
     if (req.base) {
-      summary.materials.base += itemVal;
+      summary.materials.base += grossVal;
     } else {
-      summary.materials.unit += itemVal;
+      summary.materials.unit += grossVal;
     }
 
-    const matAllow = mat.allowance !== undefined ? mat.allowance : (req.allowance || 0);
-    if (req.allow) {
-      summary.materials.allowance += itemVal * matAllow;
-    }
+    summary.materials.allowance += allowVal;
   });
 
-  // Equipment
+  // Equipment: Tax default 0%, Markup default 25%
+  // Allowance Price = Price + Tax
+  // Gross Price = Price + Tax + Markup
   lineItemForm.value.equipmentRequirements.forEach(req => {
     const eq = appStore.getEquipmentById(req.equipmentId);
     if (!eq) return;
 
-    const clientPrice = eq.netPrice * (1 + eq.tax) * 1.25;
-    const itemVal = req.qty * clientPrice;
+    const eqTax = eq.tax !== undefined ? eq.tax : 0.0;
+    const eqMarkup = eq.markup !== undefined ? eq.markup : 0.25;
+    const allowancePrice = eq.netPrice * (1 + eqTax);
+    const grossPrice = allowancePrice * (1 + eqMarkup);
+
+    const qty = req.qty || 1;
+    const grossVal = qty * grossPrice;
+    const allowVal = req.allow ? qty * allowancePrice : 0;
 
     if (req.base) {
-      summary.equipment.base += itemVal;
+      summary.equipment.base += grossVal;
     } else {
-      summary.equipment.unit += itemVal;
+      summary.equipment.unit += grossVal;
     }
 
-    const eqAllow = eq.allowance !== undefined ? eq.allowance : (req.allowance || 0);
-    if (req.allow) {
-      summary.equipment.allowance += itemVal * eqAllow;
-    }
+    summary.equipment.allowance += allowVal;
   });
 
   // Combined Totals
