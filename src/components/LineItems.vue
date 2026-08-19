@@ -27,8 +27,9 @@
           <v-btn
             prepend-icon="mdi-content-save"
             color="teal"
-            size="small"
-            class="glow-btn"
+            size="large"
+            class="glow-btn font-weight-bold px-6 text-none"
+            elevation="2"
             @click="saveLineItem"
           >
             Save Line Item

@@ -6,109 +6,47 @@
     <v-card-text class="pa-4">
       <v-row class="custom-form-row">
         <v-col cols="12" sm="3" md="3">
-          <v-combobox
-            v-model="form.category"
-            label="Category"
-            :items="categories"
-            variant="outlined"
-            density="compact"
-            hide-details="auto"
-          ></v-combobox>
+          <v-combobox v-model="form.category" label="Category" :items="categories" variant="outlined" density="compact"
+            hide-details="auto"></v-combobox>
         </v-col>
         <v-col cols="12" sm="3" md="3">
-          <v-combobox
-            v-model="form.group"
-            label="Group"
-            :items="appStore.settings.groups || []"
-            variant="outlined"
-            density="compact"
-            hide-details="auto"
-          ></v-combobox>
+          <v-combobox v-model="form.group" label="Group" :items="appStore.settings.groups || []" variant="outlined"
+            density="compact" hide-details="auto"></v-combobox>
         </v-col>
         <v-col cols="12" sm="6" md="6">
-          <v-text-field
-            v-model="form.name"
-            label="Line Item Proposal Name *"
-            variant="outlined"
-            density="compact"
+          <v-text-field v-model="form.name" label="Line Item Proposal Name *" variant="outlined" density="compact"
             hide-details="auto"
-            :rules="[v => (v && v.trim().length > 0) || 'Proposal Name is mandatory']"
-          ></v-text-field>
+            :rules="[v => (v && v.trim().length > 0) || 'Proposal Name is mandatory']"></v-text-field>
         </v-col>
         <v-col cols="12">
-          <v-textarea
-            v-model="form.desc"
-            label="Description / Scope of Work"
-            variant="outlined"
-            density="compact"
-            rows="2"
-            hide-details="auto"
-          ></v-textarea>
+          <v-textarea v-model="form.desc" label="Description / Scope of Work" variant="outlined" density="compact"
+            rows="2" hide-details="auto"></v-textarea>
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-select
-            v-model="form.activity"
-            label="Activity Type"
-            :items="appStore.settings.activities"
-            variant="outlined"
-            density="compact"
-            hide-details="auto"
-          ></v-select>
+          <v-select v-model="form.activity" label="Activity Type" :items="appStore.settings.activities"
+            variant="outlined" density="compact" hide-details="auto"></v-select>
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-select
-            v-model="form.acctCode"
-            label="Accounting Code"
-            :items="appStore.settings.acctCodes"
-            variant="outlined"
-            density="compact"
-            hide-details="auto"
-          ></v-select>
+          <v-select v-model="form.acctCode" label="Accounting Code" :items="appStore.settings.acctCodes"
+            variant="outlined" density="compact" hide-details="auto"></v-select>
         </v-col>
         <v-col cols="12" sm="4" md="2">
-          <v-select
-            v-model="form.unitType"
-            label="Billing Unit Type"
-            :items="appStore.settings.unitTypes"
-            variant="outlined"
-            density="compact"
-            hide-details="auto"
-          ></v-select>
+          <v-select v-model="form.unitType" label="Billing Unit Type" :items="appStore.settings.unitTypes"
+            variant="outlined" density="compact" hide-details="auto"></v-select>
         </v-col>
         <v-col cols="12" sm="4" md="2">
-          <v-text-field
-            v-model.number="form.defaultQty"
-            type="number"
-            label="Default Quantity"
-            variant="outlined"
-            density="compact"
-            hide-details="auto"
-          ></v-text-field>
+          <v-text-field v-model.number="form.defaultQty" type="number" label="Default Qty in Quote" variant="outlined"
+            density="compact" hide-details="auto"></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="3">
-          <v-autocomplete
-            v-model="form.defaultRoom"
-            label="Default Room"
-            :items="filteredRoomOptions"
-            item-title="title"
-            item-value="value"
-            :return-object="false"
-            variant="outlined"
-            density="compact"
-            hide-details="auto"
-            auto-select-first
-            :menu-props="{ maxHeight: 360 }"
-          >
+          <v-autocomplete v-model="form.defaultRoom" label="Default Room" :items="filteredRoomOptions"
+            item-title="title" item-value="value" :return-object="false" variant="outlined" density="compact"
+            hide-details="auto" auto-select-first :menu-props="{ maxHeight: 360 }">
             <template #prepend-item>
               <div class="border-b bg-grey-lighten-5 px-1 py-1 position-sticky top-0 style-z-top">
                 <v-tabs v-model="activeRoomCategory" color="teal" density="compact" show-arrows>
-                  <v-tab
-                    v-for="cat in roomCategories"
-                    :key="cat"
-                    :value="cat"
-                    size="small"
-                    class="text-caption font-weight-medium text-none px-3"
-                  >
+                  <v-tab v-for="cat in roomCategories" :key="cat" :value="cat" size="small"
+                    class="text-caption font-weight-medium text-none px-3">
                     {{ cat }}
                   </v-tab>
                 </v-tabs>
@@ -118,34 +56,16 @@
           </v-autocomplete>
         </v-col>
         <v-col cols="12" sm="6" md="3">
-          <v-select
-            v-model="form.tradePartner"
-            label="Trade Partner"
-            :items="appStore.settings.trades"
-            variant="outlined"
-            density="compact"
-            hide-details="auto"
-          ></v-select>
+          <v-select v-model="form.tradePartner" label="Trade Partner" :items="appStore.settings.trades"
+            variant="outlined" density="compact" hide-details="auto"></v-select>
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-text-field
-            v-model="form.url"
-            label="Product Website Link"
-            variant="outlined"
-            density="compact"
-            hide-details="auto"
-            :append-inner-icon="form.url ? 'mdi-open-in-new' : undefined"
-            @click:append-inner="openUrl"
-          ></v-text-field>
+          <v-text-field v-model="form.url" label="Product Link" variant="outlined" density="compact" hide-details="auto"
+            :append-inner-icon="form.url ? 'mdi-open-in-new' : undefined" @click:append-inner="openUrl"></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="2">
-          <v-text-field
-            v-model="form.tag"
-            label="Reporting Tag"
-            variant="outlined"
-            density="compact"
-            hide-details="auto"
-          ></v-text-field>
+          <v-text-field v-model="form.tag" label="Reporting Tag" variant="outlined" density="compact"
+            hide-details="auto"></v-text-field>
         </v-col>
       </v-row>
     </v-card-text>
@@ -232,7 +152,8 @@ const openUrl = () => {
 .style-z-top {
   z-index: 5;
 }
-.custom-form-row > :deep(.v-col) {
+
+.custom-form-row> :deep(.v-col) {
   padding-top: 6px !important;
   padding-bottom: 6px !important;
 }
