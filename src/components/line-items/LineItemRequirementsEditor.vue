@@ -1,5 +1,5 @@
 <template>
-  <v-card border elevation="0">
+  <v-card border elevation="0" style="min-height: 380px;">
     <v-tabs v-model="editorTab" color="teal">
       <v-tab value="labor">
         Labor Required
@@ -21,7 +21,7 @@
       </v-tab>
     </v-tabs>
 
-    <v-window v-model="editorTab" class="px-4 pt-4 pb-2">
+    <v-window v-model="editorTab" class="px-4 pt-4 pb-2" style="min-height: 320px;">
       <!-- Labor Inputs -->
       <v-window-item value="labor">
         <v-row class="align-center mb-4">
