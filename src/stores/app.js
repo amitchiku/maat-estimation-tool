@@ -7,7 +7,8 @@ export const useAppStore = defineStore("app", () => {
   const materials = ref([]);
   const equipment = ref([]);
   const labor = ref([]);
-  const assemblies = ref([]);
+  const lineItems = ref([]);
+  const assemblies = lineItems; // Backwards-compatibility alias
   const quotes = ref([]);
   const currentQuote = ref(null);
   const isLoading = ref(false);
@@ -290,35 +291,66 @@ export const useAppStore = defineStore("app", () => {
   });
 
   // Actions
-  const loadCatalog = async () => {
+  const getCatalog = async (type) => {
     try {
       isLoading.value = true;
-      const data = await api.getCatalog();
-      materials.value = data.materials || [];
-      equipment.value = data.equipment || [];
-      labor.value = data.labor || [];
-      assemblies.value = data.assemblies || [];
+      const data = await api.getCatalog(type);
+      if (!type) {
+        materials.value = data.materials || [];
+        equipment.value = data.equipment || [];
+        labor.value = data.labor || [];
+        lineItems.value = data.lineItems || data.assemblies || [];
+        return data;
+      }
+      if (type === 'materials') materials.value = data || [];
+      else if (type === 'labor') labor.value = data || [];
+      else if (type === 'equipment') equipment.value = data || [];
+      else if (type === 'line_items' || type === 'lineItems' || type === 'assemblies') lineItems.value = data || [];
+      return data;
     } catch (err) {
-      error.value = `Failed to load catalog: ${err.message}`;
+      error.value = `Failed to load catalog ${type || ''}: ${err.message}`;
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const loadCatalog = async () => getCatalog();
+
+  const upsertCatalog = async (type, data) => {
+    try {
+      isLoading.value = true;
+      await api.upsertCatalog(type, data);
+      if (!type) {
+        if (data.materials) materials.value = data.materials;
+        if (data.equipment) equipment.value = data.equipment;
+        if (data.labor) labor.value = data.labor;
+        if (data.lineItems) lineItems.value = data.lineItems;
+        else if (data.assemblies) lineItems.value = data.assemblies;
+      } else if (type === 'materials') {
+        materials.value = data;
+      } else if (type === 'labor') {
+        labor.value = data;
+      } else if (type === 'equipment') {
+        equipment.value = data;
+      } else if (type === 'line_items' || type === 'lineItems' || type === 'assemblies') {
+        lineItems.value = data;
+      }
+    } catch (err) {
+      error.value = `Failed to save catalog ${type || ''}: ${err.message}`;
+      throw err;
     } finally {
       isLoading.value = false;
     }
   };
 
   const saveCatalog = async () => {
-    try {
-      isLoading.value = true;
-      await api.saveCatalog({
-        materials: materials.value,
-        equipment: equipment.value,
-        labor: labor.value,
-        assemblies: assemblies.value,
-      });
-    } catch (err) {
-      error.value = `Failed to save catalog: ${err.message}`;
-    } finally {
-      isLoading.value = false;
-    }
+    return upsertCatalog(null, {
+      materials: materials.value,
+      equipment: equipment.value,
+      labor: labor.value,
+      lineItems: lineItems.value,
+      assemblies: lineItems.value,
+    });
   };
 
   const loadQuotes = async () => {
@@ -517,6 +549,7 @@ export const useAppStore = defineStore("app", () => {
     materials,
     equipment,
     labor,
+    lineItems,
     assemblies,
     quotes,
     currentQuote,
@@ -529,7 +562,9 @@ export const useAppStore = defineStore("app", () => {
     getLaborById,
     quoteTotals,
     roomTotals,
+    getCatalog,
     loadCatalog,
+    upsertCatalog,
     saveCatalog,
     loadQuotes,
     loadQuote,

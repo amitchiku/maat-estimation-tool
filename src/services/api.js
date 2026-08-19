@@ -13,26 +13,33 @@ function runGas(functionName, ...args) {
 }
 
 export const api = {
-  async getCatalog() {
+  async getCatalog(type) {
     if (isGas) {
-      return runGas('getCatalog');
+      return runGas('getCatalog', type);
     }
-    const response = await fetch('/api/catalog');
+    const url = type ? `/api/catalog/${type}` : '/api/catalog';
+    const response = await fetch(url);
     if (!response.ok) throw new Error('Failed to fetch catalog');
     return response.json();
   },
 
-  async saveCatalog(catalog) {
+  async upsertCatalog(type, data) {
     if (isGas) {
-      return runGas('saveCatalog', catalog);
+      return runGas('upsertCatalog', type, data);
     }
-    const response = await fetch('/api/catalog', {
+    const url = type ? `/api/catalog/${type}` : '/api/catalog';
+    const body = type ? data : type;
+    const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(catalog)
+      body: JSON.stringify(type ? data : body)
     });
-    if (!response.ok) throw new Error('Failed to save catalog');
+    if (!response.ok) throw new Error('Failed to upsert catalog');
     return response.json();
+  },
+
+  async saveCatalog(catalog) {
+    return this.upsertCatalog(null, catalog);
   },
 
   async getQuotes() {

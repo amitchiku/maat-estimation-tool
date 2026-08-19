@@ -108,7 +108,7 @@ const saveLaborRole = async () => {
   }
 
   try {
-    await appStore.saveCatalog();
+    await appStore.upsertCatalog('labor', appStore.labor);
     cancelLaborEdit();
   } catch (err) {
     appStore.error = `Error saving labor catalog: ${err.message}`;
@@ -128,7 +128,7 @@ const cancelLaborEdit = () => {
 const deleteLaborRole = async (id) => {
   appStore.labor = appStore.labor.filter(r => r.id !== id);
   try {
-    await appStore.saveCatalog();
+    await appStore.upsertCatalog('labor', appStore.labor);
   } catch (err) {
     appStore.error = `Error deleting labor role: ${err.message}`;
   }

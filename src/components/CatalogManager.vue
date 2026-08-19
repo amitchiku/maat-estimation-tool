@@ -389,7 +389,8 @@ const saveCatalogItem = async () => {
   }
 
   try {
-    await appStore.saveCatalog();
+    const catalogType = form.value.type === 'Material' ? 'materials' : 'equipment';
+    await appStore.upsertCatalog(catalogType, targetArray);
     catalogDialog.value = false;
   } catch (err) {
     appStore.error = `Error saving catalog item: ${err.message}`;
@@ -404,6 +405,7 @@ const confirmDelete = (item) => {
 const executeDelete = async () => {
   if (!itemToDelete.value) return;
 
+  const catalogType = itemToDelete.value.type === 'Material' ? 'materials' : 'equipment';
   if (itemToDelete.value.type === 'Material') {
     appStore.materials = appStore.materials.filter(i => i.id !== itemToDelete.value.id);
   } else {
@@ -411,7 +413,8 @@ const executeDelete = async () => {
   }
 
   try {
-    await appStore.saveCatalog();
+    const targetArray = itemToDelete.value.type === 'Material' ? appStore.materials : appStore.equipment;
+    await appStore.upsertCatalog(catalogType, targetArray);
     deleteDialog.value = false;
     itemToDelete.value = null;
   } catch (err) {

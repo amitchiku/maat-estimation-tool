@@ -96,7 +96,7 @@
     <!-- Catalog List Table View -->
     <div v-else>
       <LineItemsList
-        :line-items="appStore.assemblies"
+        :line-items="appStore.lineItems"
         @create="openAddLineItem"
         @edit="editLineItem"
         @delete="executeDeleteLineItem"
@@ -346,21 +346,21 @@ const saveLineItem = async () => {
   const now = new Date().toISOString();
 
   if (!updatedItem.id) {
-    updatedItem.id = `L${appStore.assemblies.length + 1}`;
+    updatedItem.id = `L${appStore.lineItems.length + 1}`;
     updatedItem.createdAt = now;
     updatedItem.updatedAt = now;
-    appStore.assemblies.push(updatedItem);
+    appStore.lineItems.push(updatedItem);
   } else {
     updatedItem.updatedAt = now;
     if (!updatedItem.createdAt) updatedItem.createdAt = now;
-    const idx = appStore.assemblies.findIndex(a => a.id === updatedItem.id);
+    const idx = appStore.lineItems.findIndex(a => a.id === updatedItem.id);
     if (idx !== -1) {
-      appStore.assemblies[idx] = updatedItem;
+      appStore.lineItems[idx] = updatedItem;
     }
   }
 
   try {
-    await appStore.saveCatalog();
+    await appStore.upsertCatalog('line_items', appStore.lineItems);
     isEditingLineItem.value = false;
   } catch (err) {
     appStore.error = `Error saving line item: ${err.message}`;
@@ -369,9 +369,9 @@ const saveLineItem = async () => {
 
 const executeDeleteLineItem = async (itemToDelete) => {
   if (itemToDelete) {
-    appStore.assemblies = appStore.assemblies.filter(a => a.id !== itemToDelete.id);
+    appStore.lineItems = appStore.lineItems.filter(a => a.id !== itemToDelete.id);
     try {
-      await appStore.saveCatalog();
+      await appStore.upsertCatalog('line_items', appStore.lineItems);
     } catch (err) {
       appStore.error = `Error deleting line item: ${err.message}`;
     }

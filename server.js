@@ -32,22 +32,61 @@ if (!fs.existsSync(QUOTES_DIR)) {
   fs.mkdirSync(QUOTES_DIR, { recursive: true });
 }
 
-// Reset / Initialize catalog if not exists
-function getCatalog() {
-  if (!fs.existsSync(CATALOG_PATH)) {
-    if (fs.existsSync(SEED_PATH)) {
-      fs.copyFileSync(SEED_PATH, CATALOG_PATH);
-    } else {
-      // Fallback empty catalog structure
-      fs.writeFileSync(CATALOG_PATH, JSON.stringify({ materials: [], equipment: [], labor: [], assemblies: [] }, null, 2));
-    }
+function normalizeType(type) {
+  if (!type) return null;
+  const t = String(type).trim().toLowerCase();
+  if (t === 'lineitems' || t === 'line_items' || t === 'assemblies') return 'line_items';
+  if (t === 'materials') return 'materials';
+  if (t === 'labor') return 'labor';
+  if (t === 'equipment') return 'equipment';
+  return null;
+}
+
+function getCatalogFile(type) {
+  const norm = normalizeType(type);
+  if (!norm) return null;
+  return path.join(DATA_DIR, `${norm}.json`);
+}
+
+function getCatalog(type) {
+  if (!type) {
+    const materials = getCatalog('materials') || [];
+    const labor = getCatalog('labor') || [];
+    const equipment = getCatalog('equipment') || [];
+    const lineItems = getCatalog('line_items') || [];
+    return { materials, labor, equipment, lineItems, assemblies: lineItems };
+  }
+
+  const filePath = getCatalogFile(type);
+  if (!filePath || !fs.existsSync(filePath)) {
+    return [];
   }
   try {
-    return JSON.parse(fs.readFileSync(CATALOG_PATH, 'utf-8'));
+    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
   } catch (err) {
-    console.error('Error reading catalog file:', err);
-    return { materials: [], equipment: [], labor: [], assemblies: [] };
+    console.error(`Error reading catalog file for ${type}:`, err);
+    return [];
   }
+}
+
+function upsertCatalog(type, data) {
+  if (!type) {
+    if (typeof data === 'object' && data !== null) {
+      if (Array.isArray(data.materials)) upsertCatalog('materials', data.materials);
+      if (Array.isArray(data.labor)) upsertCatalog('labor', data.labor);
+      if (Array.isArray(data.equipment)) upsertCatalog('equipment', data.equipment);
+      if (Array.isArray(data.lineItems)) upsertCatalog('line_items', data.lineItems);
+      else if (Array.isArray(data.assemblies)) upsertCatalog('line_items', data.assemblies);
+      return true;
+    }
+    throw new Error('Invalid catalog payload');
+  }
+
+  const filePath = getCatalogFile(type);
+  if (!filePath) throw new Error(`Invalid catalog type: ${type}`);
+
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+  return true;
 }
 
 // REST Endpoints
@@ -55,9 +94,24 @@ app.get('/api/catalog', (req, res) => {
   res.json(getCatalog());
 });
 
+app.get('/api/catalog/:type', (req, res) => {
+  const type = req.params.type;
+  res.json(getCatalog(type));
+});
+
+app.post('/api/catalog/:type', (req, res) => {
+  try {
+    const type = req.params.type;
+    upsertCatalog(type, req.body);
+    res.json({ success: true, message: `Catalog ${type} saved successfully` });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 app.post('/api/catalog', (req, res) => {
   try {
-    fs.writeFileSync(CATALOG_PATH, JSON.stringify(req.body, null, 2));
+    upsertCatalog(null, req.body);
     res.json({ success: true, message: 'Catalog saved successfully' });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
