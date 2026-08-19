@@ -26,25 +26,11 @@
       <v-window-item value="labor">
         <v-row class="align-center mb-4">
           <v-col cols="12" sm="8">
-            <v-select
-              v-model="selectedLabor"
-              label="Select Labor Role"
-              :items="appStore.labor"
-              item-title="name"
-              return-object
-              variant="outlined"
-              density="compact"
-              hide-details
-            ></v-select>
+            <v-select v-model="selectedLabor" label="Select Labor Role" :items="appStore.labor" item-title="name"
+              return-object variant="outlined" density="compact" hide-details></v-select>
           </v-col>
           <v-col cols="12" sm="4">
-            <v-btn
-              prepend-icon="mdi-plus"
-              color="teal"
-              block
-              :disabled="!selectedLabor"
-              @click="addLaborRequirement"
-            >
+            <v-btn prepend-icon="mdi-plus" color="teal" block :disabled="!selectedLabor" @click="addLaborRequirement">
               Add Labor Role
             </v-btn>
           </v-col>
@@ -70,24 +56,12 @@
               <td>{{ getLaborName(req.classificationId) }}</td>
               <td>${{ getLaborRate(req.classificationId) }}/hr</td>
               <td>
-                <v-text-field
-                  v-model.number="req.unitHours"
-                  type="number"
-                  variant="outlined"
-                  density="compact"
-                  hide-details
-                  class="ghost-cell-input"
-                ></v-text-field>
+                <v-text-field v-model.number="req.unitHours" type="number" variant="outlined" density="compact"
+                  hide-details class="ghost-cell-input"></v-text-field>
               </td>
               <td>
-                <v-text-field
-                  v-model.number="req.baseHours"
-                  type="number"
-                  variant="outlined"
-                  density="compact"
-                  hide-details
-                  class="ghost-cell-input"
-                ></v-text-field>
+                <v-text-field v-model.number="req.baseHours" type="number" variant="outlined" density="compact"
+                  hide-details class="ghost-cell-input"></v-text-field>
               </td>
               <td class="text-right font-weight-medium">
                 ${{ formatMoney((req.unitHours + req.baseHours) * getLaborRate(req.classificationId)) }}
@@ -101,13 +75,8 @@
                 </select>
               </td>
               <td class="text-center">
-                <v-btn
-                  icon="mdi-delete"
-                  variant="text"
-                  color="red"
-                  size="small"
-                  @click="form.laborRequirements.splice(idx, 1)"
-                ></v-btn>
+                <v-btn icon="mdi-delete" variant="text" color="red" size="small"
+                  @click="form.laborRequirements.splice(idx, 1)"></v-btn>
               </td>
             </tr>
           </tbody>
@@ -118,25 +87,12 @@
       <v-window-item value="materials">
         <v-row class="align-center mb-4">
           <v-col cols="12" sm="8">
-            <v-autocomplete
-              v-model="selectedMaterial"
-              label="Select Material Catalog Item"
-              :items="appStore.materials"
-              item-title="name"
-              return-object
-              variant="outlined"
-              density="compact"
-              hide-details
-            ></v-autocomplete>
+            <v-autocomplete v-model="selectedMaterial" label="Select Material Catalog Item" :items="appStore.materials"
+              item-title="name" return-object variant="outlined" density="compact" hide-details></v-autocomplete>
           </v-col>
           <v-col cols="12" sm="4">
-            <v-btn
-              prepend-icon="mdi-plus"
-              color="teal"
-              block
-              :disabled="!selectedMaterial"
-              @click="addMaterialRequirement"
-            >
+            <v-btn prepend-icon="mdi-plus" color="teal" block :disabled="!selectedMaterial"
+              @click="addMaterialRequirement">
               Add Material
             </v-btn>
           </v-col>
@@ -149,9 +105,9 @@
               <th class="text-right">Net Price</th>
               <th class="text-center" style="width: 110px;">Required Qty</th>
               <th class="text-center">Base Flat?</th>
-              <th class="text-right">Allowance Price (Net + Tax)</th>
-              <th class="text-right">Gross Total (Client Price)</th>
+              <th class="text-right">Allowance</th>
               <th class="text-center">Use Allowance?</th>
+              <th class="text-right">Gross Total</th>
               <th class="text-center">Actions</th>
             </tr>
           </thead>
@@ -163,14 +119,8 @@
               <td class="font-weight-medium">{{ getMaterialName(req.materialId) }}</td>
               <td class="text-right">${{ formatMoney(appStore.getMaterialById(req.materialId)?.netPrice || 0) }}</td>
               <td>
-                <v-text-field
-                  v-model.number="req.qty"
-                  type="number"
-                  variant="outlined"
-                  density="compact"
-                  hide-details
-                  class="ghost-cell-input"
-                ></v-text-field>
+                <v-text-field v-model.number="req.qty" type="number" variant="outlined" density="compact" hide-details
+                  class="ghost-cell-input"></v-text-field>
               </td>
               <td class="text-center">
                 <div class="d-flex justify-center align-center">
@@ -180,22 +130,17 @@
               <td class="text-right font-weight-medium text-amber-darken-3">
                 ${{ formatMoney((req.qty || 1) * getMaterialAllowancePrice(req.materialId)) }}
               </td>
-              <td class="text-right font-weight-bold text-teal">
-                ${{ formatMoney((req.qty || 1) * getMaterialGrossPrice(req.materialId)) }}
-              </td>
               <td class="text-center">
                 <div class="d-flex justify-center align-center">
                   <v-checkbox-btn v-model="req.allow" color="teal" class="ma-0"></v-checkbox-btn>
                 </div>
               </td>
+              <td class="text-right font-weight-bold text-teal">
+                ${{ formatMoney((req.qty || 1) * getMaterialGrossPrice(req.materialId)) }}
+              </td>
               <td class="text-center">
-                <v-btn
-                  icon="mdi-delete-outline"
-                  variant="text"
-                  color="red"
-                  size="small"
-                  @click="form.materialRequirements.splice(idx, 1)"
-                ></v-btn>
+                <v-btn icon="mdi-delete-outline" variant="text" color="red" size="small"
+                  @click="form.materialRequirements.splice(idx, 1)"></v-btn>
               </td>
             </tr>
           </tbody>
@@ -206,25 +151,13 @@
       <v-window-item value="equipment">
         <v-row class="align-center mb-4">
           <v-col cols="12" sm="8">
-            <v-autocomplete
-              v-model="selectedEquipment"
-              label="Select Equipment Catalog Rental"
-              :items="appStore.equipment"
-              item-title="name"
-              return-object
-              variant="outlined"
-              density="compact"
-              hide-details
-            ></v-autocomplete>
+            <v-autocomplete v-model="selectedEquipment" label="Select Equipment Catalog Rental"
+              :items="appStore.equipment" item-title="name" return-object variant="outlined" density="compact"
+              hide-details></v-autocomplete>
           </v-col>
           <v-col cols="12" sm="4">
-            <v-btn
-              prepend-icon="mdi-plus"
-              color="teal"
-              block
-              :disabled="!selectedEquipment"
-              @click="addEquipmentRequirement"
-            >
+            <v-btn prepend-icon="mdi-plus" color="teal" block :disabled="!selectedEquipment"
+              @click="addEquipmentRequirement">
               Add Equipment
             </v-btn>
           </v-col>
@@ -237,9 +170,9 @@
               <th class="text-right">Net Price</th>
               <th class="text-center" style="width: 110px;">Required Qty</th>
               <th class="text-center">Base Flat?</th>
-              <th class="text-right">Allowance Price (Net + Tax)</th>
-              <th class="text-right">Gross Total (Client Price)</th>
+              <th class="text-right">Allowance</th>
               <th class="text-center">Use Allowance?</th>
+              <th class="text-right">Gross Total</th>
               <th class="text-center">Actions</th>
             </tr>
           </thead>
@@ -251,14 +184,8 @@
               <td class="font-weight-medium">{{ getEquipmentName(req.equipmentId) }}</td>
               <td class="text-right">${{ formatMoney(appStore.getEquipmentById(req.equipmentId)?.netPrice || 0) }}</td>
               <td>
-                <v-text-field
-                  v-model.number="req.qty"
-                  type="number"
-                  variant="outlined"
-                  density="compact"
-                  hide-details
-                  class="ghost-cell-input"
-                ></v-text-field>
+                <v-text-field v-model.number="req.qty" type="number" variant="outlined" density="compact" hide-details
+                  class="ghost-cell-input"></v-text-field>
               </td>
               <td class="text-center">
                 <div class="d-flex justify-center align-center">
@@ -268,22 +195,17 @@
               <td class="text-right font-weight-medium text-amber-darken-3">
                 ${{ formatMoney((req.qty || 1) * getEquipmentAllowancePrice(req.equipmentId)) }}
               </td>
-              <td class="text-right font-weight-bold text-teal">
-                ${{ formatMoney((req.qty || 1) * getEquipmentGrossPrice(req.equipmentId)) }}
-              </td>
               <td class="text-center">
                 <div class="d-flex justify-center align-center">
                   <v-checkbox-btn v-model="req.allow" color="teal" class="ma-0"></v-checkbox-btn>
                 </div>
               </td>
+              <td class="text-right font-weight-bold text-teal">
+                ${{ formatMoney((req.qty || 1) * getEquipmentGrossPrice(req.equipmentId)) }}
+              </td>
               <td class="text-center">
-                <v-btn
-                  icon="mdi-delete"
-                  variant="text"
-                  color="red"
-                  size="small"
-                  @click="form.equipmentRequirements.splice(idx, 1)"
-                ></v-btn>
+                <v-btn icon="mdi-delete" variant="text" color="red" size="small"
+                  @click="form.equipmentRequirements.splice(idx, 1)"></v-btn>
               </td>
             </tr>
           </tbody>
@@ -412,21 +334,26 @@ const addEquipmentRequirement = () => {
 :deep(.v-table) {
   margin-bottom: 0 !important;
 }
+
 .ghost-cell-input {
   min-width: 115px;
 }
+
 .ghost-cell-input :deep(.v-field__input) {
   padding-left: 8px !important;
   padding-right: 2px !important;
   text-align: center;
 }
+
 :deep(.v-selection-control) {
   margin: 0 auto !important;
   justify-content: center !important;
 }
+
 :deep(.v-selection-control__wrapper) {
   margin: 0 auto !important;
 }
+
 .ghost-cell-native-select {
   appearance: none;
   -webkit-appearance: none;
@@ -452,14 +379,17 @@ const addEquipmentRequirement = () => {
   min-width: 155px;
   transition: all 0.15s ease;
 }
+
 .ghost-cell-native-select:hover {
   border-color: rgba(13, 148, 136, 0.5);
   background-color: rgba(13, 148, 136, 0.04);
 }
+
 .ghost-cell-native-select:focus {
   border-color: #0d9488;
   box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.15);
 }
+
 .ghost-cell-native-select option {
   background-color: #ffffff;
   color: #1e293b;
