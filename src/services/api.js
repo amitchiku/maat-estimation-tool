@@ -34,7 +34,7 @@ export const api = {
       payload = type;
     }
 
-    const url = targetType ? `/api/catalog/${targetType}` : '/api/catalog';
+    const url = targetType ? `/api/catalog?type=${targetType}` : '/api/catalog';
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

@@ -71,6 +71,9 @@ function getCatalog(type) {
 
 function upsertCatalog(type, data) {
   if (!type) {
+    if (Array.isArray(data)) {
+      return upsertCatalog('line_items', data);
+    }
     if (typeof data === 'object' && data !== null) {
       if (Array.isArray(data.materials)) upsertCatalog('materials', data.materials);
       if (Array.isArray(data.labor)) upsertCatalog('labor', data.labor);
@@ -91,7 +94,8 @@ function upsertCatalog(type, data) {
 
 // REST Endpoints
 app.get('/api/catalog', (req, res) => {
-  res.json(getCatalog());
+  const type = req.query.type;
+  res.json(getCatalog(type));
 });
 
 app.get('/api/catalog/:type', (req, res) => {
@@ -111,7 +115,9 @@ app.post('/api/catalog/:type', (req, res) => {
 
 app.post('/api/catalog', (req, res) => {
   try {
-    upsertCatalog(null, req.body);
+    const type = req.query.type || (req.body && req.body.type);
+    const payload = (req.body && req.body.data !== undefined) ? req.body.data : req.body;
+    upsertCatalog(type || null, payload);
     res.json({ success: true, message: 'Catalog saved successfully' });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
