@@ -27,14 +27,27 @@ export const api = {
     if (isGas) {
       return runGas('upsertCatalog', type, data);
     }
-    const url = type ? `/api/catalog/${type}` : '/api/catalog';
-    const body = type ? data : type;
+    let targetType = type;
+    let payload = data;
+    if (data === undefined && typeof type === 'object') {
+      targetType = null;
+      payload = type;
+    }
+
+    const url = targetType ? `/api/catalog/${targetType}` : '/api/catalog';
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(type ? data : body)
+      body: JSON.stringify(payload)
     });
-    if (!response.ok) throw new Error('Failed to upsert catalog');
+    if (!response.ok) {
+      let errMsg = 'Failed to upsert catalog';
+      try {
+        const errJson = await response.json();
+        if (errJson && errJson.error) errMsg = errJson.error;
+      } catch (e) {}
+      throw new Error(errMsg);
+    }
     return response.json();
   },
 
