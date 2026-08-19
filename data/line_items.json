@@ -18,8 +18,7 @@
         "classificationId": "L5",
         "unitHours": 1.5,
         "baseHours": 0.5,
-        "allow": false,
-        "allowMode": "Only Base Hr"
+        "allowMode": "BASE"
       }
     ],
     "materialRequirements": [
@@ -62,8 +61,7 @@
         "classificationId": "L14",
         "unitHours": 0.05,
         "baseHours": 2,
-        "allow": false,
-        "allowMode": "None"
+        "allowMode": "NONE"
       }
     ],
     "materialRequirements": [
@@ -116,7 +114,7 @@
         "classificationId": "L3",
         "unitHours": 0.04,
         "baseHours": 1,
-        "allow": false
+        "allowMode": "NONE"
       }
     ],
     "materialRequirements": [

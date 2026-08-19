@@ -196,12 +196,12 @@ const lineItemSummary = computed(() => {
     summary.labor.base += baseVal;
     summary.labor.unit += unitVal;
 
-    const mode = req.allowMode || 'None';
-    if (mode === 'Both') {
+    const mode = String(req.allowMode || 'NONE').toUpperCase();
+    if (mode === 'BOTH') {
       summary.labor.allowance += baseVal + unitVal;
-    } else if (mode === 'Only Unit Hr') {
+    } else if (mode === 'UNIT' || mode === 'ONLY UNIT HR') {
       summary.labor.allowance += unitVal;
-    } else if (mode === 'Only Base Hr') {
+    } else if (mode === 'BASE' || mode === 'ONLY BASE HR') {
       summary.labor.allowance += baseVal;
     }
   });
@@ -213,21 +213,20 @@ const lineItemSummary = computed(() => {
     const mat = appStore.getMaterialById(req.materialId);
     if (!mat) return;
 
-    const matTax = mat.tax !== undefined ? mat.tax : 0.06;
-    const matMarkup = mat.markup !== undefined ? mat.markup : 0.25;
-    const allowancePrice = mat.netPrice * (1 + matTax);
-    const grossPrice = allowancePrice * (1 + matMarkup);
+    const price = parseFloat(mat.netPrice) || 0;
+    const taxRate = mat.tax !== undefined ? mat.tax : 0.06;
+    const markupRate = mat.markup !== undefined ? mat.markup : 0.25;
 
-    const qty = req.qty || 1;
-    const grossVal = qty * grossPrice;
-    const allowVal = req.allow ? qty * allowancePrice : 0;
+    const allowancePrice = price * (1 + taxRate);
+    const grossPrice = allowancePrice * (1 + markupRate);
 
-    if (req.base) {
-      summary.materials.base += grossVal;
-    } else {
-      summary.materials.unit += grossVal;
-    }
+    const qty = parseFloat(req.qty) || 0;
+    const baseVal = req.base ? qty * grossPrice : 0;
+    const unitVal = !req.base ? qty * grossPrice : 0;
+    const allowVal = req.allow ? (req.base ? qty * allowancePrice : qty * allowancePrice) : 0;
 
+    summary.materials.base += baseVal;
+    summary.materials.unit += unitVal;
     summary.materials.allowance += allowVal;
   });
 

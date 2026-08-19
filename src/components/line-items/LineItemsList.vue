@@ -235,10 +235,10 @@ const getItemDetails = (item) => {
     baseVal += b;
     unitVal += u;
 
-    const mode = req.allowMode || 'None';
-    if (mode === 'Both') allowVal += b + u;
-    else if (mode === 'Only Unit Hr') allowVal += u;
-    else if (mode === 'Only Base Hr') allowVal += b;
+    const mode = String(req.allowMode || 'NONE').toUpperCase();
+    if (mode === 'BOTH') allowVal += b + u;
+    else if (mode === 'UNIT' || mode === 'ONLY UNIT HR') allowVal += u;
+    else if (mode === 'BASE' || mode === 'ONLY BASE HR') allowVal += b;
   });
 
   // Materials

@@ -496,7 +496,7 @@ export const useAppStore = defineStore("app", () => {
             rate: role.rate || 0,
             unitHours: parseFloat(req.unitHours) || 0,
             baseHours: parseFloat(req.baseHours) || 0,
-            allowMode: req.allowMode || "None",
+            allowMode: req.allowMode || "NONE",
           };
         }),
         materialRequirements: (catalogItem.materialRequirements || []).map((req) => {
@@ -595,12 +595,12 @@ export function calculateAssemblyTotals(assemblyData, assemblyQty) {
     netCost += cost;
     clientPrice += cost;
 
-    const mode = req.allowMode || "None";
-    if (mode === "Both") {
+    const mode = String(req.allowMode || "NONE").toUpperCase();
+    if (mode === "BOTH") {
       allowanceTotal += cost;
-    } else if (mode === "Only Unit Hr") {
+    } else if (mode === "UNIT" || mode === "ONLY UNIT HR") {
       allowanceTotal += req.unitHours * assemblyQty * req.rate;
-    } else if (mode === "Only Base Hr") {
+    } else if (mode === "BASE" || mode === "ONLY BASE HR") {
       allowanceTotal += req.baseHours * req.rate;
     }
   });

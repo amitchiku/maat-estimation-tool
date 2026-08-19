@@ -68,10 +68,10 @@
               </td>
               <td class="text-center">
                 <select v-model="req.allowMode" class="ghost-cell-native-select mx-auto">
-                  <option value="None">None</option>
-                  <option value="Only Unit Hr">Only Unit Hr</option>
-                  <option value="Only Base Hr">Only Base Hr</option>
-                  <option value="Both">Both</option>
+                  <option value="NONE">None</option>
+                  <option value="UNIT">Only Unit Hr</option>
+                  <option value="BASE">Only Base Hr</option>
+                  <option value="BOTH">Both</option>
                 </select>
               </td>
               <td class="text-center">
@@ -313,7 +313,7 @@ const addLaborRequirement = () => {
       classificationId: selectedLabor.value.id,
       unitHours: 1,
       baseHours: 0,
-      allowMode: 'None'
+      allowMode: 'NONE'
     });
   }
   selectedLabor.value = null;

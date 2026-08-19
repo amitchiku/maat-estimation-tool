@@ -308,8 +308,8 @@ const getItemPricing = (item) => {
     baseVal += (r.baseHours || 0) * rate;
     unitVal += (r.unitHours || 0) * rate;
 
-    const mode = r.allowMode || 'None';
-    if (mode === 'Both') unitAllow += (r.unitHours || 0) * rate;
+    const mode = String(r.allowMode || 'NONE').toUpperCase();
+    if (mode === 'BOTH' || mode === 'UNIT' || mode === 'ONLY UNIT HR') unitAllow += (r.unitHours || 0) * rate;
   });
 
   (raw.materialRequirements || []).forEach(r => {
