@@ -137,7 +137,8 @@ const isEditingLineItem = ref(false);
 
 const lineItemForm = ref({
   id: '',
-  category: 'Doors - Interior',
+  category: '',
+  group: '',
   name: '',
   desc: '',
   sampleDesc: '',
@@ -267,7 +268,8 @@ const lineItemSummary = computed(() => {
 const openAddLineItem = () => {
   lineItemForm.value = {
     id: '',
-    category: 'Doors - Interior',
+    category: '',
+    group: '',
     name: '',
     desc: '',
     sampleDesc: '',
@@ -307,6 +309,18 @@ const saveLineItem = async () => {
 
   if (!lineItemForm.value.name || !lineItemForm.value.name.trim()) {
     saveWarning.value = 'Please enter a Line Item Proposal Name before saving.';
+    showSnackbar.value = true;
+    return;
+  }
+
+  if (!lineItemForm.value.category || !String(lineItemForm.value.category).trim()) {
+    saveWarning.value = 'Please select or enter a Category before saving.';
+    showSnackbar.value = true;
+    return;
+  }
+
+  if (!lineItemForm.value.group || !String(lineItemForm.value.group).trim()) {
+    saveWarning.value = 'Please select or enter a Group before saving.';
     showSnackbar.value = true;
     return;
   }
