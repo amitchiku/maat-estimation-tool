@@ -2,7 +2,7 @@
   <div>
     <!-- Search and Actions Bar -->
     <v-row class="mb-4 align-center" density="compact">
-      <v-col cols="12" sm="5" md="4">
+      <v-col cols="12" sm="6" md="6">
         <v-text-field
           v-model="search"
           prepend-inner-icon="mdi-magnify"
@@ -13,7 +13,7 @@
           clearable
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="3" md="3">
+      <v-col cols="12" sm="2" md="2">
         <v-select
           v-model="filterRoom"
           label="Default Room"
@@ -23,7 +23,7 @@
           hide-details
         ></v-select>
       </v-col>
-      <v-col cols="12" sm="3" md="3">
+      <v-col cols="12" sm="2" md="2">
         <v-select
           v-model="filterGroup"
           label="Group"
@@ -33,9 +33,9 @@
           hide-details
         ></v-select>
       </v-col>
-      <v-col cols="12" sm="1" md="2" class="text-right">
-        <v-btn prepend-icon="mdi-plus" color="teal" class="glow-btn text-none" @click="$emit('create')">
-          Create New Line Item
+      <v-col cols="12" sm="2" md="2" class="text-right">
+        <v-btn prepend-icon="mdi-plus" color="teal" class="glow-btn text-none" block @click="$emit('create')">
+          Create New Item
         </v-btn>
       </v-col>
     </v-row>

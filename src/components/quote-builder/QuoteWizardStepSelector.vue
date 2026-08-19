@@ -50,7 +50,7 @@
 
     <!-- Search & Filter Controls -->
     <v-row density="compact" class="mb-3">
-      <v-col cols="12" sm="6">
+      <v-col cols="12" sm="8">
         <v-text-field
           v-model="search"
           prepend-inner-icon="mdi-magnify"
@@ -61,7 +61,7 @@
           clearable
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="2">
         <v-select
           v-model="filterGroup"
           label="Filter by Group"
@@ -71,7 +71,7 @@
           hide-details
         ></v-select>
       </v-col>
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="2">
         <v-select
           v-model="filterCategory"
           label="Filter by Category"
