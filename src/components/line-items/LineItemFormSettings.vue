@@ -4,7 +4,7 @@
       Line Item Settings
     </v-card-title>
     <v-card-text class="pa-4">
-      <v-row density="compact">
+      <v-row class="custom-form-row">
         <v-col cols="12" sm="3" md="3">
           <v-combobox
             v-model="form.category"
@@ -149,7 +149,7 @@
         </v-col>
 
         <!-- Divider before Total Output Qty & Sample Description -->
-        <v-col cols="12" class="py-1">
+        <v-col cols="12" class="py-2">
           <v-divider class="my-1"></v-divider>
         </v-col>
 
@@ -260,5 +260,9 @@ const openUrl = () => {
 <style scoped>
 .style-z-top {
   z-index: 5;
+}
+.custom-form-row > :deep(.v-col) {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
 }
 </style>
