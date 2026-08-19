@@ -5,7 +5,7 @@
     </v-card-title>
     <v-card-text class="pa-4">
       <v-row>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" md="2.5">
           <v-combobox
             v-model="form.category"
             label="Category"
@@ -14,7 +14,7 @@
             density="compact"
           ></v-combobox>
         </v-col>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" md="2.5">
           <v-combobox
             v-model="form.group"
             label="Group"
@@ -25,7 +25,7 @@
             persistent-hint
           ></v-combobox>
         </v-col>
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="7">
           <v-text-field
             v-model="form.name"
             label="Line Item Proposal Name *"
@@ -136,6 +136,11 @@
             variant="outlined"
             density="compact"
           ></v-text-field>
+        </v-col>
+
+        <!-- Divider before Total Output Qty & Sample Description -->
+        <v-col cols="12" class="py-1">
+          <v-divider class="my-1"></v-divider>
         </v-col>
 
         <!-- Final Line: Total Output Qty & Sample Description -->
