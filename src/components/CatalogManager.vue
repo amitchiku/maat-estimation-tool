@@ -99,18 +99,12 @@
     <!-- Dialog for Add / Edit Item -->
     <v-dialog v-model="catalogDialog" max-width="600px">
       <v-card border elevation="10" class="rounded-xl pa-2">
-        <div class="d-flex align-center pa-4 pb-2">
-          <v-avatar :color="isEdit ? 'blue-lighten-5' : 'teal-lighten-5'" size="40" class="mr-3">
-            <v-icon :icon="isEdit ? 'mdi-pencil-outline' : 'mdi-plus-box-outline'"
-              :color="isEdit ? 'blue-darken-1' : 'teal'"></v-icon>
-          </v-avatar>
-          <div>
-            <h2 class="text-h6 font-weight-bold text-slate-800">{{ isEdit ? 'Edit Catalog Item' : 'Add New Catalog Item' }}</h2>
-            <p class="text-caption text-medium-emphasis mb-0">
-              {{ isEdit ? 'Update catalog asset rates and configuration' : 'Create a new material or equipment catalog asset' }}
-            </p>
-          </div>
-        </div>
+        <v-card-title class="d-flex align-center justify-space-between px-4 pt-4 pb-2">
+          <span class="text-h6 font-weight-bold text-teal-darken-2">
+            {{ isEdit ? 'Edit Catalog Item' : 'Add New Catalog Item' }}
+          </span>
+          <v-btn icon="mdi-close" variant="text" size="small" density="comfortable" color="grey-darken-1" @click="catalogDialog = false"></v-btn>
+        </v-card-title>
 
         <v-card-text class="px-4 py-2">
           <v-row density="compact">
@@ -158,16 +152,24 @@
               <v-card variant="flat" color="teal-lighten-5" class="pa-3 rounded-lg border border-teal-lighten-4">
                 <v-row density="compact" class="align-center text-center">
                   <v-col cols="6">
-                    <div class="text-caption text-medium-emphasis font-weight-medium mb-1">
-                      Allowance Price (Price + Tax)
+                    <div class="d-flex align-center justify-center text-caption text-medium-emphasis font-weight-medium mb-1">
+                      <span>Allowance Price</span>
+                      <v-icon icon="mdi-information-outline" size="x-small" color="grey-darken-1" class="ml-1 cursor-pointer"></v-icon>
+                      <v-tooltip activator="parent" location="top">
+                        Allowance Price = Net Price + Tax
+                      </v-tooltip>
                     </div>
                     <div class="text-subtitle-1 font-weight-bold text-amber-darken-3">
                       ${{ formatMoney(computedAllowancePrice) }}
                     </div>
                   </v-col>
                   <v-col cols="6" class="border-s">
-                    <div class="text-caption text-medium-emphasis font-weight-medium mb-1">
-                      Gross Price (Price + Tax + Markup)
+                    <div class="d-flex align-center justify-center text-caption text-medium-emphasis font-weight-medium mb-1">
+                      <span>Gross Price</span>
+                      <v-icon icon="mdi-information-outline" size="x-small" color="grey-darken-1" class="ml-1 cursor-pointer"></v-icon>
+                      <v-tooltip activator="parent" location="top">
+                        Gross Price = Net Price + Tax + Markup
+                      </v-tooltip>
                     </div>
                     <div class="text-subtitle-1 font-weight-bold text-teal-darken-3">
                       ${{ formatMoney(computedGrossPrice) }}
