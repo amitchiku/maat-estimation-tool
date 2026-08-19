@@ -16,9 +16,8 @@
             :rules="[v => (v && String(v).trim().length > 0) || 'Category is mandatory']"></v-combobox>
         </v-col>
         <v-col cols="12" sm="3" md="3">
-          <v-combobox v-model="form.group" label="Group *" :items="appStore.settings.groups || []" variant="outlined"
-            density="compact" hide-details="auto"
-            :rules="[v => (v && String(v).trim().length > 0) || 'Group is mandatory']"></v-combobox>
+          <v-combobox v-model="form.group" label="Group" :items="appStore.settings.groups || []" variant="outlined"
+            density="compact" hide-details="auto" clearable></v-combobox>
         </v-col>
         <v-col cols="12">
           <v-textarea v-model="form.desc" label="Description / Scope of Work" variant="outlined" density="compact"

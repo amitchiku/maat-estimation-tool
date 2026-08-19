@@ -318,12 +318,6 @@ const saveLineItem = async () => {
     return;
   }
 
-  if (!lineItemForm.value.group || !String(lineItemForm.value.group).trim()) {
-    saveWarning.value = 'Please select or enter a Group before saving.';
-    showSnackbar.value = true;
-    return;
-  }
-
   const q = parseFloat(lineItemForm.value.totalOutputQty);
   if (isNaN(q) || q <= 0) {
     saveWarning.value = 'Total Output Quantity must be greater than 0.';
