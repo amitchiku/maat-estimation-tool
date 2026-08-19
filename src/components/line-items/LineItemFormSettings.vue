@@ -4,33 +4,34 @@
       Line Item Settings
     </v-card-title>
     <v-card-text class="pa-4">
-      <v-row>
-        <v-col cols="12" sm="6" md="2.5">
+      <v-row density="compact">
+        <v-col cols="12" sm="3" md="3">
           <v-combobox
             v-model="form.category"
             label="Category"
             :items="categories"
             variant="outlined"
             density="compact"
+            hide-details="auto"
           ></v-combobox>
         </v-col>
-        <v-col cols="12" sm="6" md="2.5">
+        <v-col cols="12" sm="3" md="3">
           <v-combobox
             v-model="form.group"
             label="Group"
             :items="appStore.settings.groups || []"
             variant="outlined"
             density="compact"
-            hint="Group for multi-select & proposal organization"
-            persistent-hint
+            hide-details="auto"
           ></v-combobox>
         </v-col>
-        <v-col cols="12" md="7">
+        <v-col cols="12" sm="6" md="6">
           <v-text-field
             v-model="form.name"
             label="Line Item Proposal Name *"
             variant="outlined"
             density="compact"
+            hide-details="auto"
             :rules="[v => (v && v.trim().length > 0) || 'Proposal Name is mandatory']"
           ></v-text-field>
         </v-col>
@@ -41,6 +42,7 @@
             variant="outlined"
             density="compact"
             rows="2"
+            hide-details="auto"
           ></v-textarea>
         </v-col>
         <v-col cols="12" sm="6" md="4">
@@ -50,6 +52,7 @@
             :items="appStore.settings.activities"
             variant="outlined"
             density="compact"
+            hide-details="auto"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="6" md="4">
@@ -59,6 +62,7 @@
             :items="appStore.settings.acctCodes"
             variant="outlined"
             density="compact"
+            hide-details="auto"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="4" md="2">
@@ -68,6 +72,7 @@
             :items="appStore.settings.unitTypes"
             variant="outlined"
             density="compact"
+            hide-details="auto"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="4" md="2">
@@ -77,6 +82,7 @@
             label="Default Quantity"
             variant="outlined"
             density="compact"
+            hide-details="auto"
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="3">
@@ -89,6 +95,7 @@
             :return-object="false"
             variant="outlined"
             density="compact"
+            hide-details="auto"
             auto-select-first
             :menu-props="{ maxHeight: 360 }"
           >
@@ -117,6 +124,7 @@
             :items="appStore.settings.trades"
             variant="outlined"
             density="compact"
+            hide-details="auto"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="6" md="4">
@@ -125,6 +133,7 @@
             label="Product Website Link"
             variant="outlined"
             density="compact"
+            hide-details="auto"
             :append-inner-icon="form.url ? 'mdi-open-in-new' : undefined"
             @click:append-inner="openUrl"
           ></v-text-field>
@@ -135,6 +144,7 @@
             label="Reporting Tag"
             variant="outlined"
             density="compact"
+            hide-details="auto"
           ></v-text-field>
         </v-col>
 
@@ -151,6 +161,7 @@
             label="Total Output Qty *"
             variant="outlined"
             density="compact"
+            hide-details="auto"
             min="1"
             :rules="[v => (v !== null && v !== undefined && v !== '' && Number(v) > 0) || 'Mandatory (>0)']"
           ></v-text-field>
@@ -162,6 +173,7 @@
             variant="outlined"
             density="compact"
             rows="1"
+            hide-details="auto"
           ></v-textarea>
         </v-col>
       </v-row>
