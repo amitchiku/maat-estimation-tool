@@ -147,35 +147,6 @@
             hide-details="auto"
           ></v-text-field>
         </v-col>
-
-        <!-- Divider before Total Output Qty & Sample Description -->
-        <v-col cols="12" class="py-2">
-          <v-divider class="my-1"></v-divider>
-        </v-col>
-
-        <!-- Final Line: Total Output Qty & Sample Description -->
-        <v-col cols="12" sm="4" md="3">
-          <v-text-field
-            v-model.number="form.totalOutputQty"
-            type="number"
-            label="Total Output Qty *"
-            variant="outlined"
-            density="compact"
-            hide-details="auto"
-            min="1"
-            :rules="[v => (v !== null && v !== undefined && v !== '' && Number(v) > 0) || 'Mandatory (>0)']"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="8" md="9">
-          <v-textarea
-            v-model="form.sampleDesc"
-            label="Sample Description"
-            variant="outlined"
-            density="compact"
-            rows="1"
-            hide-details="auto"
-          ></v-textarea>
-        </v-col>
       </v-row>
     </v-card-text>
   </v-card>

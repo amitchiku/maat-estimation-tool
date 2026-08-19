@@ -51,8 +51,39 @@
           />
         </v-col>
 
-        <!-- Right Side Pricing Breakdown Card (25% width, Sticky) -->
+        <!-- Right Side Pricing Breakdown Column (Sticky) -->
         <v-col cols="12" md="3">
+          <!-- Total Output Qty & Sample Description Card -->
+          <v-card border elevation="0" class="mb-3 rounded-lg pa-3 bg-white">
+            <div class="text-caption font-weight-bold text-uppercase text-medium-emphasis mb-2" style="letter-spacing: 0.05em;">
+              Output Batch Quantity
+            </div>
+            <v-row density="compact">
+              <v-col cols="12">
+                <v-text-field
+                  v-model.number="lineItemForm.totalOutputQty"
+                  type="number"
+                  label="Total Output Qty *"
+                  variant="outlined"
+                  density="compact"
+                  hide-details="auto"
+                  min="1"
+                  :rules="[v => (v !== null && v !== undefined && v !== '' && Number(v) > 0) || 'Mandatory (>0)']"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-textarea
+                  v-model="lineItemForm.sampleDesc"
+                  label="Sample Description"
+                  variant="outlined"
+                  density="compact"
+                  rows="2"
+                  hide-details="auto"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-card>
+
           <LineItemPricingSummary
             :form="lineItemForm"
             :line-item-summary="lineItemSummary"
