@@ -3,35 +3,16 @@
     <!-- Search and Actions Bar -->
     <v-row class="mb-4 align-center" density="compact">
       <v-col cols="12" sm="6" md="6">
-        <v-text-field
-          v-model="search"
-          prepend-inner-icon="mdi-magnify"
-          label="Search line items..."
-          variant="outlined"
-          density="compact"
-          hide-details
-          clearable
-        ></v-text-field>
+        <v-text-field v-model="search" prepend-inner-icon="mdi-magnify" label="Search line items..." variant="outlined"
+          density="compact" hide-details clearable></v-text-field>
       </v-col>
       <v-col cols="12" sm="2" md="2">
-        <v-select
-          v-model="filterRoom"
-          label="Default Room"
-          :items="roomFilterOptions"
-          variant="outlined"
-          density="compact"
-          hide-details
-        ></v-select>
+        <v-select v-model="filterRoom" label="Default Room" :items="roomFilterOptions" variant="outlined"
+          density="compact" hide-details></v-select>
       </v-col>
       <v-col cols="12" sm="2" md="2">
-        <v-select
-          v-model="filterGroup"
-          label="Group"
-          :items="groupFilterOptions"
-          variant="outlined"
-          density="compact"
-          hide-details
-        ></v-select>
+        <v-select v-model="filterGroup" label="Group" :items="groupFilterOptions" variant="outlined" density="compact"
+          hide-details></v-select>
       </v-col>
       <v-col cols="12" sm="2" md="2" class="text-right">
         <v-btn prepend-icon="mdi-plus" color="teal" class="glow-btn text-none" block @click="$emit('create')">
@@ -61,7 +42,7 @@
           <tbody>
             <tr v-if="filteredLineItems.length === 0">
               <td colspan="10" class="text-center py-6 text-medium-emphasis">
-                No custom line items found matching criteria.
+                No line items found matching criteria.
               </td>
             </tr>
             <tr v-for="item in filteredLineItems" :key="item.id">
@@ -75,7 +56,8 @@
               <td class="text-right text-no-wrap font-weight-medium">
                 ${{ formatMoney(getItemDetails(item).totalPrice) }}
                 <v-tooltip activator="parent" location="top">
-                  Base Price: ${{ formatMoney(getItemDetails(item).basePrice) }} | Unit Price: ${{ formatMoney(getItemDetails(item).unitPrice) }}
+                  Base Price: ${{ formatMoney(getItemDetails(item).basePrice) }} | Unit Price: ${{
+                    formatMoney(getItemDetails(item).unitPrice) }}
                 </v-tooltip>
               </td>
               <td class="text-no-wrap">{{ item.defaultRoom || '-' }}</td>
@@ -89,22 +71,10 @@
               </td>
               <td class="text-right text-no-wrap">${{ formatMoney(getItemDetails(item).allowance) }}</td>
               <td class="text-center text-no-wrap">
-                <v-btn
-                  icon="mdi-pencil"
-                  variant="text"
-                  color="light-blue"
-                  size="small"
-                  @click="$emit('edit', item)"
-                  title="Edit Line Item"
-                ></v-btn>
-                <v-btn
-                  icon="mdi-delete"
-                  variant="text"
-                  color="red"
-                  size="small"
-                  @click="confirmDelete(item)"
-                  title="Delete Line Item"
-                ></v-btn>
+                <v-btn icon="mdi-pencil" variant="text" color="light-blue" size="small" @click="$emit('edit', item)"
+                  title="Edit Line Item"></v-btn>
+                <v-btn icon="mdi-delete" variant="text" color="red" size="small" @click="confirmDelete(item)"
+                  title="Delete Line Item"></v-btn>
               </td>
             </tr>
           </tbody>
@@ -126,27 +96,17 @@
         </div>
 
         <v-card-text class="px-4 py-3 text-body-2 text-slate-700">
-          Are you sure you want to delete <span class="font-weight-bold text-slate-900">"{{ lineItemToDelete?.name }}"</span> from the custom line items catalog?
+          Are you sure you want to delete <span class="font-weight-bold text-slate-900">"{{ lineItemToDelete?.name
+            }}"</span> from the custom line items catalog?
         </v-card-text>
 
         <v-card-actions class="pa-4 pt-2 justify-end">
-          <v-btn
-            variant="tonal"
-            color="grey-darken-1"
-            density="comfortable"
-            class="text-none px-4 rounded-lg mr-2"
-            @click="deleteDialog = false"
-          >
+          <v-btn variant="tonal" color="grey-darken-1" density="comfortable" class="text-none px-4 rounded-lg mr-2"
+            @click="deleteDialog = false">
             Cancel
           </v-btn>
-          <v-btn
-            color="red-darken-1"
-            variant="flat"
-            density="comfortable"
-            class="text-none px-4 rounded-lg font-weight-medium"
-            elevation="1"
-            @click="executeDelete"
-          >
+          <v-btn color="red-darken-1" variant="flat" density="comfortable"
+            class="text-none px-4 rounded-lg font-weight-medium" elevation="1" @click="executeDelete">
             Delete Item
           </v-btn>
         </v-card-actions>

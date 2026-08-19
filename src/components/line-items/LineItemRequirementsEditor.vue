@@ -27,7 +27,8 @@
         <v-row class="align-center mb-4">
           <v-col cols="12" sm="8">
             <v-select v-model="selectedLabor" label="Select Labor Role" :items="appStore.labor" item-title="name"
-              return-object variant="outlined" density="compact" hide-details></v-select>
+              return-object variant="outlined" density="compact" hide-details
+              :input-props="{ autocomplete: 'off', autoCorrect: 'off', spellCheck: 'false' }"></v-select>
           </v-col>
           <v-col cols="12" sm="4">
             <v-btn prepend-icon="mdi-plus" color="teal" block :disabled="!selectedLabor" @click="addLaborRequirement">
@@ -95,7 +96,8 @@
         <v-row class="align-center mb-4">
           <v-col cols="12" sm="8">
             <v-autocomplete v-model="selectedMaterial" label="Select Material Catalog Item" :items="appStore.materials"
-              item-title="name" return-object variant="outlined" density="compact" hide-details></v-autocomplete>
+              item-title="name" return-object variant="outlined" density="compact" hide-details
+              :input-props="{ autocomplete: 'off', autoCorrect: 'off', spellCheck: 'false' }"></v-autocomplete>
           </v-col>
           <v-col cols="12" sm="4">
             <v-btn prepend-icon="mdi-plus" color="teal" block :disabled="!selectedMaterial"
@@ -167,7 +169,7 @@
           <v-col cols="12" sm="8">
             <v-autocomplete v-model="selectedEquipment" label="Select Equipment Catalog Rental"
               :items="appStore.equipment" item-title="name" return-object variant="outlined" density="compact"
-              hide-details></v-autocomplete>
+              hide-details :input-props="{ autocomplete: 'off', autoCorrect: 'off', spellCheck: 'false' }"></v-autocomplete>
           </v-col>
           <v-col cols="12" sm="4">
             <v-btn prepend-icon="mdi-plus" color="teal" block :disabled="!selectedEquipment"

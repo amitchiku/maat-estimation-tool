@@ -1,1 +1,55 @@
-[]
+[
+  {
+    "id": "I1",
+    "category": "Appliances",
+    "group": "",
+    "name": "Test",
+    "desc": "Test",
+    "sampleDesc": "",
+    "totalOutputQty": 1,
+    "activity": "Supply & Install",
+    "acctCode": "4100 - Contract Work - Flat rate",
+    "unitType": "each",
+    "costType": "Contract Work",
+    "defaultRoom": "Hallway",
+    "defaultQty": 1,
+    "tradePartner": "In-House",
+    "url": "",
+    "tag": "",
+    "laborRequirements": [
+      {
+        "classificationId": "L1",
+        "unitHours": 1,
+        "baseHours": 2,
+        "allowMode": "NONE"
+      }
+    ],
+    "materialRequirements": [
+      {
+        "materialId": "M1",
+        "qty": 2,
+        "base": true,
+        "allow": true,
+        "allowance": 0
+      }
+    ],
+    "equipmentRequirements": [
+      {
+        "equipmentId": "E2",
+        "qty": 1,
+        "base": false,
+        "allow": true,
+        "allowance": 0
+      },
+      {
+        "equipmentId": "E5",
+        "qty": 1,
+        "base": false,
+        "allow": true,
+        "allowance": 0
+      }
+    ],
+    "createdAt": "2026-08-19T15:45:26.081Z",
+    "updatedAt": "2026-08-19T15:47:00.099Z"
+  }
+]
