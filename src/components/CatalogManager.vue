@@ -154,9 +154,27 @@
             <v-col cols="12" sm="6">
               <v-text-field v-model="form.note" label="Note" variant="outlined" density="compact"></v-text-field>
             </v-col>
-            <v-col cols="12" class="text-subtitle-2 text-right pt-2">
-              Allowance Price (Price + Tax): <span class="font-weight-bold text-amber-darken-3 mr-3">${{ formatMoney(computedAllowancePrice) }}</span>
-              Gross Price (Price + Tax + Markup): <span class="font-weight-bold text-teal">${{ formatMoney(computedGrossPrice) }}</span>
+            <v-col cols="12" class="pt-2">
+              <v-card variant="flat" color="teal-lighten-5" class="pa-3 rounded-lg border border-teal-lighten-4">
+                <v-row density="compact" class="align-center text-center">
+                  <v-col cols="6">
+                    <div class="text-caption text-medium-emphasis font-weight-medium mb-1">
+                      Allowance Price (Price + Tax)
+                    </div>
+                    <div class="text-subtitle-1 font-weight-bold text-amber-darken-3">
+                      ${{ formatMoney(computedAllowancePrice) }}
+                    </div>
+                  </v-col>
+                  <v-col cols="6" class="border-s">
+                    <div class="text-caption text-medium-emphasis font-weight-medium mb-1">
+                      Gross Price (Price + Tax + Markup)
+                    </div>
+                    <div class="text-subtitle-1 font-weight-bold text-teal-darken-3">
+                      ${{ formatMoney(computedGrossPrice) }}
+                    </div>
+                  </v-col>
+                </v-row>
+              </v-card>
             </v-col>
           </v-row>
         </v-card-text>
