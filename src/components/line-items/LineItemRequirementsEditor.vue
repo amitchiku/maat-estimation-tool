@@ -75,8 +75,15 @@
                 </select>
               </td>
               <td class="text-center">
-                <v-btn icon="mdi-delete" variant="text" color="red" size="small"
-                  @click="form.laborRequirements.splice(idx, 1)"></v-btn>
+                <v-btn
+                  icon="mdi-delete"
+                  variant="flat"
+                  color="red-lighten-5"
+                  size="small"
+                  density="comfortable"
+                  class="text-red-darken-1 rounded-lg"
+                  @click="form.laborRequirements.splice(idx, 1)"
+                ></v-btn>
               </td>
             </tr>
           </tbody>
@@ -139,8 +146,15 @@
                 ${{ formatMoney((req.qty || 1) * getMaterialGrossPrice(req.materialId)) }}
               </td>
               <td class="text-center">
-                <v-btn icon="mdi-delete-outline" variant="text" color="red" size="small"
-                  @click="form.materialRequirements.splice(idx, 1)"></v-btn>
+                <v-btn
+                  icon="mdi-delete"
+                  variant="flat"
+                  color="red-lighten-5"
+                  size="small"
+                  density="comfortable"
+                  class="text-red-darken-1 rounded-lg"
+                  @click="form.materialRequirements.splice(idx, 1)"
+                ></v-btn>
               </td>
             </tr>
           </tbody>
@@ -204,8 +218,15 @@
                 ${{ formatMoney((req.qty || 1) * getEquipmentGrossPrice(req.equipmentId)) }}
               </td>
               <td class="text-center">
-                <v-btn icon="mdi-delete" variant="text" color="red" size="small"
-                  @click="form.equipmentRequirements.splice(idx, 1)"></v-btn>
+                <v-btn
+                  icon="mdi-delete"
+                  variant="flat"
+                  color="red-lighten-5"
+                  size="small"
+                  density="comfortable"
+                  class="text-red-darken-1 rounded-lg"
+                  @click="form.equipmentRequirements.splice(idx, 1)"
+                ></v-btn>
               </td>
             </tr>
           </tbody>
