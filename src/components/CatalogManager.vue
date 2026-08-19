@@ -15,17 +15,17 @@
     <!-- Filter Card -->
     <v-card class="mb-6" border>
       <v-card-text class="pa-4">
-        <v-row>
-          <v-col cols="12" md="4">
+        <v-row density="compact">
+          <v-col cols="12" md="8">
             <v-text-field v-model="search" prepend-inner-icon="mdi-magnify"
               label="Search items by name or description..." variant="outlined" density="compact"
-              hide-details></v-text-field>
+              hide-details clearable></v-text-field>
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" md="2">
             <v-select v-model="categoryFilter" label="Filter by Category" :items="['All', ...categories]"
               variant="outlined" density="compact" hide-details></v-select>
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" md="2">
             <v-select v-model="typeFilter" label="Filter by Asset Type" :items="['All', 'Material', 'Equipment']"
               variant="outlined" density="compact" hide-details></v-select>
           </v-col>
