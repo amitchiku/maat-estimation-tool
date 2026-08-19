@@ -1,6 +1,6 @@
 [
   {
-    "id": "L1",
+    "id": "I1",
     "category": "Doors - Interior",
     "name": "Interior Double Door Solid Core - Pre-hung Unit",
     "desc": "Install pre-hung interior double doors including frame, hardware, casings, and trim.",
@@ -15,7 +15,7 @@
     "tag": "interior-doors",
     "laborRequirements": [
       {
-        "classificationId": "l5",
+        "classificationId": "L5",
         "unitHours": 1.5,
         "baseHours": 0.5,
         "allow": false,
@@ -44,7 +44,7 @@
     "group": "Cabinets & Countertops"
   },
   {
-    "id": "L2",
+    "id": "I2",
     "category": "Drywall & Plaster",
     "name": "Standard 1/2in Drywall Installation (per SF)",
     "desc": "Supply, hang, tape, joint compound, and sand standard 1/2in drywall.",
@@ -59,7 +59,7 @@
     "tag": "drywall",
     "laborRequirements": [
       {
-        "classificationId": "l14",
+        "classificationId": "L14",
         "unitHours": 0.05,
         "baseHours": 2,
         "allow": false,
@@ -98,7 +98,7 @@
     "createdAt": "2026-08-19T05:58:35.131Z"
   },
   {
-    "id": "L3",
+    "id": "I3",
     "category": "Painting",
     "name": "Standard Ceiling & Wall Painting (per SF)",
     "desc": "Includes primer coat and two premium latex satin finish coats on drywall.",
@@ -113,7 +113,7 @@
     "tag": "paint",
     "laborRequirements": [
       {
-        "classificationId": "l3",
+        "classificationId": "L3",
         "unitHours": 0.04,
         "baseHours": 1,
         "allow": false

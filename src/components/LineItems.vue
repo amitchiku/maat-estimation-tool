@@ -346,7 +346,7 @@ const saveLineItem = async () => {
   const now = new Date().toISOString();
 
   if (!updatedItem.id) {
-    updatedItem.id = `L${appStore.lineItems.length + 1}`;
+    updatedItem.id = `I${appStore.lineItems.length + 1}`;
     updatedItem.createdAt = now;
     updatedItem.updatedAt = now;
     appStore.lineItems.push(updatedItem);

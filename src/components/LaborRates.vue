@@ -100,7 +100,7 @@ const saveLaborRole = async () => {
     }
   } else {
     appStore.labor.push({
-      id: `l${appStore.labor.length + 1}`,
+      id: `L${appStore.labor.length + 1}`,
       name: laborForm.value.name,
       type: laborForm.value.type,
       rate

@@ -4646,115 +4646,115 @@
   ],
   "labor": [
     {
-      "id": "l1",
+      "id": "L1",
       "name": "Electrician",
       "type": "Sub",
       "rate": 152
     },
     {
-      "id": "l2",
+      "id": "L2",
       "name": "Plumber",
       "type": "Sub",
       "rate": 175
     },
     {
-      "id": "l3",
+      "id": "L3",
       "name": "Painter",
       "type": "In-House",
       "rate": 65
     },
     {
-      "id": "l4",
+      "id": "L4",
       "name": "Rough Carpenter",
       "type": "In-House",
       "rate": 90
     },
     {
-      "id": "l5",
+      "id": "L5",
       "name": "Finish Carpenter",
       "type": "In-House",
       "rate": 110
     },
     {
-      "id": "l6",
+      "id": "L6",
       "name": "Tile Installer",
       "type": "In-House",
       "rate": 90
     },
     {
-      "id": "l7",
+      "id": "L7",
       "name": "Mason",
       "type": "Sub",
       "rate": 90
     },
     {
-      "id": "l8",
+      "id": "L8",
       "name": "Mechanical",
       "type": "Sub",
       "rate": 160
     },
     {
-      "id": "l9",
+      "id": "L9",
       "name": "Technician/Diagnostics",
       "type": "In-House",
       "rate": 145
     },
     {
-      "id": "l10",
+      "id": "L10",
       "name": "Hardwood Installer/finisher",
       "type": "Sub",
       "rate": 115
     },
     {
-      "id": "l11",
+      "id": "L11",
       "name": "Excavator - Operator/labor",
       "type": "In-House",
       "rate": 95
     },
     {
-      "id": "l12",
+      "id": "L12",
       "name": "Demo",
       "type": "In-House",
       "rate": 65
     },
     {
-      "id": "l13",
+      "id": "L13",
       "name": "Siding/Cornice",
       "type": "In-House",
       "rate": 98
     },
     {
-      "id": "l14",
+      "id": "L14",
       "name": "Drywall",
       "type": "In-House",
       "rate": 90
     },
     {
-      "id": "l15",
+      "id": "L15",
       "name": "Roofer",
       "type": "In-House",
       "rate": 125
     },
     {
-      "id": "l16",
+      "id": "L16",
       "name": "Insulation",
       "type": "In-House",
       "rate": 90
     },
     {
-      "id": "l17",
+      "id": "L17",
       "name": "Flooring",
       "type": "In-House",
       "rate": 65
     },
     {
-      "id": "l18",
+      "id": "L18",
       "name": "Concrete",
       "type": "Sub",
       "rate": 105
     },
     {
-      "id": "l19",
+      "id": "L19",
       "name": "Dump truck & driver",
       "type": "Sub",
       "rate": 125
@@ -4762,7 +4762,7 @@
   ],
   "assemblies": [
     {
-      "id": "L1",
+      "id": "I1",
       "category": "Doors - Interior",
       "name": "Interior Double Door Solid Core - Pre-hung Unit",
       "desc": "Install pre-hung interior double doors including frame, hardware, casings, and trim.",
@@ -4777,7 +4777,7 @@
       "tag": "interior-doors",
       "laborRequirements": [
         {
-          "classificationId": "l5",
+          "classificationId": "L5",
           "unitHours": 1.5,
           "baseHours": 0.5,
           "allow": false
@@ -4807,7 +4807,7 @@
       ]
     },
     {
-      "id": "L2",
+      "id": "I2",
       "category": "Drywall & Plaster",
       "name": "Standard 1/2in Drywall Installation (per SF)",
       "desc": "Supply, hang, tape, joint compound, and sand standard 1/2in drywall.",
@@ -4822,7 +4822,7 @@
       "tag": "drywall",
       "laborRequirements": [
         {
-          "classificationId": "l14",
+          "classificationId": "L14",
           "unitHours": 0.05,
           "baseHours": 2,
           "allow": false
@@ -4858,7 +4858,7 @@
       ]
     },
     {
-      "id": "L3",
+      "id": "I3",
       "category": "Painting",
       "name": "Standard Ceiling & Wall Painting (per SF)",
       "desc": "Includes primer coat and two premium latex satin finish coats on drywall.",
@@ -4873,7 +4873,7 @@
       "tag": "paint",
       "laborRequirements": [
         {
-          "classificationId": "l3",
+          "classificationId": "L3",
           "unitHours": 0.04,
           "baseHours": 1,
           "allow": false
