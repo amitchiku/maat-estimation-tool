@@ -27,7 +27,6 @@
         <v-table density="compact" class="line-items-table">
           <thead>
             <tr>
-              <th class="font-weight-bold text-no-wrap">Group</th>
               <th class="font-weight-bold text-no-wrap">Category</th>
               <th class="font-weight-bold text-no-wrap" style="width: 220px; min-width: 220px; max-width: 220px;">Name</th>
               <th class="font-weight-bold text-right text-no-wrap">Total Price</th>
@@ -41,16 +40,11 @@
           </thead>
           <tbody>
             <tr v-if="filteredLineItems.length === 0">
-              <td colspan="10" class="text-center py-6 text-medium-emphasis">
+              <td colspan="9" class="text-center py-6 text-medium-emphasis">
                 No line items found matching criteria.
               </td>
             </tr>
             <tr v-for="item in filteredLineItems" :key="item.id">
-              <td class="text-no-wrap">
-                <v-chip size="x-small" color="teal-lighten-4" class="text-teal-darken-3 font-weight-medium">
-                  {{ item.group || 'General' }}
-                </v-chip>
-              </td>
               <td class="text-no-wrap">{{ item.category || '-' }}</td>
               <td style="width: 220px; min-width: 220px; max-width: 220px; white-space: normal; word-break: break-word;" class="py-2">{{ item.name }}</td>
               <td class="text-right text-no-wrap font-weight-medium">
