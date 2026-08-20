@@ -291,10 +291,10 @@ const executeDelete = () => {
 .line-items-table td {
   padding-left: 12px !important;
   padding-right: 12px !important;
-  height: 48px !important;
+  height: 60px !important;
 }
 
 .line-items-table tr {
-  height: 48px !important;
+  height: 60px !important;
 }
 </style>
