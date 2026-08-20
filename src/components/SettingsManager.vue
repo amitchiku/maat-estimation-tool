@@ -171,21 +171,7 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Material Allowance</td>
-                    <td>
-                      <v-text-field
-                        v-model.number="appStore.settings.defaults.materialAllowance"
-                        type="number"
-                        suffix="%"
-                        variant="outlined"
-                        density="compact"
-                        hide-details
-                        @change="saveDefaults"
-                      ></v-text-field>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Material Tax</td>
+                    <td>Default Material Tax</td>
                     <td>
                       <v-text-field
                         v-model.number="appStore.settings.defaults.materialTax"
@@ -199,10 +185,10 @@
                     </td>
                   </tr>
                   <tr>
-                    <td>Equipment Default Allowance</td>
+                    <td>Default Material Mark Up</td>
                     <td>
                       <v-text-field
-                        v-model.number="appStore.settings.defaults.equipmentAllowance"
+                        v-model.number="appStore.settings.defaults.materialMarkup"
                         type="number"
                         suffix="%"
                         variant="outlined"
@@ -213,7 +199,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td>Equipment Default Tax</td>
+                    <td>Default Equipment Tax</td>
                     <td>
                       <v-text-field
                         v-model.number="appStore.settings.defaults.equipmentTax"
@@ -226,8 +212,25 @@
                       ></v-text-field>
                     </td>
                   </tr>
+                  <tr>
+                    <td>Default Equipment Mark Up</td>
+                    <td>
+                      <v-text-field
+                        v-model.number="appStore.settings.defaults.equipmentMarkup"
+                        type="number"
+                        suffix="%"
+                        variant="outlined"
+                        density="compact"
+                        hide-details
+                        @change="saveDefaults"
+                      ></v-text-field>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
+              <div class="mt-3 text-caption text-grey-darken-1 font-italic">
+                * Note: Changing these default settings does not change existing line items.
+              </div>
             </div>
 
             <!-- Standard Flat List Layout -->
