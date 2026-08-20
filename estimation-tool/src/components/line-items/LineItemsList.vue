@@ -27,14 +27,14 @@
         <v-table density="compact" class="line-items-table">
           <thead>
             <tr>
-              <th class="font-weight-bold text-no-wrap" style="width: 130px; min-width: 120px; max-width: 140px;">Category</th>
-              <th class="font-weight-bold" style="width: 320px; min-width: 300px;">Name</th>
-              <th class="font-weight-bold text-right text-no-wrap">Total Price</th>
-              <th class="font-weight-bold text-no-wrap">Activity</th>
-              <th class="font-weight-bold text-no-wrap">Trade</th>
-              <th class="font-weight-bold">Description</th>
-              <th class="font-weight-bold text-right text-no-wrap">Allowance</th>
-              <th class="font-weight-bold text-center text-no-wrap">Actions</th>
+              <th class="font-weight-bold text-no-wrap" style="width: 140px; min-width: 140px; max-width: 140px;">Category</th>
+              <th class="font-weight-bold" style="width: 320px; min-width: 320px; max-width: 320px;">Name</th>
+              <th class="font-weight-bold text-right text-no-wrap" style="width: 130px; min-width: 130px; max-width: 130px;">Total Price</th>
+              <th class="font-weight-bold text-no-wrap" style="width: 130px; min-width: 130px; max-width: 130px;">Activity</th>
+              <th class="font-weight-bold text-no-wrap" style="width: 130px; min-width: 130px; max-width: 130px;">Trade</th>
+              <th class="font-weight-bold" style="width: 280px; min-width: 280px; max-width: 280px;">Description</th>
+              <th class="font-weight-bold text-right text-no-wrap" style="width: 120px; min-width: 120px; max-width: 120px;">Allowance</th>
+              <th class="font-weight-bold text-center text-no-wrap" style="width: 100px; min-width: 100px; max-width: 100px;">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -44,25 +44,25 @@
               </td>
             </tr>
             <tr v-for="item in paginatedLineItems" :key="item.id">
-              <td class="text-no-wrap text-truncate" style="max-width: 140px;">{{ item.category || '-' }}</td>
-              <td style="width: 320px; min-width: 300px; white-space: normal; word-break: break-word;" class="py-2 font-weight-medium">{{ item.name }}</td>
-              <td class="text-right text-no-wrap font-weight-medium">
+              <td class="text-no-wrap text-truncate" style="width: 140px; min-width: 140px; max-width: 140px;">{{ item.category || '-' }}</td>
+              <td style="width: 320px; min-width: 320px; max-width: 320px; white-space: normal; word-break: break-word;" class="py-2 font-weight-medium">{{ item.name }}</td>
+              <td class="text-right text-no-wrap font-weight-medium" style="width: 130px; min-width: 130px; max-width: 130px;">
                 ${{ formatMoney(getItemDetails(item).totalPrice) }}
                 <v-tooltip activator="parent" location="top">
                   Base Price: ${{ formatMoney(getItemDetails(item).basePrice) }} | Unit Price: ${{
                     formatMoney(getItemDetails(item).unitPrice) }}
                 </v-tooltip>
               </td>
-              <td class="text-no-wrap">{{ item.activity || '-' }}</td>
-              <td class="text-no-wrap">{{ item.tradePartner || '-' }}</td>
-              <td class="py-2" style="max-width: 280px;">
+              <td class="text-no-wrap text-truncate" style="width: 130px; min-width: 130px; max-width: 130px;">{{ item.activity || '-' }}</td>
+              <td class="text-no-wrap text-truncate" style="width: 130px; min-width: 130px; max-width: 130px;">{{ item.tradePartner || '-' }}</td>
+              <td class="py-2" style="width: 280px; min-width: 280px; max-width: 280px;">
                 <span>{{ item.desc ? (item.desc.length > 55 ? item.desc.substring(0, 55) + '...' : item.desc) : '-' }}</span>
                 <v-tooltip v-if="item.desc" activator="parent" location="top" max-width="360">
                   {{ item.desc }}
                 </v-tooltip>
               </td>
-              <td class="text-right text-no-wrap">${{ formatMoney(getItemDetails(item).allowance) }}</td>
-              <td class="text-center text-no-wrap">
+              <td class="text-right text-no-wrap" style="width: 120px; min-width: 120px; max-width: 120px;">${{ formatMoney(getItemDetails(item).allowance) }}</td>
+              <td class="text-center text-no-wrap" style="width: 100px; min-width: 100px; max-width: 100px;">
                 <v-btn icon="mdi-pencil" variant="text" color="light-blue" size="small" @click="$emit('edit', item)"
                   title="Edit Line Item"></v-btn>
                 <v-btn icon="mdi-delete" variant="text" color="red" size="small" @click="confirmDelete(item)"
@@ -287,11 +287,17 @@ const executeDelete = () => {
 </script>
 
 <style scoped>
+.line-items-table {
+  table-layout: fixed !important;
+  width: 100%;
+}
+
 .line-items-table th,
 .line-items-table td {
   padding-left: 12px !important;
   padding-right: 12px !important;
   height: 60px !important;
+  overflow: hidden;
 }
 
 .line-items-table tr {
