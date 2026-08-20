@@ -30,7 +30,6 @@
               <th class="font-weight-bold text-no-wrap">Category</th>
               <th class="font-weight-bold text-no-wrap" style="width: 220px; min-width: 220px; max-width: 220px;">Name</th>
               <th class="font-weight-bold text-right text-no-wrap">Total Price</th>
-              <th class="font-weight-bold text-no-wrap">Default Room</th>
               <th class="font-weight-bold text-no-wrap">Activity</th>
               <th class="font-weight-bold text-no-wrap">Trade</th>
               <th class="font-weight-bold" style="width: 280px; min-width: 280px; max-width: 280px;">Description</th>
@@ -40,7 +39,7 @@
           </thead>
           <tbody>
             <tr v-if="filteredLineItems.length === 0">
-              <td colspan="9" class="text-center py-6 text-medium-emphasis">
+              <td colspan="8" class="text-center py-6 text-medium-emphasis">
                 No line items found matching criteria.
               </td>
             </tr>
@@ -54,7 +53,6 @@
                     formatMoney(getItemDetails(item).unitPrice) }}
                 </v-tooltip>
               </td>
-              <td class="text-no-wrap">{{ item.defaultRoom || '-' }}</td>
               <td class="text-no-wrap">{{ item.activity || '-' }}</td>
               <td class="text-no-wrap">{{ item.tradePartner || '-' }}</td>
               <td style="width: 280px; min-width: 280px; max-width: 280px; white-space: normal; word-break: break-word;" class="py-2">
