@@ -142,7 +142,7 @@ const lineItemToDelete = ref(null);
 
 // Pagination
 const page = ref(1);
-const itemsPerPage = 15;
+const itemsPerPage = 10;
 
 const roomFilterOptions = computed(() => {
   const set = new Set();
@@ -291,5 +291,10 @@ const executeDelete = () => {
 .line-items-table td {
   padding-left: 12px !important;
   padding-right: 12px !important;
+  height: 48px !important;
+}
+
+.line-items-table tr {
+  height: 48px !important;
 }
 </style>
