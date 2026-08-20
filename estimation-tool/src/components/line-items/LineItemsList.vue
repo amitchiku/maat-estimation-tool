@@ -27,12 +27,42 @@
         <v-table density="compact" class="line-items-table">
           <thead>
             <tr>
-              <th class="font-weight-bold text-no-wrap" style="width: 140px; min-width: 140px; max-width: 140px;">Category</th>
-              <th class="font-weight-bold" style="width: 320px; min-width: 320px; max-width: 320px;">Name</th>
-              <th class="font-weight-bold text-right text-no-wrap" style="width: 130px; min-width: 130px; max-width: 130px;">Total Price</th>
-              <th class="font-weight-bold text-no-wrap" style="width: 130px; min-width: 130px; max-width: 130px;">Activity</th>
-              <th class="font-weight-bold text-no-wrap" style="width: 130px; min-width: 130px; max-width: 130px;">Trade</th>
-              <th class="font-weight-bold" style="width: 280px; min-width: 280px; max-width: 280px;">Description</th>
+              <th class="font-weight-bold text-no-wrap cursor-pointer user-select-none" style="width: 140px; min-width: 140px; max-width: 140px;" @click="toggleSort('category')">
+                Category
+                <v-icon size="x-small" class="ml-1" :color="sortBy === 'category' ? 'teal' : 'grey-lighten-1'">
+                  {{ sortBy === 'category' ? (sortDesc ? 'mdi-arrow-down' : 'mdi-arrow-up') : 'mdi-swap-vertical' }}
+                </v-icon>
+              </th>
+              <th class="font-weight-bold cursor-pointer user-select-none" style="width: 320px; min-width: 320px; max-width: 320px;" @click="toggleSort('name')">
+                Name
+                <v-icon size="x-small" class="ml-1" :color="sortBy === 'name' ? 'teal' : 'grey-lighten-1'">
+                  {{ sortBy === 'name' ? (sortDesc ? 'mdi-arrow-down' : 'mdi-arrow-up') : 'mdi-swap-vertical' }}
+                </v-icon>
+              </th>
+              <th class="font-weight-bold text-right text-no-wrap cursor-pointer user-select-none" style="width: 130px; min-width: 130px; max-width: 130px;" @click="toggleSort('totalPrice')">
+                Total Price
+                <v-icon size="x-small" class="ml-1" :color="sortBy === 'totalPrice' ? 'teal' : 'grey-lighten-1'">
+                  {{ sortBy === 'totalPrice' ? (sortDesc ? 'mdi-arrow-down' : 'mdi-arrow-up') : 'mdi-swap-vertical' }}
+                </v-icon>
+              </th>
+              <th class="font-weight-bold text-no-wrap cursor-pointer user-select-none" style="width: 130px; min-width: 130px; max-width: 130px;" @click="toggleSort('activity')">
+                Activity
+                <v-icon size="x-small" class="ml-1" :color="sortBy === 'activity' ? 'teal' : 'grey-lighten-1'">
+                  {{ sortBy === 'activity' ? (sortDesc ? 'mdi-arrow-down' : 'mdi-arrow-up') : 'mdi-swap-vertical' }}
+                </v-icon>
+              </th>
+              <th class="font-weight-bold text-no-wrap cursor-pointer user-select-none" style="width: 130px; min-width: 130px; max-width: 130px;" @click="toggleSort('tradePartner')">
+                Trade
+                <v-icon size="x-small" class="ml-1" :color="sortBy === 'tradePartner' ? 'teal' : 'grey-lighten-1'">
+                  {{ sortBy === 'tradePartner' ? (sortDesc ? 'mdi-arrow-down' : 'mdi-arrow-up') : 'mdi-swap-vertical' }}
+                </v-icon>
+              </th>
+              <th class="font-weight-bold cursor-pointer user-select-none" style="width: 280px; min-width: 280px; max-width: 280px;" @click="toggleSort('desc')">
+                Description
+                <v-icon size="x-small" class="ml-1" :color="sortBy === 'desc' ? 'teal' : 'grey-lighten-1'">
+                  {{ sortBy === 'desc' ? (sortDesc ? 'mdi-arrow-down' : 'mdi-arrow-up') : 'mdi-swap-vertical' }}
+                </v-icon>
+              </th>
               <th class="font-weight-bold text-center text-no-wrap" style="width: 100px; min-width: 100px; max-width: 100px;">Actions</th>
             </tr>
           </thead>
@@ -142,6 +172,20 @@ const lineItemToDelete = ref(null);
 const page = ref(1);
 const itemsPerPage = 10;
 
+// Sorting
+const sortBy = ref('name');
+const sortDesc = ref(false);
+
+const toggleSort = (key) => {
+  if (sortBy.value === key) {
+    sortDesc.value = !sortDesc.value;
+  } else {
+    sortBy.value = key;
+    sortDesc.value = false;
+  }
+  page.value = 1;
+};
+
 const roomFilterOptions = computed(() => {
   const set = new Set();
   props.lineItems.forEach(item => {
@@ -187,11 +231,33 @@ const filteredLineItems = computed(() => {
   });
 });
 
-const totalPages = computed(() => Math.ceil(filteredLineItems.value.length / itemsPerPage) || 1);
+const sortedLineItems = computed(() => {
+  const list = [...filteredLineItems.value];
+  if (!sortBy.value) return list;
+
+  list.sort((a, b) => {
+    let valA, valB;
+    if (sortBy.value === 'totalPrice') {
+      valA = getItemDetails(a).totalPrice || 0;
+      valB = getItemDetails(b).totalPrice || 0;
+    } else {
+      valA = (a[sortBy.value] || '').toString().toLowerCase();
+      valB = (b[sortBy.value] || '').toString().toLowerCase();
+    }
+
+    if (valA < valB) return sortDesc.value ? 1 : -1;
+    if (valA > valB) return sortDesc.value ? -1 : 1;
+    return 0;
+  });
+
+  return list;
+});
+
+const totalPages = computed(() => Math.ceil(sortedLineItems.value.length / itemsPerPage) || 1);
 
 const paginatedLineItems = computed(() => {
   const start = (page.value - 1) * itemsPerPage;
-  return filteredLineItems.value.slice(start, start + itemsPerPage);
+  return sortedLineItems.value.slice(start, start + itemsPerPage);
 });
 
 watch([search, filterRoom, filterGroup], () => {
