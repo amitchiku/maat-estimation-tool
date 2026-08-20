@@ -23,7 +23,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="role in appStore.labor" :key="role.id">
+                <tr v-for="role in appStore.labors" :key="role.id">
                   <td>{{ role.id }}</td>
                   <td>{{ role.name }}</td>
                   <td>
@@ -92,15 +92,15 @@ const saveLaborRole = async () => {
 
   const rate = parseFloat(laborForm.value.rate) || 0;
   if (editingLabor.value) {
-    const role = appStore.labor.find(r => r.id === editingLabor.value.id);
+    const role = appStore.labors.find(r => r.id === editingLabor.value.id);
     if (role) {
       role.name = laborForm.value.name;
       role.type = laborForm.value.type;
       role.rate = rate;
     }
   } else {
-    appStore.labor.push({
-      id: `L${appStore.labor.length + 1}`,
+    appStore.labors.push({
+      id: `L${appStore.labors.length + 1}`,
       name: laborForm.value.name,
       type: laborForm.value.type,
       rate
@@ -108,7 +108,7 @@ const saveLaborRole = async () => {
   }
 
   try {
-    await appStore.upsertCatalog('labor', appStore.labor);
+    await appStore.upsertCatalog('labor', appStore.labors);
     cancelLaborEdit();
   } catch (err) {
     appStore.error = `Error saving labor catalog: ${err.message}`;
@@ -126,9 +126,9 @@ const cancelLaborEdit = () => {
 };
 
 const deleteLaborRole = async (id) => {
-  appStore.labor = appStore.labor.filter(r => r.id !== id);
+  appStore.labors = appStore.labors.filter(r => r.id !== id);
   try {
-    await appStore.upsertCatalog('labor', appStore.labor);
+    await appStore.upsertCatalog('labor', appStore.labors);
   } catch (err) {
     appStore.error = `Error deleting labor role: ${err.message}`;
   }

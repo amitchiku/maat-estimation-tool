@@ -6,7 +6,8 @@
       </v-avatar>
       <div>
         <h2 class="text-h6 font-weight-bold text-slate-800">Line Item & Group Selection</h2>
-        <p class="text-caption text-medium-emphasis mb-0">Step 2 of 4: Search and select individual items or entire groups</p>
+        <p class="text-caption text-medium-emphasis mb-0">Step 2 of 4: Search and select individual items or entire
+          groups</p>
       </div>
       <v-spacer></v-spacer>
       <v-chip color="teal" variant="flat" class="font-weight-bold">
@@ -24,21 +25,12 @@
       </div>
       <v-row density="compact">
         <v-col v-for="grp in groupCards" :key="grp.name" cols="6" sm="4" md="3">
-          <v-card
-            border
-            elevation="0"
-            :color="grp.allSelected ? 'teal-lighten-5' : 'white'"
-            class="pa-3 rounded-lg cursor-pointer transition-all"
-            @click="toggleGroup(grp.name)"
-          >
+          <v-card border elevation="0" :color="grp.allSelected ? 'teal-lighten-5' : 'white'"
+            class="pa-3 rounded-lg cursor-pointer transition-all" @click="toggleGroup(grp.name)">
             <div class="d-flex align-center justify-space-between mb-1">
               <span class="font-weight-bold text-body-2 text-truncate">{{ grp.name }}</span>
-              <v-checkbox-btn
-                :model-value="grp.allSelected"
-                :indeterminate="grp.partiallySelected"
-                color="teal"
-                density="compact"
-              ></v-checkbox-btn>
+              <v-checkbox-btn :model-value="grp.allSelected" :indeterminate="grp.partiallySelected" color="teal"
+                density="compact"></v-checkbox-btn>
             </div>
             <div class="text-caption text-medium-emphasis">
               {{ grp.selectedCount }} / {{ grp.totalCount }} Items
@@ -51,35 +43,17 @@
     <!-- Search & Filter Controls -->
     <v-row density="compact" class="mb-3">
       <v-col cols="12" sm="8">
-        <v-text-field
-          v-model="search"
-          prepend-inner-icon="mdi-magnify"
-          label="Search line items by name, group, room..."
-          variant="outlined"
-          density="compact"
-          hide-details
-          clearable
-        ></v-text-field>
+        <v-text-field v-model="search" prepend-inner-icon="mdi-magnify"
+          label="Search line items by name, group, room..." variant="outlined" density="compact" hide-details
+          clearable></v-text-field>
       </v-col>
       <v-col cols="12" sm="2">
-        <v-select
-          v-model="filterGroup"
-          label="Filter by Group"
-          :items="groupOptions"
-          variant="outlined"
-          density="compact"
-          hide-details
-        ></v-select>
+        <v-select v-model="filterGroup" label="Filter by Group" :items="groupOptions" variant="outlined"
+          density="compact" hide-details></v-select>
       </v-col>
       <v-col cols="12" sm="2">
-        <v-select
-          v-model="filterCategory"
-          label="Filter by Category"
-          :items="categoryOptions"
-          variant="outlined"
-          density="compact"
-          hide-details
-        ></v-select>
+        <v-select v-model="filterCategory" label="Filter by Category" :items="categoryOptions" variant="outlined"
+          density="compact" hide-details></v-select>
       </v-col>
     </v-row>
 
@@ -104,12 +78,8 @@
           </tr>
           <tr v-for="item in filteredAssemblies" :key="item.id" :class="{ 'bg-teal-lighten-5': isSelected(item.id) }">
             <td class="text-center">
-              <v-checkbox-btn
-                :model-value="isSelected(item.id)"
-                color="teal"
-                density="compact"
-                @update:model-value="toggleItem(item)"
-              ></v-checkbox-btn>
+              <v-checkbox-btn :model-value="isSelected(item.id)" color="teal" density="compact"
+                @update:model-value="toggleItem(item)"></v-checkbox-btn>
             </td>
             <td>
               <v-chip size="x-small" color="teal-lighten-4" class="text-teal-darken-3 font-weight-medium">
@@ -120,17 +90,9 @@
             <td class="text-medium-emphasis">{{ item.defaultRoom || '-' }}</td>
             <td class="text-right font-weight-medium">${{ formatMoney(getItemUnitPrice(item)) }}</td>
             <td class="text-center py-1">
-              <v-text-field
-                :model-value="getItemQuantity(item.id)"
-                type="number"
-                min="1"
-                variant="outlined"
-                density="compact"
-                hide-details
-                class="qty-field mx-auto"
-                :disabled="!isSelected(item.id)"
-                @update:model-value="val => updateItemQuantity(item, val)"
-              ></v-text-field>
+              <v-text-field :model-value="getItemQuantity(item.id)" type="number" min="1" variant="outlined"
+                density="compact" hide-details class="qty-field mx-auto" :disabled="!isSelected(item.id)"
+                @update:model-value="val => updateItemQuantity(item, val)"></v-text-field>
             </td>
           </tr>
         </tbody>
@@ -277,15 +239,15 @@ const toggleGroup = (groupName) => {
 
 const getItemUnitPrice = (item) => {
   let unitVal = 0;
-  (item.laborRequirements || []).forEach(r => {
-    const role = appStore.getLaborById(r.classificationId) || { rate: r.rate || 0 };
+  (item.laborRequired || []).forEach(r => {
+    const role = appStore.getLaborById(r.classId) || { rate: r.rate || 0 };
     unitVal += (r.unitHours || 0) * (role.rate || 0);
   });
-  (item.materialRequirements || []).forEach(r => {
+  (item.materialRequired || []).forEach(r => {
     const mat = appStore.getMaterialById(r.materialId) || { netPrice: r.price || 0 };
     unitVal += (r.qty || 0) * (mat.netPrice || 0);
   });
-  (item.equipmentRequirements || []).forEach(r => {
+  (item.equipmentRequired || []).forEach(r => {
     const eq = appStore.getEquipmentById(r.equipmentId) || { netPrice: r.price || 0 };
     unitVal += (r.qty || 0) * (eq.netPrice || 0);
   });
@@ -301,13 +263,16 @@ const formatMoney = (val) => {
 .qty-field {
   max-width: 90px;
 }
+
 .qty-field :deep(.v-field__input) {
   text-align: center;
   padding: 4px 8px;
 }
+
 .cursor-pointer {
   cursor: pointer;
 }
+
 .transition-all {
   transition: all 0.2s ease-in-out;
 }

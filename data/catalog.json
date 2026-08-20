@@ -1,9 +1,0 @@
-[
-  {
-    "id": "I1",
-    "name": "Test Line Item",
-    "category": "Drywall",
-    "unitType": "each",
-    "defaultQty": 1
-  }
-]

@@ -4775,15 +4775,15 @@
       "tradePartner": "In-House",
       "url": "https://example.com/doors",
       "tag": "interior-doors",
-      "laborRequirements": [
+      "laborRequired": [
         {
-          "classificationId": "L5",
+          "classId": "L5",
           "unitHours": 1.5,
           "baseHours": 0.5,
           "allowMode": "NONE"
         }
       ],
-      "materialRequirements": [
+      "materialRequired": [
         {
           "materialId": "M1",
           "qty": 1,
@@ -4797,7 +4797,7 @@
           "allow": false
         }
       ],
-      "equipmentRequirements": [
+      "equipmentRequired": [
         {
           "equipmentId": "E4",
           "qty": 0.2,
@@ -4820,15 +4820,15 @@
       "tradePartner": "In-House",
       "url": "",
       "tag": "drywall",
-      "laborRequirements": [
+      "laborRequired": [
         {
-          "classificationId": "L14",
+          "classId": "L14",
           "unitHours": 0.05,
           "baseHours": 2,
           "allowMode": "NONE"
         }
       ],
-      "materialRequirements": [
+      "materialRequired": [
         {
           "materialId": "M30",
           "qty": 0.035,
@@ -4848,7 +4848,7 @@
           "allow": false
         }
       ],
-      "equipmentRequirements": [
+      "equipmentRequired": [
         {
           "equipmentId": "E7",
           "qty": 1,
@@ -4871,15 +4871,15 @@
       "tradePartner": "In-House",
       "url": "",
       "tag": "paint",
-      "laborRequirements": [
+      "laborRequired": [
         {
-          "classificationId": "L3",
+          "classId": "L3",
           "unitHours": 0.04,
           "baseHours": 1,
           "allowMode": "NONE"
         }
       ],
-      "materialRequirements": [
+      "materialRequired": [
         {
           "materialId": "M39",
           "qty": 0.003,
@@ -4893,7 +4893,7 @@
           "allow": false
         }
       ],
-      "equipmentRequirements": [
+      "equipmentRequired": [
         {
           "equipmentId": "E8",
           "qty": 0.5,

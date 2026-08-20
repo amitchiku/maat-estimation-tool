@@ -4,19 +4,19 @@
       <v-tab value="labor">
         Labor Required
         <v-chip size="x-small" class="ml-2 font-weight-bold" color="teal" variant="flat">
-          {{ form.laborRequirements.length }}
+          {{ form.laborRequired.length }}
         </v-chip>
       </v-tab>
       <v-tab value="materials">
         Materials Requirements
         <v-chip size="x-small" class="ml-2 font-weight-bold" color="teal" variant="flat">
-          {{ form.materialRequirements.length }}
+          {{ form.materialRequired.length }}
         </v-chip>
       </v-tab>
       <v-tab value="equipment">
         Equipment Requirements
         <v-chip size="x-small" class="ml-2 font-weight-bold" color="teal" variant="flat">
-          {{ form.equipmentRequirements.length }}
+          {{ form.equipmentRequired.length }}
         </v-chip>
       </v-tab>
     </v-tabs>
@@ -26,9 +26,9 @@
       <v-window-item value="labor">
         <v-row class="align-center mb-4">
           <v-col cols="12" sm="8">
-            <v-select v-model="selectedLabor" label="Select Labor Role" :items="appStore.labor" item-title="name"
+            <v-select v-model="selectedLabor" label="Select Labor Role" :items="appStore.labors" item-title="name"
               return-object variant="outlined" density="compact" hide-details
-              :input-props="{ autocomplete: 'off', autoCorrect: 'off', spellCheck: 'false' }"></v-select>
+              :input-props="{ autocomplete: 'new-password', name: 'labor_select_no_autofill', role: 'presentation', autoCorrect: 'off', spellCheck: 'false' }"></v-select>
           </v-col>
           <v-col cols="12" sm="4">
             <v-btn prepend-icon="mdi-plus" color="teal" block :disabled="!selectedLabor" @click="addLaborRequirement">
@@ -50,12 +50,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-if="form.laborRequirements.length === 0">
+            <tr v-if="form.laborRequired.length === 0">
               <td colspan="7" class="text-center py-4 text-medium-emphasis">No labor roles added yet.</td>
             </tr>
-            <tr v-for="(req, idx) in form.laborRequirements" :key="req.classificationId">
-              <td>{{ getLaborName(req.classificationId) }}</td>
-              <td>${{ getLaborRate(req.classificationId) }}/hr</td>
+            <tr v-for="(req, idx) in form.laborRequired" :key="req.classId">
+              <td>{{ getLaborName(req.classId) }}</td>
+              <td>${{ getLaborRate(req.classId) }}/hr</td>
               <td>
                 <v-text-field v-model.number="req.unitHours" type="number" variant="outlined" density="compact"
                   hide-details class="ghost-cell-input"></v-text-field>
@@ -65,7 +65,7 @@
                   hide-details class="ghost-cell-input"></v-text-field>
               </td>
               <td class="text-right font-weight-medium">
-                ${{ formatMoney((req.unitHours + req.baseHours) * getLaborRate(req.classificationId)) }}
+                ${{ formatMoney((req.unitHours + req.baseHours) * getLaborRate(req.classId)) }}
               </td>
               <td class="text-center">
                 <select v-model="req.allowMode" class="ghost-cell-native-select mx-auto">
@@ -76,15 +76,8 @@
                 </select>
               </td>
               <td class="text-center">
-                <v-btn
-                  icon="mdi-delete"
-                  variant="flat"
-                  color="red-lighten-5"
-                  size="small"
-                  density="comfortable"
-                  class="text-red-darken-1 rounded-lg"
-                  @click="form.laborRequirements.splice(idx, 1)"
-                ></v-btn>
+                <v-btn icon="mdi-delete" variant="flat" color="red-lighten-5" size="small" density="comfortable"
+                  class="text-red-darken-1 rounded-lg" @click="form.laborRequired.splice(idx, 1)"></v-btn>
               </td>
             </tr>
           </tbody>
@@ -97,7 +90,7 @@
           <v-col cols="12" sm="8">
             <v-autocomplete v-model="selectedMaterial" label="Select Material Catalog Item" :items="appStore.materials"
               item-title="name" return-object variant="outlined" density="compact" hide-details
-              :input-props="{ autocomplete: 'off', autoCorrect: 'off', spellCheck: 'false' }"></v-autocomplete>
+              :input-props="{ autocomplete: 'new-password', name: 'mat_select_no_autofill', role: 'presentation', autoCorrect: 'off', spellCheck: 'false' }"></v-autocomplete>
           </v-col>
           <v-col cols="12" sm="4">
             <v-btn prepend-icon="mdi-plus" color="teal" block :disabled="!selectedMaterial"
@@ -121,10 +114,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-if="form.materialRequirements.length === 0">
+            <tr v-if="form.materialRequired.length === 0">
               <td colspan="8" class="text-center py-4 text-medium-emphasis">No materials added yet.</td>
             </tr>
-            <tr v-for="(req, idx) in form.materialRequirements" :key="req.materialId">
+            <tr v-for="(req, idx) in form.materialRequired" :key="req.materialId">
               <td class="font-weight-medium">{{ getMaterialName(req.materialId) }}</td>
               <td class="text-right">${{ formatMoney(appStore.getMaterialById(req.materialId)?.netPrice || 0) }}</td>
               <td>
@@ -148,15 +141,8 @@
                 ${{ formatMoney((req.qty || 1) * getMaterialGrossPrice(req.materialId)) }}
               </td>
               <td class="text-center">
-                <v-btn
-                  icon="mdi-delete"
-                  variant="flat"
-                  color="red-lighten-5"
-                  size="small"
-                  density="comfortable"
-                  class="text-red-darken-1 rounded-lg"
-                  @click="form.materialRequirements.splice(idx, 1)"
-                ></v-btn>
+                <v-btn icon="mdi-delete" variant="flat" color="red-lighten-5" size="small" density="comfortable"
+                  class="text-red-darken-1 rounded-lg" @click="form.materialRequired.splice(idx, 1)"></v-btn>
               </td>
             </tr>
           </tbody>
@@ -168,8 +154,9 @@
         <v-row class="align-center mb-4">
           <v-col cols="12" sm="8">
             <v-autocomplete v-model="selectedEquipment" label="Select Equipment Catalog Rental"
-              :items="appStore.equipment" item-title="name" return-object variant="outlined" density="compact"
-              hide-details :input-props="{ autocomplete: 'off', autoCorrect: 'off', spellCheck: 'false' }"></v-autocomplete>
+              :items="appStore.equipments" item-title="name" return-object variant="outlined" density="compact"
+              hide-details
+              :input-props="{ autocomplete: 'new-password', name: 'eq_select_no_autofill', role: 'presentation', autoCorrect: 'off', spellCheck: 'false' }"></v-autocomplete>
           </v-col>
           <v-col cols="12" sm="4">
             <v-btn prepend-icon="mdi-plus" color="teal" block :disabled="!selectedEquipment"
@@ -193,10 +180,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-if="form.equipmentRequirements.length === 0">
+            <tr v-if="form.equipmentRequired.length === 0">
               <td colspan="8" class="text-center py-4 text-medium-emphasis">No equipment added yet.</td>
             </tr>
-            <tr v-for="(req, idx) in form.equipmentRequirements" :key="req.equipmentId">
+            <tr v-for="(req, idx) in form.equipmentRequired" :key="req.equipmentId">
               <td class="font-weight-medium">{{ getEquipmentName(req.equipmentId) }}</td>
               <td class="text-right">${{ formatMoney(appStore.getEquipmentById(req.equipmentId)?.netPrice || 0) }}</td>
               <td>
@@ -220,15 +207,8 @@
                 ${{ formatMoney((req.qty || 1) * getEquipmentGrossPrice(req.equipmentId)) }}
               </td>
               <td class="text-center">
-                <v-btn
-                  icon="mdi-delete"
-                  variant="flat"
-                  color="red-lighten-5"
-                  size="small"
-                  density="comfortable"
-                  class="text-red-darken-1 rounded-lg"
-                  @click="form.equipmentRequirements.splice(idx, 1)"
-                ></v-btn>
+                <v-btn icon="mdi-delete" variant="flat" color="red-lighten-5" size="small" density="comfortable"
+                  class="text-red-darken-1 rounded-lg" @click="form.equipmentRequired.splice(idx, 1)"></v-btn>
               </td>
             </tr>
           </tbody>
@@ -309,10 +289,10 @@ const getEquipmentGrossPrice = (id) => {
 // Insertions
 const addLaborRequirement = () => {
   if (!selectedLabor.value) return;
-  const exists = form.value.laborRequirements.some(r => r.classificationId === selectedLabor.value.id);
+  const exists = form.value.laborRequired.some(r => r.classId === selectedLabor.value.id);
   if (!exists) {
-    form.value.laborRequirements.push({
-      classificationId: selectedLabor.value.id,
+    form.value.laborRequired.push({
+      classId: selectedLabor.value.id,
       unitHours: 1,
       baseHours: 0,
       allowMode: 'NONE'
@@ -323,9 +303,9 @@ const addLaborRequirement = () => {
 
 const addMaterialRequirement = () => {
   if (!selectedMaterial.value) return;
-  const exists = form.value.materialRequirements.some(m => m.materialId === selectedMaterial.value.id);
+  const exists = form.value.materialRequired.some(m => m.materialId === selectedMaterial.value.id);
   if (!exists) {
-    form.value.materialRequirements.push({
+    form.value.materialRequired.push({
       materialId: selectedMaterial.value.id,
       qty: 1,
       base: false,
@@ -338,9 +318,9 @@ const addMaterialRequirement = () => {
 
 const addEquipmentRequirement = () => {
   if (!selectedEquipment.value) return;
-  const exists = form.value.equipmentRequirements.some(e => e.equipmentId === selectedEquipment.value.id);
+  const exists = form.value.equipmentRequired.some(e => e.equipmentId === selectedEquipment.value.id);
   if (!exists) {
-    form.value.equipmentRequirements.push({
+    form.value.equipmentRequired.push({
       equipmentId: selectedEquipment.value.id,
       qty: 1,
       base: false,

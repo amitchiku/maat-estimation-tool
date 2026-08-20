@@ -18,16 +18,18 @@
         <v-row density="compact">
           <v-col cols="12" md="8">
             <v-text-field v-model="search" prepend-inner-icon="mdi-magnify"
-              label="Search items by name or description..." variant="outlined" density="compact"
-              hide-details clearable></v-text-field>
+              label="Search items by name or description..." variant="outlined" density="compact" hide-details
+              clearable></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="2">
             <v-select v-model="categoryFilter" label="Filter by Category" :items="['All', ...categories]"
-              variant="outlined" density="compact" hide-details></v-select>
+              variant="outlined" density="compact" hide-details
+              :input-props="{ autocomplete: 'new-password', role: 'presentation' }"></v-select>
           </v-col>
           <v-col cols="12" sm="6" md="2">
             <v-select v-model="typeFilter" label="Filter by Asset Type" :items="['All', 'Material', 'Equipment']"
-              variant="outlined" density="compact" hide-details></v-select>
+              variant="outlined" density="compact" hide-details
+              :input-props="{ autocomplete: 'new-password', role: 'presentation' }"></v-select>
           </v-col>
         </v-row>
       </v-card-text>
@@ -73,7 +75,8 @@
               <td class="text-right">{{ ((item.tax || 0) * 100).toFixed(0) }}%</td>
               <td class="text-right">{{ ((item.markup || 0.25) * 100).toFixed(0) }}%</td>
               <td class="text-right font-weight-medium">${{ formatMoney(item.netPrice * (1 + (item.tax || 0))) }}</td>
-              <td class="text-right font-weight-bold text-teal">${{ formatMoney(item.grossPrice || (item.netPrice * (1 + (item.tax || 0)) * (1 + (item.markup || 0.25)))) }}</td>
+              <td class="text-right font-weight-bold text-teal">${{ formatMoney(item.grossPrice || (item.netPrice * (1 +
+                (item.tax || 0)) * (1 + (item.markup || 0.25)))) }}</td>
               <td class="text-center">
                 <v-btn icon="mdi-pencil" variant="text" color="blue" size="small" @click="openEditDialog(item)"></v-btn>
                 <v-btn icon="mdi-delete" variant="text" color="red" size="small" @click="confirmDelete(item)"></v-btn>
@@ -103,7 +106,8 @@
           <span class="text-h6 font-weight-bold text-teal-darken-2">
             {{ isEdit ? 'Edit Catalog Item' : 'Add New Catalog Item' }}
           </span>
-          <v-btn icon="mdi-close" variant="text" size="small" density="comfortable" color="grey-darken-1" @click="catalogDialog = false"></v-btn>
+          <v-btn icon="mdi-close" variant="text" size="small" density="comfortable" color="grey-darken-1"
+            @click="catalogDialog = false"></v-btn>
         </v-card-title>
 
         <v-card-text class="px-4 py-2">
@@ -129,17 +133,11 @@
             </v-col>
             <v-col cols="12" sm="4">
               <v-text-field v-model.number="form.taxPercent" type="number" label="Tax (%)" variant="outlined"
-                density="compact"
-                :hint="'= $' + formatMoney(computedTaxAbs)"
-                persistent-hint
-              ></v-text-field>
+                density="compact" :hint="'= $' + formatMoney(computedTaxAbs)" persistent-hint></v-text-field>
             </v-col>
             <v-col cols="12" sm="4">
               <v-text-field v-model.number="form.markupPercent" type="number" label="Markup (%)" variant="outlined"
-                density="compact"
-                :hint="'= $' + formatMoney(computedMarkupAbs)"
-                persistent-hint
-              ></v-text-field>
+                density="compact" :hint="'= $' + formatMoney(computedMarkupAbs)" persistent-hint></v-text-field>
             </v-col>
             <v-col cols="12" sm="6">
               <v-select v-model="form.unit" label="Unit Type" :items="appStore.settings.unitTypes" variant="outlined"
@@ -152,9 +150,11 @@
               <v-card variant="flat" color="teal-lighten-5" class="pa-3 rounded-lg border border-teal-lighten-4">
                 <v-row density="compact" class="align-center text-center">
                   <v-col cols="6">
-                    <div class="d-flex align-center justify-center text-caption text-medium-emphasis font-weight-medium mb-1">
+                    <div
+                      class="d-flex align-center justify-center text-caption text-medium-emphasis font-weight-medium mb-1">
                       <span>Allowance Price</span>
-                      <v-icon icon="mdi-information-outline" size="x-small" color="grey-darken-1" class="ml-1 cursor-pointer"></v-icon>
+                      <v-icon icon="mdi-information-outline" size="x-small" color="grey-darken-1"
+                        class="ml-1 cursor-pointer"></v-icon>
                       <v-tooltip activator="parent" location="top">
                         Allowance Price = Net Price + Tax
                       </v-tooltip>
@@ -164,9 +164,11 @@
                     </div>
                   </v-col>
                   <v-col cols="6" class="border-s">
-                    <div class="d-flex align-center justify-center text-caption text-medium-emphasis font-weight-medium mb-1">
+                    <div
+                      class="d-flex align-center justify-center text-caption text-medium-emphasis font-weight-medium mb-1">
                       <span>Gross Price</span>
-                      <v-icon icon="mdi-information-outline" size="x-small" color="grey-darken-1" class="ml-1 cursor-pointer"></v-icon>
+                      <v-icon icon="mdi-information-outline" size="x-small" color="grey-darken-1"
+                        class="ml-1 cursor-pointer"></v-icon>
                       <v-tooltip activator="parent" location="top">
                         Gross Price = Net Price + Tax + Markup
                       </v-tooltip>
@@ -182,8 +184,10 @@
         </v-card-text>
 
         <v-card-actions class="pa-4 pt-2 justify-end">
-          <v-btn variant="tonal" color="grey-darken-1" density="comfortable" class="text-none px-4 rounded-lg mr-2" @click="catalogDialog = false">Cancel</v-btn>
-          <v-btn color="teal" variant="flat" density="comfortable" class="text-none px-4 rounded-lg font-weight-medium" elevation="1" @click="saveCatalogItem">Save Item</v-btn>
+          <v-btn variant="tonal" color="grey-darken-1" density="comfortable" class="text-none px-4 rounded-lg mr-2"
+            @click="catalogDialog = false">Cancel</v-btn>
+          <v-btn color="teal" variant="flat" density="comfortable" class="text-none px-4 rounded-lg font-weight-medium"
+            elevation="1" @click="saveCatalogItem">Save Item</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -202,12 +206,16 @@
         </div>
 
         <v-card-text class="px-4 py-3 text-body-2 text-slate-700">
-          Are you sure you want to permanently delete <span class="font-weight-bold text-slate-900">"{{ itemToDelete?.name }}"</span> from the master catalog?
+          Are you sure you want to permanently delete <span class="font-weight-bold text-slate-900">"{{
+            itemToDelete?.name }}"</span> from the master catalog?
         </v-card-text>
 
         <v-card-actions class="pa-4 pt-2 justify-end">
-          <v-btn variant="tonal" color="grey-darken-1" density="comfortable" class="text-none px-4 rounded-lg mr-2" @click="deleteDialog = false">Cancel</v-btn>
-          <v-btn color="red-darken-1" variant="flat" density="comfortable" class="text-none px-4 rounded-lg font-weight-medium" elevation="1" @click="executeDelete">Delete Item</v-btn>
+          <v-btn variant="tonal" color="grey-darken-1" density="comfortable" class="text-none px-4 rounded-lg mr-2"
+            @click="deleteDialog = false">Cancel</v-btn>
+          <v-btn color="red-darken-1" variant="flat" density="comfortable"
+            class="text-none px-4 rounded-lg font-weight-medium" elevation="1" @click="executeDelete">Delete
+            Item</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -280,7 +288,7 @@ const computedMarkupAbs = computed(() => {
 // Compile total items
 const combinedCatalogItems = computed(() => {
   const mats = appStore.materials.map(m => ({ ...m, type: 'Material' }));
-  const eqs = appStore.equipment.map(e => ({ ...e, type: 'Equipment' }));
+  const eqs = appStore.equipments.map(e => ({ ...e, type: 'Equipment' }));
   return [...mats, ...eqs];
 });
 
@@ -358,7 +366,7 @@ const openEditDialog = (item) => {
 const saveCatalogItem = async () => {
   if (!form.value.name.trim()) return;
 
-  const targetArray = form.value.type === 'Material' ? appStore.materials : appStore.equipment;
+  const targetArray = form.value.type === 'Material' ? appStore.materials : appStore.equipments;
   const itemTax = (parseFloat(form.value.taxPercent) || 0) / 100;
   const itemMarkup = (parseFloat(form.value.markupPercent) || 0) / 100;
   const itemNet = parseFloat(form.value.netPrice) || 0;
@@ -366,7 +374,7 @@ const saveCatalogItem = async () => {
   const updatedItem = {
     id: form.value.id || (form.value.type === 'Material'
       ? `M${appStore.materials.length + 1001}`
-      : `E${appStore.equipment.length + 1001}`),
+      : `E${appStore.equipments.length + 1001}`),
     category: form.value.category,
     name: form.value.name,
     desc: form.value.desc,
@@ -405,15 +413,15 @@ const confirmDelete = (item) => {
 const executeDelete = async () => {
   if (!itemToDelete.value) return;
 
-  const catalogType = itemToDelete.value.type === 'Material' ? 'materials' : 'equipment';
+  const catalogType = itemToDelete.value.type === 'Material' ? 'materials' : 'equipments';
   if (itemToDelete.value.type === 'Material') {
     appStore.materials = appStore.materials.filter(i => i.id !== itemToDelete.value.id);
   } else {
-    appStore.equipment = appStore.equipment.filter(i => i.id !== itemToDelete.value.id);
+    appStore.equipments = appStore.equipments.filter(i => i.id !== itemToDelete.value.id);
   }
 
   try {
-    const targetArray = itemToDelete.value.type === 'Material' ? appStore.materials : appStore.equipment;
+    const targetArray = itemToDelete.value.type === 'Material' ? appStore.materials : appStore.equipments;
     await appStore.upsertCatalog(catalogType, targetArray);
     deleteDialog.value = false;
     itemToDelete.value = null;

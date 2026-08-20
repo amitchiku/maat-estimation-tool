@@ -5,10 +5,9 @@ import { api } from "@/services/api";
 export const useAppStore = defineStore("app", () => {
   // State
   const materials = ref([]);
-  const equipment = ref([]);
-  const labor = ref([]);
+  const equipments = ref([]);
+  const labors = ref([]);
   const lineItems = ref([]);
-  const assemblies = lineItems; // Backwards-compatibility alias
   const quotes = ref([]);
   const currentQuote = ref(null);
   const isLoading = ref(false);
@@ -178,8 +177,8 @@ export const useAppStore = defineStore("app", () => {
 
   // Helpers
   const getMaterialById = (id) => materials.value.find((m) => m.id === id);
-  const getEquipmentById = (id) => equipment.value.find((e) => e.id === id);
-  const getLaborById = (id) => labor.value.find((l) => l.id === id);
+  const getEquipmentById = (id) => equipments.value.find((e) => e.id === id);
+  const getLaborById = (id) => labors.value.find((l) => l.id === id);
 
   // Computeds
   const quoteTotals = computed(() => {
@@ -295,20 +294,21 @@ export const useAppStore = defineStore("app", () => {
     try {
       isLoading.value = true;
       const data = await api.getCatalog(type);
+      console.log(data);
       if (!type) {
         materials.value = data.materials || [];
-        equipment.value = data.equipment || [];
-        labor.value = data.labor || [];
-        lineItems.value = data.lineItems || data.assemblies || [];
+        equipments.value = data.equipments || [];
+        labors.value = data.labors || [];
+        lineItems.value = data.lineItems;
         return data;
       }
-      if (type === 'materials') materials.value = data || [];
-      else if (type === 'labor') labor.value = data || [];
-      else if (type === 'equipment') equipment.value = data || [];
-      else if (type === 'line_items' || type === 'lineItems' || type === 'assemblies') lineItems.value = data || [];
+      if (type === "material") materials.value = data || [];
+      else if (type === "labor") labors.value = data || [];
+      else if (type === "equipment") equipments.value = data || [];
+      else if (type === "lineItem") lineItems.value = data || [];
       return data;
     } catch (err) {
-      error.value = `Failed to load catalog ${type || ''}: ${err.message}`;
+      error.value = `Failed to load catalog ${type || ""}: ${err.message}`;
     } finally {
       isLoading.value = false;
     }
@@ -322,21 +322,20 @@ export const useAppStore = defineStore("app", () => {
       await api.upsertCatalog(type, data);
       if (!type) {
         if (data.materials) materials.value = data.materials;
-        if (data.equipment) equipment.value = data.equipment;
-        if (data.labor) labor.value = data.labor;
+        if (data.equipments) equipments.value = data.equipments;
+        if (data.labors) labors.value = data.labors;
         if (data.lineItems) lineItems.value = data.lineItems;
-        else if (data.assemblies) lineItems.value = data.assemblies;
-      } else if (type === 'materials') {
+      } else if (type === "material") {
         materials.value = data;
-      } else if (type === 'labor') {
-        labor.value = data;
-      } else if (type === 'equipment') {
-        equipment.value = data;
-      } else if (type === 'line_items' || type === 'lineItems' || type === 'assemblies') {
+      } else if (type === "labor") {
+        labors.value = data;
+      } else if (type === "equipment") {
+        equipments.value = data;
+      } else if (type === "lineItem") {
         lineItems.value = data;
       }
     } catch (err) {
-      error.value = `Failed to save catalog ${type || ''}: ${err.message}`;
+      error.value = `Failed to save catalog ${type || ""}: ${err.message}`;
       throw err;
     } finally {
       isLoading.value = false;
@@ -346,10 +345,9 @@ export const useAppStore = defineStore("app", () => {
   const saveCatalog = async () => {
     return upsertCatalog(null, {
       materials: materials.value,
-      equipment: equipment.value,
-      labor: labor.value,
+      equipments: equipments.value,
+      labors: labors.value,
       lineItems: lineItems.value,
-      assemblies: lineItems.value,
     });
   };
 
@@ -488,10 +486,10 @@ export const useAppStore = defineStore("app", () => {
     if (isAssembly) {
       quoteItem.unit = catalogItem.unitType || "each";
       quoteItem.assemblyData = {
-        laborRequirements: (catalogItem.laborRequirements || []).map((req) => {
-          const role = labor.value.find((l) => l.id === req.classificationId) || {};
+        laborRequired: (catalogItem.laborRequired || []).map((req) => {
+          const role = labor.value.find((l) => l.id === req.classId) || {};
           return {
-            classificationId: req.classificationId,
+            classId: req.classId,
             name: role.name || "Labor Role",
             rate: role.rate || 0,
             unitHours: parseFloat(req.unitHours) || 0,
@@ -499,7 +497,7 @@ export const useAppStore = defineStore("app", () => {
             allowMode: req.allowMode || "NONE",
           };
         }),
-        materialRequirements: (catalogItem.materialRequirements || []).map((req) => {
+        materialRequired: (catalogItem.materialRequired || []).map((req) => {
           const mat = materials.value.find((m) => m.id === req.materialId) || {};
           return {
             materialId: req.materialId,
@@ -512,8 +510,8 @@ export const useAppStore = defineStore("app", () => {
             allow: !!req.allow,
           };
         }),
-        equipmentRequirements: (catalogItem.equipmentRequirements || []).map((req) => {
-          const eq = equipment.value.find((e) => e.id === req.equipmentId) || {};
+        equipmentRequired: (catalogItem.equipmentRequired || []).map((req) => {
+          const eq = equipments.value.find((e) => e.id === req.equipmentId) || {};
           return {
             equipmentId: req.equipmentId,
             name: eq.name || "Equipment Item",
@@ -547,10 +545,9 @@ export const useAppStore = defineStore("app", () => {
 
   return {
     materials,
-    equipment,
-    labor,
+    equipments,
+    labors,
     lineItems,
-    assemblies,
     quotes,
     currentQuote,
     isLoading,
@@ -589,7 +586,7 @@ export function calculateAssemblyTotals(assemblyData, assemblyQty) {
   if (!assemblyData) return { netCost, clientPrice, allowanceTotal };
 
   // Labor
-  (assemblyData.laborRequirements || []).forEach((req) => {
+  (assemblyData.laborRequired || []).forEach((req) => {
     const totalHours = req.unitHours * assemblyQty + req.baseHours;
     const cost = totalHours * req.rate;
     netCost += cost;
@@ -608,7 +605,7 @@ export function calculateAssemblyTotals(assemblyData, assemblyQty) {
   // Materials: Tax defaults to 6%, Markup defaults to 25%
   // Allowance Price = Price + Tax = Price * (1 + Tax)
   // Gross Price = Price + Tax + Markup = Price * (1 + Tax) * (1 + Markup)
-  (assemblyData.materialRequirements || []).forEach((req) => {
+  (assemblyData.materialRequired || []).forEach((req) => {
     const totalQty = req.base ? req.qty : req.qty * assemblyQty;
     const itemNet = req.price * totalQty;
     const itemTax = req.tax !== undefined ? req.tax : 0.06;
@@ -625,7 +622,7 @@ export function calculateAssemblyTotals(assemblyData, assemblyQty) {
   // Equipment: Tax defaults to 0%, Markup defaults to 25%
   // Allowance Price = Price + Tax = Price * (1 + Tax)
   // Gross Price = Price + Tax + Markup = Price * (1 + Tax) * (1 + Markup)
-  (assemblyData.equipmentRequirements || []).forEach((req) => {
+  (assemblyData.equipmentRequired || []).forEach((req) => {
     const totalQty = req.base ? req.qty : req.qty * assemblyQty;
     const itemNet = req.price * totalQty;
     const itemTax = req.tax !== undefined ? req.tax : 0.0;

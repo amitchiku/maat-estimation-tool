@@ -34,16 +34,16 @@
             "tradePartner": "In-House",
             "url": "https://example.com/doors",
             "tag": "interior-doors",
-            "laborRequirements": [
+            "laborRequired": [
               {
-                "classificationId": "l5",
+                "classId": "l5",
                 "unitHours": 1.5,
                 "baseHours": 0.5,
                 "allow": false,
                 "allowMode": "Only Base Hr"
               }
             ],
-            "materialRequirements": [
+            "materialRequired": [
               {
                 "materialId": "M1",
                 "qty": 10,
@@ -57,7 +57,7 @@
                 "allow": false
               }
             ],
-            "equipmentRequirements": [
+            "equipmentRequired": [
               {
                 "equipmentId": "E4",
                 "qty": 0.2,
@@ -101,16 +101,16 @@
             "tradePartner": "In-House",
             "url": "",
             "tag": "drywall",
-            "laborRequirements": [
+            "laborRequired": [
               {
-                "classificationId": "l14",
+                "classId": "l14",
                 "unitHours": 0.05,
                 "baseHours": 2,
                 "allow": false,
                 "allowMode": "None"
               }
             ],
-            "materialRequirements": [
+            "materialRequired": [
               {
                 "materialId": "M30",
                 "qty": 0.035,
@@ -130,7 +130,7 @@
                 "allow": false
               }
             ],
-            "equipmentRequirements": [
+            "equipmentRequired": [
               {
                 "equipmentId": "E7",
                 "qty": 1,
@@ -166,15 +166,15 @@
             "tradePartner": "In-House",
             "url": "",
             "tag": "paint",
-            "laborRequirements": [
+            "laborRequired": [
               {
-                "classificationId": "l3",
+                "classId": "l3",
                 "unitHours": 0.04,
                 "baseHours": 1,
                 "allow": false
               }
             ],
-            "materialRequirements": [
+            "materialRequired": [
               {
                 "materialId": "M39",
                 "qty": 0.003,
@@ -188,7 +188,7 @@
                 "allow": false
               }
             ],
-            "equipmentRequirements": [
+            "equipmentRequired": [
               {
                 "equipmentId": "E8",
                 "qty": 0.5,

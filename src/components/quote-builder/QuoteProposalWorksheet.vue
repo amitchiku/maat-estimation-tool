@@ -4,13 +4,8 @@
     <v-card border elevation="0" class="rounded-xl pa-3 mb-4 bg-white">
       <div class="d-flex align-center justify-space-between flex-wrap gap-2">
         <div class="d-flex align-center">
-          <v-btn
-            variant="tonal"
-            color="teal"
-            size="small"
-            class="text-none mr-2 font-weight-medium"
-            @click="isHeaderCollapsed = !isHeaderCollapsed"
-          >
+          <v-btn variant="tonal" color="teal" size="small" class="text-none mr-2 font-weight-medium"
+            @click="isHeaderCollapsed = !isHeaderCollapsed">
             <v-icon :icon="isHeaderCollapsed ? 'mdi-chevron-down' : 'mdi-chevron-up'" class="mr-1"></v-icon>
             {{ isHeaderCollapsed ? 'Expand Header' : 'Collapse Header' }}
           </v-btn>
@@ -20,23 +15,12 @@
         </div>
 
         <div class="d-flex align-center gap-2">
-          <v-btn
-            variant="tonal"
-            color="blue"
-            size="small"
-            prepend-icon="mdi-printer"
-            class="text-none font-weight-medium"
-            @click="$emit('print')"
-          >
+          <v-btn variant="tonal" color="blue" size="small" prepend-icon="mdi-printer"
+            class="text-none font-weight-medium" @click="$emit('print')">
             Print / Export PDF
           </v-btn>
-          <v-btn
-            color="teal"
-            size="small"
-            prepend-icon="mdi-content-save"
-            class="text-none font-weight-bold glow-btn"
-            @click="$emit('save')"
-          >
+          <v-btn color="teal" size="small" prepend-icon="mdi-content-save" class="text-none font-weight-bold glow-btn"
+            @click="$emit('save')">
             Save Proposal
           </v-btn>
         </div>
@@ -58,7 +42,8 @@
                 {{ appStore.settings?.companyHeader?.address || '4427 Chestnut La. Rockville, MD 20853' }}
               </div>
               <div class="text-caption text-slate-600">
-                Ph: {{ appStore.settings?.companyHeader?.phone || '(301) 924-9322' }} &nbsp;|&nbsp; {{ appStore.settings?.companyHeader?.mhic || 'MHIC 68498' }}
+                Ph: {{ appStore.settings?.companyHeader?.phone || '(301) 924-9322' }} &nbsp;|&nbsp; {{
+                  appStore.settings?.companyHeader?.mhic || 'MHIC 68498' }}
               </div>
             </v-col>
 
@@ -85,18 +70,22 @@
               <v-card variant="flat" color="amber-lighten-5" class="pa-3 rounded border border-amber-lighten-3">
                 <v-row density="compact" class="no-gutters">
                   <v-col cols="4" class="font-weight-bold text-caption text-slate-800">Prepared For:</v-col>
-                  <v-col cols="8" class="font-weight-bold text-body-2 text-slate-900">{{ quote.clientName || 'Customer' }}</v-col>
+                  <v-col cols="8" class="font-weight-bold text-body-2 text-slate-900">{{ quote.clientName || 'Customer'
+                    }}</v-col>
                   <v-col cols="4" class="font-weight-bold text-caption text-slate-800">Address:</v-col>
-                  <v-col cols="8" class="text-body-2 text-slate-800">{{ quote.clientStreet || 'Street Address' }}</v-col>
+                  <v-col cols="8" class="text-body-2 text-slate-800">{{ quote.clientStreet || 'Street Address'
+                    }}</v-col>
                   <v-col cols="4" class="font-weight-bold text-caption text-slate-800">City, State:</v-col>
-                  <v-col cols="8" class="text-body-2 text-slate-800">{{ quote.clientCityState || 'City, State' }}</v-col>
+                  <v-col cols="8" class="text-body-2 text-slate-800">{{ quote.clientCityState || 'City, State'
+                    }}</v-col>
                 </v-row>
               </v-card>
             </v-col>
 
             <!-- Project Address -->
             <v-col cols="12" md="6">
-              <v-card variant="flat" color="amber-lighten-5" class="pa-3 rounded border border-amber-lighten-3 fill-height">
+              <v-card variant="flat" color="amber-lighten-5"
+                class="pa-3 rounded border border-amber-lighten-3 fill-height">
                 <v-row density="compact" class="no-gutters">
                   <v-col cols="4" class="font-weight-bold text-caption text-slate-800">Project Address:</v-col>
                   <v-col cols="8" class="text-body-2 text-slate-800">{{ quote.projectAddress || 'Same' }}</v-col>
@@ -110,9 +99,11 @@
           <!-- Prepared By Footer -->
           <div class="d-flex align-center flex-wrap text-caption text-slate-800">
             <span class="font-weight-bold mr-2">Prepared By:</span>
-            <span class="font-weight-medium mr-6">{{ quote.preparedBy || appStore.settings?.preparedBy?.name || 'M. Webb' }}</span>
+            <span class="font-weight-medium mr-6">{{ quote.preparedBy || appStore.settings?.preparedBy?.name || 'M.Webb'
+              }}</span>
             <span class="font-weight-bold mr-2">Ph:</span>
-            <span class="font-weight-medium">{{ quote.preparedByPhone || appStore.settings?.preparedBy?.phone || '(301) 252-1355' }}</span>
+            <span class="font-weight-medium">
+              {{ quote.preparedByPhone || appStore.settings?.preparedBy?.phone || '(301) 252 - 1355' }}</span>
           </div>
         </div>
       </v-expand-transition>
@@ -122,8 +113,7 @@
         <!-- Room Collapsible Header Bar -->
         <div
           class="room-header-bar d-flex align-center justify-space-between px-4 py-2 bg-light-green-lighten-4 border rounded-t-lg cursor-pointer"
-          @click="toggleRoomCollapse(room.name)"
-        >
+          @click="toggleRoomCollapse(room.name)">
           <div class="d-flex align-center">
             <v-icon :icon="collapsedRooms[room.name] ? 'mdi-chevron-right' : 'mdi-chevron-down'" class="mr-2"></v-icon>
             <span class="text-subtitle-1 font-weight-bold text-slate-900">{{ room.name }}</span>
@@ -135,8 +125,10 @@
           <!-- Per-Room Total & Allowance Summary -->
           <div class="text-caption font-weight-bold text-slate-800">
             =&gt; {{ room.name }} Subtotal: &nbsp;
-            <span class="text-slate-900 font-weight-bold mr-3">Total ${{ formatMoney(getRoomTotals(room).total) }}</span>
-            <span class="text-amber-darken-3 font-weight-bold">Allowance ${{ formatMoney(getRoomTotals(room).allowance) }}</span>
+            <span class="text-slate-900 font-weight-bold mr-3">Total ${{ formatMoney(getRoomTotals(room).total)
+              }}</span>
+            <span class="text-amber-darken-3 font-weight-bold">Allowance ${{ formatMoney(getRoomTotals(room).allowance)
+              }}</span>
           </div>
         </div>
 
@@ -170,13 +162,8 @@
                     <div v-if="item.desc" class="text-caption text-medium-emphasis">{{ item.desc }}</div>
                   </td>
                   <td class="text-center py-1">
-                    <input
-                      type="number"
-                      min="1"
-                      class="qty-inline-input"
-                      :value="item.quantity"
-                      @change="e => updateItemQty(item, e.target.value)"
-                    />
+                    <input type="number" min="1" class="qty-inline-input" :value="item.quantity"
+                      @change="e => updateItemQty(item, e.target.value)" />
                   </td>
                   <td class="text-center text-caption">{{ item.unit || 'each' }}</td>
                   <td class="text-right text-caption">${{ formatMoney(getItemPricing(item).basePrice) }}</td>
@@ -188,22 +175,12 @@
                   </td>
                   <!-- Column A (Allowance Toggle) -->
                   <td class="text-center">
-                    <v-checkbox-btn
-                      v-model="item.isAllowanceFull"
-                      color="teal"
-                      density="compact"
-                    ></v-checkbox-btn>
+                    <v-checkbox-btn v-model="item.isAllowanceFull" color="teal" density="compact"></v-checkbox-btn>
                   </td>
                   <!-- Strike Column (Remove Item) -->
                   <td class="text-center">
-                    <v-btn
-                      icon="mdi-close"
-                      size="x-small"
-                      color="red"
-                      variant="text"
-                      title="Strike / Remove Item"
-                      @click="removeItemFromRoom(room.name, item.id)"
-                    ></v-btn>
+                    <v-btn icon="mdi-close" size="x-small" color="red" variant="text" title="Strike / Remove Item"
+                      @click="removeItemFromRoom(room.name, item.id)"></v-btn>
                   </td>
                 </tr>
               </tbody>
@@ -219,14 +196,8 @@
           Proposal Tag & Category Summary
         </div>
         <div class="d-flex flex-wrap gap-2">
-          <v-chip
-            v-for="tg in tagSummaries"
-            :key="tg.name"
-            size="small"
-            color="teal"
-            variant="tonal"
-            class="font-weight-medium"
-          >
+          <v-chip v-for="tg in tagSummaries" :key="tg.name" size="small" color="teal" variant="tonal"
+            class="font-weight-medium">
             {{ tg.name }}: {{ tg.count }} {{ tg.count === 1 ? 'Item' : 'Items' }} (${{ formatMoney(tg.total) }})
           </v-chip>
         </div>
@@ -237,12 +208,14 @@
         <v-row density="compact" class="align-center">
           <v-col cols="12" md="6">
             <div class="text-caption text-medium-emphasis">Total Proposal Rooms: {{ quoteRooms.length }}</div>
-            <div class="text-caption text-medium-emphasis">Total Selected Line Items: {{ totalProposalItemsCount }}</div>
+            <div class="text-caption text-medium-emphasis">Total Selected Line Items: {{ totalProposalItemsCount }}
+            </div>
           </v-col>
           <v-col cols="12" md="6" class="text-md-right">
             <div class="text-subtitle-1 font-weight-bold text-slate-800">
               Total Allowance Portion:
-              <span class="text-amber-darken-3 font-weight-bold ml-2">${{ formatMoney(proposalTotals.allowance) }}</span>
+              <span class="text-amber-darken-3 font-weight-bold ml-2">${{ formatMoney(proposalTotals.allowance)
+                }}</span>
             </div>
             <div class="text-h5 font-weight-bold text-teal-darken-3">
               Proposal Grand Total: ${{ formatMoney(proposalTotals.grandTotal) }}
@@ -302,8 +275,8 @@ const getItemPricing = (item) => {
   let unitVal = 0;
   let unitAllow = 0;
 
-  (raw.laborRequirements || []).forEach(r => {
-    const role = appStore.getLaborById(r.classificationId) || { rate: r.rate || 0 };
+  (raw.laborRequired || []).forEach(r => {
+    const role = appStore.getLaborById(r.classId) || { rate: r.rate || 0 };
     const rate = role.rate || 0;
     baseVal += (r.baseHours || 0) * rate;
     unitVal += (r.unitHours || 0) * rate;
@@ -312,7 +285,7 @@ const getItemPricing = (item) => {
     if (mode === 'BOTH' || mode === 'UNIT' || mode === 'ONLY UNIT HR') unitAllow += (r.unitHours || 0) * rate;
   });
 
-  (raw.materialRequirements || []).forEach(r => {
+  (raw.materialRequired || []).forEach(r => {
     const mat = appStore.getMaterialById(r.materialId) || {};
     const net = mat.netPrice !== undefined ? mat.netPrice : (r.price || 0);
     const tax = mat.tax !== undefined ? mat.tax : (r.tax !== undefined ? r.tax : 0.06);
@@ -333,7 +306,7 @@ const getItemPricing = (item) => {
     }
   });
 
-  (raw.equipmentRequirements || []).forEach(r => {
+  (raw.equipmentRequired || []).forEach(r => {
     const eq = appStore.getEquipmentById(r.equipmentId) || {};
     const net = eq.netPrice !== undefined ? eq.netPrice : (r.price || 0);
     const tax = eq.tax !== undefined ? eq.tax : (r.tax !== undefined ? r.tax : 0.0);
@@ -437,13 +410,16 @@ const formatMoney = (val) => {
   padding: 2px 4px;
   font-size: 0.875rem;
 }
+
 .strike-row {
   opacity: 0.5;
   text-decoration: line-through;
 }
+
 .whitespace-pre-line {
   white-space: pre-line;
 }
+
 .worksheet-paper {
   background-color: #ffffff;
 }

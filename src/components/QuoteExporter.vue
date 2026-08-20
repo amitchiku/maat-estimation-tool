@@ -52,7 +52,8 @@
             <td>
               <div class="font-weight-medium">
                 {{ item.name }}
-                <v-chip v-if="item.isAllowance || (item.type === 'assembly' && hasAllowanceRequirements(item))" size="x-small" color="teal" variant="flat" class="ml-2">
+                <v-chip v-if="item.isAllowance || (item.type === 'assembly' && hasAllowanceRequirements(item))"
+                  size="x-small" color="teal" variant="flat" class="ml-2">
                   Allowance
                 </v-chip>
               </div>
@@ -97,9 +98,11 @@
     <div class="print-avoid-break mt-16">
       <h4 class="text-subtitle-1 font-weight-bold mb-6 border-b pb-1">Acceptance of Proposal</h4>
       <p class="text-caption mb-12">
-        The specifications, pricing, and conditions outlined in this proposal are satisfactory and are hereby accepted. The contractor is authorized to perform the work specified. Payment terms will be executed in accordance with standard project guidelines.
+        The specifications, pricing, and conditions outlined in this proposal are satisfactory and are hereby accepted.
+        The contractor is authorized to perform the work specified. Payment terms will be executed in accordance with
+        standard project guidelines.
       </p>
-      
+
       <v-row class="mt-8">
         <v-col cols="6">
           <div style="border-top: 1px solid #000; width: 80%; margin-top: 40px;" class="mb-2"></div>
@@ -166,9 +169,9 @@ const getItemTotalPrice = (item) => {
 
 const hasAllowanceRequirements = (item) => {
   if (!item.assemblyData) return false;
-  const mats = item.assemblyData.materialRequirements || [];
-  const eqs = item.assemblyData.equipmentRequirements || [];
-  const lbs = item.assemblyData.laborRequirements || [];
+  const mats = item.assemblyData.materialRequired || [];
+  const eqs = item.assemblyData.equipmentRequired || [];
+  const lbs = item.assemblyData.laborRequired || [];
   return mats.some(m => m.allow) || eqs.some(e => e.allow) || lbs.some(l => l.allow);
 };
 

@@ -12,12 +12,12 @@
         </v-col>
         <v-col cols="12" sm="3" md="3">
           <v-combobox v-model="form.category" label="Category *" :items="categories" variant="outlined" density="compact"
-            hide-details="auto" :input-props="{ autocomplete: 'off' }"
+            hide-details="auto" :input-props="{ autocomplete: 'new-password', role: 'presentation' }"
             :rules="[v => (v && String(v).trim().length > 0) || 'Category is mandatory']"></v-combobox>
         </v-col>
         <v-col cols="12" sm="3" md="3">
           <v-combobox v-model="form.group" label="Group" :items="appStore.settings.groups || []" variant="outlined"
-            density="compact" hide-details="auto" :input-props="{ autocomplete: 'off' }" clearable></v-combobox>
+            density="compact" hide-details="auto" :input-props="{ autocomplete: 'new-password', role: 'presentation' }" clearable></v-combobox>
         </v-col>
         <v-col cols="12">
           <v-textarea v-model="form.desc" label="Description / Scope of Work" variant="outlined" density="compact"
@@ -25,15 +25,15 @@
         </v-col>
         <v-col cols="12" sm="6" md="4">
           <v-select v-model="form.activity" label="Activity Type" :items="appStore.settings.activities"
-            variant="outlined" density="compact" hide-details="auto" :input-props="{ autocomplete: 'off' }"></v-select>
+            variant="outlined" density="compact" hide-details="auto" :input-props="{ autocomplete: 'new-password', role: 'presentation' }"></v-select>
         </v-col>
         <v-col cols="12" sm="6" md="4">
           <v-select v-model="form.acctCode" label="Accounting Code" :items="appStore.settings.acctCodes"
-            variant="outlined" density="compact" hide-details="auto" :input-props="{ autocomplete: 'off' }"></v-select>
+            variant="outlined" density="compact" hide-details="auto" :input-props="{ autocomplete: 'new-password', role: 'presentation' }"></v-select>
         </v-col>
         <v-col cols="12" sm="4" md="2">
           <v-select v-model="form.unitType" label="Billing Unit Type" :items="appStore.settings.unitTypes"
-            variant="outlined" density="compact" hide-details="auto" :input-props="{ autocomplete: 'off' }"></v-select>
+            variant="outlined" density="compact" hide-details="auto" :input-props="{ autocomplete: 'new-password', role: 'presentation' }"></v-select>
         </v-col>
         <v-col cols="12" sm="4" md="2">
           <v-text-field v-model.number="form.defaultQty" type="number" label="Default Qty in Quote" variant="outlined"
@@ -42,7 +42,7 @@
         <v-col cols="12" sm="6" md="3">
           <v-autocomplete v-model="form.defaultRoom" label="Default Room" :items="filteredRoomOptions"
             item-title="title" item-value="value" :return-object="false" variant="outlined" density="compact"
-            hide-details="auto" auto-select-first :menu-props="{ maxHeight: 360 }" :input-props="{ autocomplete: 'off' }">
+            hide-details="auto" auto-select-first :menu-props="{ maxHeight: 360 }" :input-props="{ autocomplete: 'new-password', role: 'presentation' }">
             <template #prepend-item>
               <div class="border-b bg-grey-lighten-5 px-1 py-1 position-sticky top-0 style-z-top">
                 <v-tabs v-model="activeRoomCategory" color="teal" density="compact" show-arrows>

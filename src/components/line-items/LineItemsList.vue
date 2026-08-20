@@ -187,8 +187,8 @@ const getItemDetails = (item) => {
   let allowVal = 0;
 
   // Labor
-  (item.laborRequirements || []).forEach(req => {
-    const role = appStore.getLaborById(req.classificationId) || { rate: req.rate || 0 };
+  (item.laborRequired || []).forEach(req => {
+    const role = appStore.getLaborById(req.classId) || { rate: req.rate || 0 };
     const rate = role.rate || 0;
     const b = (req.baseHours || 0) * rate;
     const u = (req.unitHours || 0) * rate;
@@ -202,7 +202,7 @@ const getItemDetails = (item) => {
   });
 
   // Materials
-  (item.materialRequirements || []).forEach(req => {
+  (item.materialRequired || []).forEach(req => {
     const mat = appStore.getMaterialById(req.materialId) || { netPrice: req.price || 0, tax: req.tax || 0.25 };
     const price = mat.netPrice * (1 + (mat.tax !== undefined ? mat.tax : 0.25)) * 1.25;
     const val = (req.qty || 0) * price;
@@ -214,7 +214,7 @@ const getItemDetails = (item) => {
   });
 
   // Equipment
-  (item.equipmentRequirements || []).forEach(req => {
+  (item.equipmentRequired || []).forEach(req => {
     const eq = appStore.getEquipmentById(req.equipmentId) || { netPrice: req.price || 0, tax: req.tax || 0.25 };
     const price = eq.netPrice * (1 + (eq.tax !== undefined ? eq.tax : 0.25)) * 1.25;
     const val = (req.qty || 0) * price;

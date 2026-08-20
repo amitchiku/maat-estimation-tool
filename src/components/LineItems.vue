@@ -12,26 +12,15 @@
       <!-- Editor Controls Banner -->
       <div class="d-flex align-center justify-space-between py-1 mb-3">
         <div class="d-flex align-center">
-          <v-btn
-            icon="mdi-arrow-left"
-            variant="text"
-            density="comfortable"
-            class="mr-2"
-            @click="exitLineItemEditor"
-          ></v-btn>
+          <v-btn icon="mdi-arrow-left" variant="text" density="comfortable" class="mr-2"
+            @click="exitLineItemEditor"></v-btn>
           <span class="text-body-1 text-medium-emphasis">
             {{ lineItemForm.id ? 'Edit Line Item (' + lineItemForm.id + ')' : 'Create New Line Item' }}
           </span>
         </div>
         <div>
-          <v-btn
-            prepend-icon="mdi-content-save"
-            color="teal"
-            size="large"
-            class="glow-btn font-weight-bold px-6 text-none"
-            elevation="2"
-            @click="saveLineItem"
-          >
+          <v-btn prepend-icon="mdi-content-save" color="teal" size="large"
+            class="glow-btn font-weight-bold px-6 text-none" elevation="2" @click="saveLineItem">
             Save Line Item
           </v-btn>
         </div>
@@ -41,76 +30,46 @@
         <!-- Left Side Editor (Form Settings + Requirements Tables - 75% width) -->
         <v-col cols="12" md="9">
           <!-- Metadata Settings Card -->
-          <LineItemFormSettings
-            v-model="lineItemForm"
-            :categories="categories"
-          />
+          <LineItemFormSettings v-model="lineItemForm" :categories="categories" />
 
           <!-- Requirements Editor (Labor, Materials, Equipment Tabs) -->
-          <LineItemRequirementsEditor
-            v-model="lineItemForm"
-          />
+          <LineItemRequirementsEditor v-model="lineItemForm" />
         </v-col>
 
         <!-- Right Side Pricing Breakdown Column (Sticky) -->
         <v-col cols="12" md="3">
           <!-- Total Output Qty & Sample Description Card -->
           <v-card border elevation="0" class="mb-3 rounded-lg pa-3 bg-white">
-            <div class="text-caption font-weight-bold text-uppercase text-medium-emphasis mb-2" style="letter-spacing: 0.05em;">
+            <div class="text-caption font-weight-bold text-uppercase text-medium-emphasis mb-2"
+              style="letter-spacing: 0.05em;">
               Output Batch Quantity
             </div>
             <v-row density="compact">
               <v-col cols="12">
-                <v-text-field
-                  v-model.number="lineItemForm.totalOutputQty"
-                  type="number"
-                  label="Total Output Qty *"
-                  variant="outlined"
-                  density="compact"
-                  hide-details="auto"
-                  min="1"
-                  :rules="[v => (v !== null && v !== undefined && v !== '' && Number(v) > 0) || 'Mandatory (>0)']"
-                ></v-text-field>
+                <v-text-field v-model.number="lineItemForm.totalOutputQty" type="number" label="Total Output Qty *"
+                  variant="outlined" density="compact" hide-details="auto" min="1"
+                  :rules="[v => (v !== null && v !== undefined && v !== '' && Number(v) > 0) || 'Mandatory (>0)']"></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-textarea
-                  v-model="lineItemForm.sampleDesc"
-                  label="Sample Description"
-                  variant="outlined"
-                  density="compact"
-                  rows="2"
-                  hide-details="auto"
-                ></v-textarea>
+                <v-textarea v-model="lineItemForm.sampleDesc" label="Sample Description" variant="outlined"
+                  density="compact" rows="2" hide-details="auto"></v-textarea>
               </v-col>
             </v-row>
           </v-card>
 
-          <LineItemPricingSummary
-            :form="lineItemForm"
-            :line-item-summary="lineItemSummary"
-          />
+          <LineItemPricingSummary :form="lineItemForm" :line-item-summary="lineItemSummary" />
         </v-col>
       </v-row>
     </div>
 
     <!-- Catalog List Table View -->
     <div v-else>
-      <LineItemsList
-        :line-items="appStore.lineItems"
-        @create="openAddLineItem"
-        @edit="editLineItem"
-        @delete="executeDeleteLineItem"
-      />
+      <LineItemsList :line-items="appStore.lineItems" @create="openAddLineItem" @edit="editLineItem"
+        @delete="executeDeleteLineItem" />
     </div>
 
     <!-- Validation Warning Snackbar -->
-    <v-snackbar
-      v-model="showSnackbar"
-      color="amber-darken-4"
-      timeout="5000"
-      location="top"
-      elevation="6"
-    >
+    <v-snackbar v-model="showSnackbar" color="amber-darken-4" timeout="5000" location="top" elevation="6">
       <div class="d-flex align-center font-weight-medium text-body-2">
         <v-icon icon="mdi-alert-circle-outline" class="mr-2"></v-icon>
         <span>{{ saveWarning }}</span>
@@ -152,9 +111,9 @@ const lineItemForm = ref({
   tradePartner: 'In-House',
   url: '',
   tag: '',
-  laborRequirements: [],
-  materialRequirements: [],
-  equipmentRequirements: []
+  laborRequired: [],
+  materialRequired: [],
+  equipmentRequired: []
 });
 
 const categories = computed(() => appStore.settings?.categories || [
@@ -186,8 +145,8 @@ const lineItemSummary = computed(() => {
   if (!lineItemForm.value) return summary;
 
   // Labor
-  lineItemForm.value.laborRequirements.forEach(req => {
-    const role = appStore.getLaborById(req.classificationId);
+  lineItemForm.value.laborRequired.forEach(req => {
+    const role = appStore.getLaborById(req.classId);
     if (!role) return;
 
     const baseVal = req.baseHours * role.rate;
@@ -209,7 +168,7 @@ const lineItemSummary = computed(() => {
   // Materials: Tax default 6%, Markup default 25%
   // Allowance Price = Price + Tax
   // Gross Price = Price + Tax + Markup
-  lineItemForm.value.materialRequirements.forEach(req => {
+  lineItemForm.value.materialRequired.forEach(req => {
     const mat = appStore.getMaterialById(req.materialId);
     if (!mat) return;
 
@@ -233,7 +192,7 @@ const lineItemSummary = computed(() => {
   // Equipment: Tax default 0%, Markup default 25%
   // Allowance Price = Price + Tax
   // Gross Price = Price + Tax + Markup
-  lineItemForm.value.equipmentRequirements.forEach(req => {
+  lineItemForm.value.equipmentRequired.forEach(req => {
     const eq = appStore.getEquipmentById(req.equipmentId);
     if (!eq) return;
 
@@ -282,17 +241,17 @@ const openAddLineItem = () => {
     tradePartner: 'In-House',
     url: '',
     tag: '',
-    laborRequirements: [],
-    materialRequirements: [],
-    equipmentRequirements: []
+    laborRequired: [],
+    materialRequired: [],
+    equipmentRequired: []
   };
   isEditingLineItem.value = true;
 };
 
 const editLineItem = (item) => {
   const form = JSON.parse(JSON.stringify(item));
-  if (form.laborRequirements) {
-    form.laborRequirements.forEach(req => {
+  if (form.laborRequired) {
+    form.laborRequired.forEach(req => {
       req.allowMode = req.allowMode || 'None';
     });
   }
@@ -325,9 +284,9 @@ const saveLineItem = async () => {
     return;
   }
 
-  const hasLabor = (lineItemForm.value.laborRequirements || []).length > 0;
-  const hasMaterial = (lineItemForm.value.materialRequirements || []).length > 0;
-  const hasEquipment = (lineItemForm.value.equipmentRequirements || []).length > 0;
+  const hasLabor = (lineItemForm.value.laborRequired || []).length > 0;
+  const hasMaterial = (lineItemForm.value.materialRequired || []).length > 0;
+  const hasEquipment = (lineItemForm.value.equipmentRequired || []).length > 0;
 
   if (!hasLabor && !hasMaterial && !hasEquipment) {
     saveWarning.value = 'At least one Labor, Material, or Equipment requirement must be added before saving.';
