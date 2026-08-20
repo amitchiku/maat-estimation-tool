@@ -118,7 +118,7 @@
               <td colspan="8" class="text-center py-4 text-medium-emphasis">No materials added yet.</td>
             </tr>
             <tr v-for="(req, idx) in form.materialRequired" :key="req.materialId">
-              <td class="font-weight-medium">{{ getMaterialName(req.materialId) }}</td>
+              <td class="font-weight-medium" style="width: 220px; min-width: 220px; max-width: 220px; white-space: normal; word-break: break-word;">{{ getMaterialName(req.materialId) }}</td>
               <td class="text-right">${{ formatMoney(appStore.getMaterialById(req.materialId)?.netPrice || 0) }}</td>
               <td>
                 <v-text-field v-model.number="req.qty" type="number" variant="outlined" density="compact" hide-details
@@ -184,7 +184,7 @@
               <td colspan="8" class="text-center py-4 text-medium-emphasis">No equipment added yet.</td>
             </tr>
             <tr v-for="(req, idx) in form.equipmentRequired" :key="req.equipmentId">
-              <td class="font-weight-medium">{{ getEquipmentName(req.equipmentId) }}</td>
+              <td class="font-weight-medium" style="width: 220px; min-width: 220px; max-width: 220px; white-space: normal; word-break: break-word;">{{ getEquipmentName(req.equipmentId) }}</td>
               <td class="text-right">${{ formatMoney(appStore.getEquipmentById(req.equipmentId)?.netPrice || 0) }}</td>
               <td>
                 <v-text-field v-model.number="req.qty" type="number" variant="outlined" density="compact" hide-details

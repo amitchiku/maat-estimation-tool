@@ -44,7 +44,7 @@
               <th class="font-weight-bold">ID</th>
               <th class="font-weight-bold">Asset Type</th>
               <th class="font-weight-bold">Category</th>
-              <th class="font-weight-bold">Name</th>
+              <th class="font-weight-bold" style="width: 220px; min-width: 220px; max-width: 220px;">Name</th>
               <th class="font-weight-bold">Unit</th>
               <th class="font-weight-bold text-right">Net Price</th>
               <th class="font-weight-bold text-right">Tax %</th>
@@ -69,7 +69,7 @@
                 </v-chip>
               </td>
               <td>{{ item.category }}</td>
-              <td>{{ item.name }}</td>
+              <td style="width: 220px; min-width: 220px; max-width: 220px; white-space: normal; word-break: break-word;" class="py-2">{{ item.name }}</td>
               <td>{{ item.unit }}</td>
               <td class="text-right">${{ formatMoney(item.netPrice) }}</td>
               <td class="text-right">{{ ((item.tax || 0) * 100).toFixed(0) }}%</td>
