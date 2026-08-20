@@ -44,8 +44,8 @@
             </tr>
             <tr v-for="item in paginatedLineItems" :key="item.id">
               <td class="text-no-wrap text-truncate" style="width: 140px; min-width: 140px; max-width: 140px;">{{ item.category || '-' }}</td>
-              <td style="width: 320px; min-width: 320px; max-width: 320px; white-space: normal; word-break: break-word;" class="py-2 font-weight-medium">{{ item.name }}</td>
-              <td class="text-right text-no-wrap font-weight-medium" style="width: 130px; min-width: 130px; max-width: 130px;">
+              <td style="width: 320px; min-width: 320px; max-width: 320px; white-space: normal; word-break: break-word;" class="py-2 font-weight-regular">{{ item.name }}</td>
+              <td class="text-right text-no-wrap font-weight-regular" style="width: 130px; min-width: 130px; max-width: 130px;">
                 ${{ formatMoney(getItemDetails(item).totalPrice) }}
                 <v-tooltip activator="parent" location="top">
                   Base Price: ${{ formatMoney(getItemDetails(item).basePrice) }} | Unit Price: ${{
