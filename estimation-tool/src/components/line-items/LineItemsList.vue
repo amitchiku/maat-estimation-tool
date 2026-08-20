@@ -33,13 +33,12 @@
               <th class="font-weight-bold text-no-wrap" style="width: 130px; min-width: 130px; max-width: 130px;">Activity</th>
               <th class="font-weight-bold text-no-wrap" style="width: 130px; min-width: 130px; max-width: 130px;">Trade</th>
               <th class="font-weight-bold" style="width: 280px; min-width: 280px; max-width: 280px;">Description</th>
-              <th class="font-weight-bold text-right text-no-wrap" style="width: 120px; min-width: 120px; max-width: 120px;">Allowance</th>
               <th class="font-weight-bold text-center text-no-wrap" style="width: 100px; min-width: 100px; max-width: 100px;">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr v-if="filteredLineItems.length === 0">
-              <td colspan="8" class="text-center py-6 text-medium-emphasis">
+              <td colspan="7" class="text-center py-6 text-medium-emphasis">
                 No line items found matching criteria.
               </td>
             </tr>
@@ -61,7 +60,6 @@
                   {{ item.desc }}
                 </v-tooltip>
               </td>
-              <td class="text-right text-no-wrap" style="width: 120px; min-width: 120px; max-width: 120px;">${{ formatMoney(getItemDetails(item).allowance) }}</td>
               <td class="text-center text-no-wrap" style="width: 100px; min-width: 100px; max-width: 100px;">
                 <v-btn icon="mdi-pencil" variant="text" color="light-blue" size="small" @click="$emit('edit', item)"
                   title="Edit Line Item"></v-btn>
