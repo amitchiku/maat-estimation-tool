@@ -27,12 +27,12 @@
         <v-table density="compact" class="line-items-table">
           <thead>
             <tr>
-              <th class="font-weight-bold text-no-wrap">Category</th>
-              <th class="font-weight-bold text-no-wrap" style="width: 220px; min-width: 220px; max-width: 220px;">Name</th>
+              <th class="font-weight-bold text-no-wrap" style="width: 130px; min-width: 120px; max-width: 140px;">Category</th>
+              <th class="font-weight-bold" style="width: 320px; min-width: 300px;">Name</th>
               <th class="font-weight-bold text-right text-no-wrap">Total Price</th>
               <th class="font-weight-bold text-no-wrap">Activity</th>
               <th class="font-weight-bold text-no-wrap">Trade</th>
-              <th class="font-weight-bold" style="width: 280px; min-width: 280px; max-width: 280px;">Description</th>
+              <th class="font-weight-bold">Description</th>
               <th class="font-weight-bold text-right text-no-wrap">Allowance</th>
               <th class="font-weight-bold text-center text-no-wrap">Actions</th>
             </tr>
@@ -44,8 +44,8 @@
               </td>
             </tr>
             <tr v-for="item in filteredLineItems" :key="item.id">
-              <td class="text-no-wrap">{{ item.category || '-' }}</td>
-              <td style="width: 220px; min-width: 220px; max-width: 220px; white-space: normal; word-break: break-word;" class="py-2">{{ item.name }}</td>
+              <td class="text-no-wrap text-truncate" style="max-width: 140px;">{{ item.category || '-' }}</td>
+              <td style="width: 320px; min-width: 300px; white-space: normal; word-break: break-word;" class="py-2 font-weight-medium">{{ item.name }}</td>
               <td class="text-right text-no-wrap font-weight-medium">
                 ${{ formatMoney(getItemDetails(item).totalPrice) }}
                 <v-tooltip activator="parent" location="top">
@@ -55,8 +55,11 @@
               </td>
               <td class="text-no-wrap">{{ item.activity || '-' }}</td>
               <td class="text-no-wrap">{{ item.tradePartner || '-' }}</td>
-              <td style="width: 280px; min-width: 280px; max-width: 280px; white-space: normal; word-break: break-word;" class="py-2">
-                {{ item.desc || '-' }}
+              <td class="py-2" style="max-width: 280px;">
+                <span>{{ item.desc ? (item.desc.length > 55 ? item.desc.substring(0, 55) + '...' : item.desc) : '-' }}</span>
+                <v-tooltip v-if="item.desc" activator="parent" location="top" max-width="360">
+                  {{ item.desc }}
+                </v-tooltip>
               </td>
               <td class="text-right text-no-wrap">${{ formatMoney(getItemDetails(item).allowance) }}</td>
               <td class="text-center text-no-wrap">
