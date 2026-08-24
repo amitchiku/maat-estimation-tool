@@ -19,8 +19,50 @@
           <v-text-field v-model="quote.name" label="Proposal Name / Title *" variant="outlined" hide-details class="estimate-field" />
         </v-col>
 
-        <v-col cols="12" md="6">
-          <v-text-field v-model="quote.date" label="Date" type="date" variant="outlined" hide-details class="estimate-field" />
+        <v-col cols="12" sm="6" md="3">
+          <v-menu v-model="menuDate" :close-on-content-click="false" location="bottom start">
+            <template #activator="{ props: menuProps }">
+              <v-text-field
+                v-model="quote.date"
+                label="Date *"
+                prepend-inner-icon="mdi-calendar"
+                readonly
+                v-bind="menuProps"
+                variant="outlined"
+                hide-details
+                class="estimate-field cursor-pointer"
+              />
+            </template>
+            <v-date-picker
+              v-model="pickerDate"
+              color="teal"
+              elevation="4"
+              @update:model-value="onDateSelected"
+            />
+          </v-menu>
+        </v-col>
+
+        <v-col cols="12" sm="6" md="3">
+          <v-menu v-model="menuDateOfLoss" :close-on-content-click="false" location="bottom start">
+            <template #activator="{ props: menuProps }">
+              <v-text-field
+                v-model="quote.dateOfLoss"
+                label="Date Of Loss"
+                prepend-inner-icon="mdi-calendar-alert"
+                readonly
+                v-bind="menuProps"
+                variant="outlined"
+                hide-details
+                class="estimate-field cursor-pointer"
+              />
+            </template>
+            <v-date-picker
+              v-model="pickerDateOfLoss"
+              color="teal"
+              elevation="4"
+              @update:model-value="onDateOfLossSelected"
+            />
+          </v-menu>
         </v-col>
 
         <v-col cols="12" class="prepared-title">Prepared For:</v-col>
@@ -80,6 +122,38 @@ const props = defineProps({
 
 const appStore = useAppStore()
 const copied = ref(false)
+
+const menuDate = ref(false)
+const menuDateOfLoss = ref(false)
+
+const parseDateObj = (str) => {
+  if (!str) return null
+  const d = new Date(str)
+  return isNaN(d.getTime()) ? null : d
+}
+
+const formatDateStr = (dateVal) => {
+  if (!dateVal) return ''
+  const d = new Date(dateVal)
+  if (isNaN(d.getTime())) return ''
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+const pickerDate = ref(parseDateObj(props.quote.date) || new Date())
+const pickerDateOfLoss = ref(parseDateObj(props.quote.dateOfLoss))
+
+const onDateSelected = (val) => {
+  props.quote.date = formatDateStr(val)
+  menuDate.value = false
+}
+
+const onDateOfLossSelected = (val) => {
+  props.quote.dateOfLoss = formatDateStr(val)
+  menuDateOfLoss.value = false
+}
 
 const getToday = () => {
   const today = new Date()
