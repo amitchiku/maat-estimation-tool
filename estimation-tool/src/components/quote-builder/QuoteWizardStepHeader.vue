@@ -1,157 +1,165 @@
 <template>
-  <v-card border elevation="0" class="rounded-xl pa-4">
-    <div class="d-flex align-center mb-4">
-      <v-avatar color="teal-lighten-5" size="44" class="mr-3">
-        <v-icon icon="mdi-file-document-edit-outline" color="teal" size="24"></v-icon>
-      </v-avatar>
-      <div>
-        <h2 class="text-h6 font-weight-bold text-slate-800">Proposal Details & Header Information</h2>
-        <p class="text-caption text-medium-emphasis mb-0">Step 1 of 4: Enter project header and customer information</p>
+  <div class="header-step">
+    <div class="company-row">
+      <v-icon icon="mdi-office-building-outline" class="company-icon" />
+      <div class="company-details">
+        <strong>{{ appStore.settings?.companyHeader?.companyName || 'Sycamore Design Build, Inc.' }}</strong>
+        <span>|</span>
+        <span>{{ appStore.settings?.companyHeader?.address || '4427 Chestnut La. Rockville, MD 20853' }}</span>
+        <span>|</span>
+        <span>Ph: {{ appStore.settings?.companyHeader?.phone || '(301) 924-9322' }}</span>
+        <span>|</span>
+        <span>{{ appStore.settings?.companyHeader?.mhic || 'MHIC 68498' }}</span>
       </div>
     </div>
 
-    <v-divider class="mb-4"></v-divider>
-
-    <!-- Company Branding Header Preview -->
-    <v-card variant="flat" color="teal-lighten-5" class="pa-4 mb-4 rounded-lg border">
-      <v-row density="compact" class="align-center">
+    <v-card class="form-card" elevation="0">
+      <v-row dense>
         <v-col cols="12" md="6">
-          <div class="text-subtitle-1 font-weight-bold text-teal-darken-3">
-            {{ appStore.settings?.companyHeader?.companyName || 'Sycamore Design Build, Inc.' }}
-          </div>
-          <div class="text-caption text-slate-700 whitespace-pre-line">
-            {{ appStore.settings?.companyHeader?.address || '4427 Chestnut La. Rockville, MD 20853' }}
-          </div>
-          <div class="text-caption text-slate-700">
-            Ph: {{ appStore.settings?.companyHeader?.phone || '(301) 924-9322' }} | {{ appStore.settings?.companyHeader?.mhic || 'MHIC 68498' }}
-          </div>
+          <v-text-field v-model="quote.name" label="Proposal name / title *" variant="outlined" hide-details class="estimate-field" />
         </v-col>
-        <v-col cols="12" md="6" class="text-md-right">
-          <span class="text-h5 font-weight-bold text-teal-darken-2">PROPOSAL</span>
+
+        <v-col cols="12" md="6">
+          <v-text-field v-model="quote.date" label="Date" type="date" variant="outlined" hide-details class="estimate-field" />
+        </v-col>
+
+        <v-col cols="12" class="prepared-title">Prepared For:</v-col>
+
+        <v-col cols="12" md="6">
+          <v-text-field v-model="quote.clientName" label="Customer name *" prepend-inner-icon="mdi-account-outline" variant="outlined" hide-details class="estimate-field" />
+        </v-col>
+
+        <v-col cols="12" md="6">
+          <v-text-field v-model="quote.clientStreet" label="Customer street address *" prepend-inner-icon="mdi-map-marker-outline" variant="outlined" hide-details class="estimate-field" />
+        </v-col>
+
+        <v-col cols="12" md="4">
+          <v-text-field v-model="quote.clientCityState" label="City *" prepend-inner-icon="mdi-city-variant-outline" variant="outlined" hide-details class="estimate-field" />
+        </v-col>
+
+        <v-col cols="12" md="4">
+          <v-text-field label="State *" prepend-inner-icon="mdi-map-outline" append-inner-icon="mdi-chevron-down" variant="outlined" hide-details class="estimate-field" />
+        </v-col>
+
+        <v-col cols="12" md="4">
+          <v-text-field label="ZIP *" prepend-inner-icon="mdi-email-outline" variant="outlined" hide-details class="estimate-field" />
+        </v-col>
+
+        <v-col cols="12" md="10">
+          <v-text-field v-model="quote.projectAddress" label="Project address *" prepend-inner-icon="mdi-map-marker-outline" variant="outlined" hide-details class="estimate-field" />
+        </v-col>
+
+        <v-col cols="12" md="2" class="copy-wrapper">
+          <v-btn variant="outlined" class="copy-address" prepend-icon="mdi-content-copy" @click="copyCustomerAddress">
+            {{ copied ? 'Copied!' : 'Copy Address' }}
+          </v-btn>
+        </v-col>
+
+        <v-col cols="12" md="6">
+          <v-text-field v-model="quote.preparedBy" label="Prepared by *" prepend-inner-icon="mdi-account-outline" variant="outlined" hide-details class="estimate-field" />
+        </v-col>
+
+        <v-col cols="12" md="6">
+          <v-text-field v-model="quote.preparedByPhone" label="Prepared by phone number (optional)" prepend-inner-icon="mdi-phone-outline" variant="outlined" hide-details class="estimate-field" />
         </v-col>
       </v-row>
     </v-card>
-
-    <!-- Form Grid -->
-    <v-row density="compact">
-      <v-col cols="12" sm="6">
-        <v-text-field
-          v-model="quote.name"
-          label="Proposal Name / Title *"
-          variant="outlined"
-          density="compact"
-          placeholder="e.g. Master Suite Remodel"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" sm="3">
-        <v-text-field
-          v-model="quote.date"
-          label="Date"
-          type="date"
-          variant="outlined"
-          density="compact"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" sm="3">
-        <v-text-field
-          v-model="quote.dateOfLoss"
-          label="Date of Loss"
-          type="date"
-          variant="outlined"
-          density="compact"
-        ></v-text-field>
-      </v-col>
-
-      <!-- Prepared For Section -->
-      <v-col cols="12">
-        <div class="text-subtitle-2 font-weight-bold text-slate-800 mb-2">Prepared For:</div>
-      </v-col>
-      <v-col cols="12" sm="4">
-        <v-text-field
-          v-model="quote.clientName"
-          label="Customer Name *"
-          variant="outlined"
-          density="compact"
-          placeholder="e.g. John Smith"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" sm="4">
-        <v-text-field
-          v-model="quote.clientStreet"
-          label="Customer Street Address"
-          variant="outlined"
-          density="compact"
-          placeholder="e.g. 123 Main St"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" sm="4">
-        <v-text-field
-          v-model="quote.clientCityState"
-          label="City, State Zip"
-          variant="outlined"
-          density="compact"
-          placeholder="e.g. Rockville, MD 20853"
-        ></v-text-field>
-      </v-col>
-
-      <!-- Project Address -->
-      <v-col cols="12" sm="8">
-        <v-text-field
-          v-model="quote.projectAddress"
-          label="Project Address"
-          variant="outlined"
-          density="compact"
-          placeholder="Same or specify custom address..."
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" sm="4">
-        <v-btn variant="tonal" color="teal" size="small" class="mt-1 text-none" @click="copyCustomerAddress">
-          Copy Customer Address
-        </v-btn>
-      </v-col>
-
-      <!-- Prepared By Section -->
-      <v-col cols="12" sm="6">
-        <v-text-field
-          v-model="quote.preparedBy"
-          label="Prepared By"
-          variant="outlined"
-          density="compact"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" sm="6">
-        <v-text-field
-          v-model="quote.preparedByPhone"
-          label="Prepared By Phone Number"
-          variant="outlined"
-          density="compact"
-        ></v-text-field>
-      </v-col>
-    </v-row>
-  </v-card>
+  </div>
 </template>
 
 <script setup>
-import { useAppStore } from '@/stores/app';
+import { ref, onMounted } from 'vue'
+import { useAppStore } from '@/stores/app'
 
 const props = defineProps({
   quote: {
     type: Object,
     required: true
   }
-});
+})
 
-const appStore = useAppStore();
+const appStore = useAppStore()
+const copied = ref(false)
 
-const copyCustomerAddress = () => {
-  if (props.quote.clientStreet || props.quote.clientCityState) {
-    props.quote.projectAddress = `${props.quote.clientStreet || ''} ${props.quote.clientCityState || ''}`.trim();
+const getToday = () => {
+  const today = new Date()
+  const year = today.getFullYear()
+  const month = String(today.getMonth() + 1).padStart(2, '0')
+  const day = String(today.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+onMounted(() => {
+  if (!props.quote.date) props.quote.date = getToday()
+})
+
+const copyCustomerAddress = async () => {
+  const street = props.quote.clientStreet?.trim() || ''
+  const city = props.quote.clientCityState?.trim() || ''
+  const address = [street, city].filter(Boolean).join(', ')
+  if (!address) return
+
+  try {
+    await navigator.clipboard.writeText(address)
+    copied.value = true
+    setTimeout(() => {
+      copied.value = false
+    }, 1500)
+  } catch (error) {
+    console.error('Unable to copy address:', error)
   }
-};
+}
 </script>
 
 <style scoped>
-.whitespace-pre-line {
-  white-space: pre-line;
+.header-step{width:100%;color:var(--wizard-text)}
+.company-row{min-height:32px;display:flex;align-items:center;margin:0 0 27px 18px}
+.company-icon{margin-right:15px;color:#079b91;font-size:24px}
+.company-details{display:flex;align-items:center;flex-wrap:wrap;gap:13px;color:var(--wizard-muted);font-size:14px;line-height:1.5}
+.company-details strong{color:var(--wizard-heading);font-size:14px;font-weight:700}
+
+.form-card{width:100%;padding:38px 30px 28px;border:1px solid var(--wizard-border)!important;border-radius:6px!important;background:var(--wizard-surface)!important;box-shadow:none!important}
+
+.estimate-field{width:100%}
+.estimate-field :deep(.v-field){min-height:56px;border-radius:6px;background:var(--wizard-input)!important;box-shadow:none}
+.estimate-field :deep(.v-field__outline){--v-field-border-opacity:1;color:var(--wizard-border)}
+.estimate-field :deep(.v-field__input){min-height:54px;padding-top:0;padding-bottom:0;color:var(--wizard-text);font-size:14px}
+.estimate-field :deep(.v-label){color:var(--wizard-muted);font-size:14px}
+.estimate-field :deep(.v-field--focused .v-field__outline){color:#079b91}
+.estimate-field :deep(.v-icon){color:var(--wizard-icon)}
+
+.prepared-title{padding-top:17px!important;padding-bottom:7px!important;color:var(--wizard-heading);font-size:18px;font-weight:700}
+
+.copy-wrapper{display:flex;align-items:center}
+.copy-address{width:100%;height:56px!important;border:1px solid #a9ddd8!important;border-radius:6px;color:#07958d!important;background:var(--wizard-surface)!important;font-size:13px;font-weight:600;text-transform:none;letter-spacing:0}
+.copy-address :deep(.v-icon){color:#07958d}
+.copy-address:hover{background:var(--wizard-hover)!important}
+
+:global(.v-theme--light) .header-step{
+  --wizard-surface:#ffffff;
+  --wizard-input:#ffffff;
+  --wizard-text:#26385e;
+  --wizard-heading:#101e44;
+  --wizard-muted:#617397;
+  --wizard-icon:#34476a;
+  --wizard-border:#d4dce7;
+  --wizard-hover:#f2fbfa;
+}
+
+:global(.v-theme--dark) .header-step{
+  --wizard-surface:#1e1e1e;
+  --wizard-input:#242424;
+  --wizard-text:#e6e8eb;
+  --wizard-heading:#ffffff;
+  --wizard-muted:#aeb5c0;
+  --wizard-icon:#b9c0ca;
+  --wizard-border:#3b3f46;
+  --wizard-hover:#293735;
+}
+
+@media (max-width:900px){
+  .company-row{margin-left:0}
+  .company-details{gap:7px}
+  .form-card{padding:25px 18px}
 }
 </style>
