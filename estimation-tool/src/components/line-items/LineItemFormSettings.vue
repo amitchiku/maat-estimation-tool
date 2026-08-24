@@ -11,13 +11,13 @@
             :rules="[v => (v && v.trim().length > 0) || 'Proposal Name is mandatory']"></v-text-field>
         </v-col>
         <v-col cols="12" sm="3" md="3">
-          <v-combobox v-model="form.category" label="Category *" :items="categories" variant="outlined" density="compact"
+          <v-autocomplete v-model="form.category" label="Category *" :items="categories" variant="outlined" density="compact"
             hide-details="auto" :input-props="{ autocomplete: 'new-password', role: 'presentation' }"
-            :rules="[v => (v && String(v).trim().length > 0) || 'Category is mandatory']"></v-combobox>
+            :rules="[v => (v && String(v).trim().length > 0) || 'Category is mandatory']"></v-autocomplete>
         </v-col>
         <v-col cols="12" sm="3" md="3">
-          <v-combobox v-model="form.group" label="Group" :items="appStore.settings.groups || []" variant="outlined"
-            density="compact" hide-details="auto" :input-props="{ autocomplete: 'new-password', role: 'presentation' }" clearable></v-combobox>
+          <v-autocomplete v-model="form.group" label="Group" :items="appStore.settings.groups || []" variant="outlined"
+            density="compact" hide-details="auto" :input-props="{ autocomplete: 'new-password', role: 'presentation' }" clearable></v-autocomplete>
         </v-col>
         <v-col cols="12">
           <v-textarea v-model="form.desc" label="Description / Scope of Work" variant="outlined" density="compact"

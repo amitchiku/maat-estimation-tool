@@ -52,7 +52,7 @@
             <td>
               <div class="font-weight-medium">
                 {{ item.name }}
-                <v-chip v-if="item.isAllowance || (item.type === 'assembly' && hasAllowanceRequirements(item))"
+                <v-chip v-if="item.isAllowance || (item.type === 'lineItems' && hasAllowanceRequirements(item))"
                   size="x-small" color="teal" variant="flat" class="ml-2">
                   Allowance
                 </v-chip>
@@ -121,7 +121,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useAppStore, calculateAssemblyTotals } from '@/stores/app';
+import { useAppStore, calculatelineItemsTotals } from '@/stores/app';
 
 const props = defineProps({
   quote: {
@@ -142,9 +142,9 @@ const getItemUnitPrice = (item) => {
     return parseFloat(item.allowanceOverride) / (parseFloat(item.quantity) || 1);
   }
 
-  if (item.type === 'assembly') {
+  if (item.type === 'lineItems') {
     const qty = parseFloat(item.quantity) || 1;
-    const totals = calculateAssemblyTotals(item.assemblyData, qty);
+    const totals = calculatelineItemsTotals(item.lineItemsData, qty);
     return totals.clientPrice / qty;
   }
 
@@ -160,18 +160,18 @@ const getItemTotalPrice = (item) => {
   }
 
   const qty = parseFloat(item.quantity) || 0;
-  if (item.type === 'assembly') {
-    return calculateAssemblyTotals(item.assemblyData, qty).clientPrice;
+  if (item.type === 'lineItems') {
+    return calculatelineItemsTotals(item.lineItemsData, qty).clientPrice;
   }
 
   return getItemUnitPrice(item) * qty;
 };
 
 const hasAllowanceRequirements = (item) => {
-  if (!item.assemblyData) return false;
-  const mats = item.assemblyData.materialRequired || [];
-  const eqs = item.assemblyData.equipmentRequired || [];
-  const lbs = item.assemblyData.laborRequired || [];
+  if (!item.lineItemsData) return false;
+  const mats = item.lineItemsData.materialRequired || [];
+  const eqs = item.lineItemsData.equipmentRequired || [];
+  const lbs = item.lineItemsData.laborRequired || [];
   return mats.some(m => m.allow) || eqs.some(e => e.allow) || lbs.some(l => l.allow);
 };
 

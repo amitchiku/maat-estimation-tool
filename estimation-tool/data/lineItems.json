@@ -5172,7 +5172,10 @@
       }
     ],
     "equipmentRequired": [],
-    "totalOutputQty": 1
+    "totalOutputQty": 1,
+    "group": "Cabinets & Countertops",
+    "updatedAt": "2026-08-24T12:11:43.871Z",
+    "createdAt": "2026-08-24T12:11:43.871Z"
   },
   {
     "id": "I196",
@@ -5205,7 +5208,10 @@
       }
     ],
     "equipmentRequired": [],
-    "totalOutputQty": 1
+    "totalOutputQty": 1,
+    "group": "Framing & Drywall",
+    "updatedAt": "2026-08-24T12:11:54.421Z",
+    "createdAt": "2026-08-24T12:11:54.421Z"
   },
   {
     "id": "I197",
@@ -6592,8 +6598,8 @@
   {
     "id": "I245",
     "category": "Plumbing",
-    "name": "P-trap assembly - ABS (plastic)",
-    "desc": "P-trap assembly - ABS (plastic)",
+    "name": "P-trap lineItems - ABS (plastic)",
+    "desc": "P-trap lineItems - ABS (plastic)",
     "activity": "Remove and Replace",
     "acctCode": "4100 - Contract Work - Flat rate",
     "unitType": "each",

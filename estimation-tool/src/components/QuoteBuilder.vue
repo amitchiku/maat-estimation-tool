@@ -8,43 +8,23 @@
         <div class="wizard-id">{{ appStore.currentQuote.id }}</div>
       </div>
 
-      <v-btn
-        v-if="currentStep < 4"
-        class="next-btn"
-        elevation="0"
-        @click="currentStep++"
-      >
+      <v-btn v-if="currentStep < 4" class="next-btn" elevation="0" @click="currentStep++">
         Next
         <v-icon icon="mdi-arrow-right" size="18" />
       </v-btn>
 
-      <v-btn
-        v-else
-        class="save-final-btn"
-        elevation="0"
-        @click="saveQuote"
-      >
-        <v-icon
-          icon="mdi-content-save-outline"
-          size="19"
-          class="save-icon"
-        />
+      <v-btn v-else class="save-final-btn" elevation="0" @click="saveQuote">
+        <v-icon icon="mdi-content-save-outline" size="19" class="save-icon" />
         <span>Save Final Proposal</span>
       </v-btn>
     </div>
 
     <!-- Steps -->
     <div class="wizard-steps no-print">
-      <div
-        v-for="s in wizardSteps"
-        :key="s.step"
-        class="wizard-step"
-        :class="{
-          active: currentStep === s.step,
-          completed: currentStep > s.step
-        }"
-        @click="currentStep = s.step"
-      >
+      <div v-for="s in wizardSteps" :key="s.step" class="wizard-step" :class="{
+        active: currentStep === s.step,
+        completed: currentStep > s.step
+      }" @click="currentStep = s.step">
         <div class="step-track">
           <div class="step-circle">{{ s.step }}</div>
           <div v-if="s.step < 4" class="step-line"></div>
@@ -56,28 +36,14 @@
 
     <!-- Content -->
     <div class="wizard-body">
-      <QuoteWizardStepHeader
-        v-if="currentStep === 1"
-        :quote="appStore.currentQuote"
-      />
+      <QuoteWizardStepHeader v-if="currentStep === 1" :quote="appStore.currentQuote" />
 
-      <QuoteWizardStepSelector
-        v-else-if="currentStep === 2"
-        v-model:selected-items-map="selectedItemsMap"
-      />
+      <QuoteWizardStepSelector v-else-if="currentStep === 2" v-model:selected-items-map="selectedItemsMap" />
 
-      <QuoteWizardStepRooms
-        v-else-if="currentStep === 3"
-        v-model:selected-items-map="selectedItemsMap"
-      />
+      <QuoteWizardStepRooms v-else-if="currentStep === 3" v-model:selected-items-map="selectedItemsMap" />
 
-      <QuoteProposalWorksheet
-        v-else-if="currentStep === 4"
-        :quote="appStore.currentQuote"
-        v-model:selected-items-map="selectedItemsMap"
-        @save="saveQuote"
-        @print="exportPdf"
-      />
+      <QuoteProposalWorksheet v-else-if="currentStep === 4" :quote="appStore.currentQuote"
+        v-model:selected-items-map="selectedItemsMap" @save="saveQuote" @print="exportPdf" />
     </div>
   </div>
 </template>
@@ -111,7 +77,7 @@ const initSelectedItemsMap = () => {
   const map = {}
 
   appStore.currentQuote.rooms.forEach(room => {
-    ;(room.items || []).forEach(item => {
+    ; (room.items || []).forEach(item => {
       map[item.id] = {
         id: item.id,
         name: item.name,
@@ -122,9 +88,9 @@ const initSelectedItemsMap = () => {
         quantity: item.quantity || 1,
         unit: item.unit || 'each',
         isAllowanceFull: !!item.isAllowanceFull,
-        rawAssembly:
-          item.assemblyData ||
-          appStore.assemblies?.find(a => a.id === item.id) ||
+        rawlineItems:
+          item.lineItemsData ||
+          appStore.lineItems?.find(a => a.id === item.id) ||
           item
       }
     })
@@ -169,9 +135,9 @@ const syncQuoteWithStore = () => {
       defaultRoom: item.defaultRoom,
       quantity: item.quantity,
       unit: item.unit,
-      type: 'assembly',
+      type: 'lineItems',
       isAllowanceFull: !!item.isAllowanceFull,
-      assemblyData: item.rawAssembly || {}
+      lineItemsData: item.rawlineItems || {}
     })
   })
 
@@ -277,7 +243,7 @@ const exportPdf = () => {
 .next-btn:hover {
   background: #078b83 !important;
   transform: translateY(-1px);
-  box-shadow: 0 5px 14px rgba(7,154,145,.22);
+  box-shadow: 0 5px 14px rgba(7, 154, 145, .22);
 }
 
 .next-btn .v-icon {
@@ -290,20 +256,20 @@ const exportPdf = () => {
   height: 44px !important;
   padding: 0 16px !important;
   border-radius: 10px;
-  background: linear-gradient(135deg,#079a91,#087f78) !important;
+  background: linear-gradient(135deg, #079a91, #087f78) !important;
   color: #fff !important;
   font-size: 13px;
   font-weight: 700;
   text-transform: none;
   white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(7,154,145,.18);
+  box-shadow: 0 4px 12px rgba(7, 154, 145, .18);
   transition: transform .15s ease, box-shadow .15s ease;
 }
 
 .save-final-btn:hover {
-  background: linear-gradient(135deg,#08a69b,#087f78) !important;
+  background: linear-gradient(135deg, #08a69b, #087f78) !important;
   transform: translateY(-1px);
-  box-shadow: 0 7px 18px rgba(7,154,145,.28);
+  box-shadow: 0 7px 18px rgba(7, 154, 145, .28);
 }
 
 .save-final-btn .save-icon {

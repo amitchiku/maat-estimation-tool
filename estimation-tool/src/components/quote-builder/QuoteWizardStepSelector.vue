@@ -9,21 +9,12 @@
 
       <v-row density="compact">
         <v-col v-for="grp in groupCards" :key="grp.name" cols="6" sm="4" md="3">
-          <v-card
-            border
-            elevation="0"
-            :color="grp.allSelected ? 'teal-lighten-5' : 'white'"
-            class="pa-3 rounded-lg cursor-pointer transition-all"
-            @click="toggleGroup(grp.name)"
-          >
+          <v-card border elevation="0" :color="grp.allSelected ? 'teal-lighten-5' : 'white'"
+            class="pa-3 rounded-lg cursor-pointer transition-all" @click="toggleGroup(grp.name)">
             <div class="d-flex align-center justify-space-between mb-1">
               <span class="font-weight-bold text-body-2 text-truncate">{{ grp.name }}</span>
-              <v-checkbox-btn
-                :model-value="grp.allSelected"
-                :indeterminate="grp.partiallySelected"
-                color="teal"
-                density="compact"
-              />
+              <v-checkbox-btn :model-value="grp.allSelected" :indeterminate="grp.partiallySelected" color="teal"
+                density="compact" />
             </div>
             <div class="text-caption text-medium-emphasis">
               {{ grp.selectedCount }} / {{ grp.totalCount }} Items
@@ -36,37 +27,19 @@
     <!-- Search & Filter Controls -->
     <v-row density="compact" class="mb-3">
       <v-col cols="12" sm="8">
-        <v-text-field
-          v-model="search"
-          prepend-inner-icon="mdi-magnify"
-          label="Search Line Items by Name, Group, Room..."
-          variant="outlined"
-          density="compact"
-          hide-details
-          clearable
-        />
+        <v-text-field v-model="search" prepend-inner-icon="mdi-magnify"
+          label="Search Line Items by Name, Group, Room..." variant="outlined" density="compact" hide-details
+          clearable />
       </v-col>
 
       <v-col cols="12" sm="2">
-        <v-select
-          v-model="filterGroup"
-          label="Filter by Group"
-          :items="groupOptions"
-          variant="outlined"
-          density="compact"
-          hide-details
-        />
+        <v-select v-model="filterGroup" label="Filter by Group" :items="groupOptions" variant="outlined"
+          density="compact" hide-details />
       </v-col>
 
       <v-col cols="12" sm="2">
-        <v-select
-          v-model="filterCategory"
-          label="Filter by Category"
-          :items="categoryOptions"
-          variant="outlined"
-          density="compact"
-          hide-details
-        />
+        <v-select v-model="filterCategory" label="Filter by Category" :items="categoryOptions" variant="outlined"
+          density="compact" hide-details />
       </v-col>
     </v-row>
 
@@ -85,24 +58,16 @@
         </thead>
 
         <tbody>
-          <tr v-if="filteredAssemblies.length === 0">
+          <tr v-if="filteredlineItems.length === 0">
             <td colspan="6" class="text-center py-6 text-medium-emphasis">
               No matching line items found.
             </td>
           </tr>
 
-          <tr
-            v-for="item in filteredAssemblies"
-            :key="item.id"
-            :class="{ 'bg-teal-lighten-5': isSelected(item.id) }"
-          >
+          <tr v-for="item in filteredlineItems" :key="item.id" :class="{ 'bg-teal-lighten-5': isSelected(item.id) }">
             <td class="text-center">
-              <v-checkbox-btn
-                :model-value="isSelected(item.id)"
-                color="teal"
-                density="compact"
-                @update:model-value="toggleItem(item)"
-              />
+              <v-checkbox-btn :model-value="isSelected(item.id)" color="teal" density="compact"
+                @update:model-value="toggleItem(item)" />
             </td>
 
             <td>
@@ -120,17 +85,9 @@
             </td>
 
             <td class="text-center py-1">
-              <v-text-field
-                :model-value="getItemQuantity(item.id)"
-                type="number"
-                min="1"
-                variant="outlined"
-                density="compact"
-                hide-details
-                class="qty-field mx-auto"
-                :disabled="!isSelected(item.id)"
-                @update:model-value="val => updateItemQuantity(item, val)"
-              />
+              <v-text-field :model-value="getItemQuantity(item.id)" type="number" min="1" variant="outlined"
+                density="compact" hide-details class="qty-field mx-auto" :disabled="!isSelected(item.id)"
+                @update:model-value="val => updateItemQuantity(item, val)" />
             </td>
           </tr>
         </tbody>
@@ -159,22 +116,22 @@ onMounted(() => {
   }
 })
 
-const allAssemblies = computed(() => (appStore.lineItems && appStore.lineItems.length) ? appStore.lineItems : (appStore.assemblies || []))
+const alllineItems = computed(() => (appStore.lineItems && appStore.lineItems.length) ? appStore.lineItems : (appStore.lineItems || []))
 
 const groupOptions = computed(() => {
   const set = new Set()
-  allAssemblies.value.forEach(a => { if (a.group) set.add(a.group) })
+  alllineItems.value.forEach(a => { if (a.group) set.add(a.group) })
   if (appStore.settings?.groups) appStore.settings.groups.forEach(g => set.add(g))
   return ['All', ...Array.from(set).sort()]
 })
 
 const categoryOptions = computed(() => {
   const set = new Set()
-  allAssemblies.value.forEach(a => { if (a.category) set.add(a.category) })
+  alllineItems.value.forEach(a => { if (a.category) set.add(a.category) })
   return ['All', ...Array.from(set).sort()]
 })
 
-const filteredAssemblies = computed(() => allAssemblies.value.filter(item => {
+const filteredlineItems = computed(() => alllineItems.value.filter(item => {
   if (filterGroup.value !== 'All' && (item.group || 'General') !== filterGroup.value) return false
   if (filterCategory.value !== 'All' && (item.category || 'General') !== filterCategory.value) return false
   if (!search.value) return true
@@ -195,7 +152,7 @@ const filteredAssemblies = computed(() => allAssemblies.value.filter(item => {
 const groupCards = computed(() => {
   const map = {}
 
-  allAssemblies.value.forEach(item => {
+  alllineItems.value.forEach(item => {
     const grp = item.group || 'General'
     if (!map[grp]) map[grp] = { total: 0, selected: 0 }
     map[grp].total++
@@ -233,7 +190,7 @@ const toggleItem = item => {
       defaultRoom: item.defaultRoom || 'General',
       quantity: parseFloat(item.totalOutputQty) || 1,
       unit: item.unitType || 'each',
-      rawAssembly: item
+      rawlineItems: item
     }
   }
 
@@ -251,7 +208,7 @@ const updateItemQuantity = (item, val) => {
 }
 
 const toggleGroup = groupName => {
-  const groupItems = allAssemblies.value.filter(
+  const groupItems = alllineItems.value.filter(
     a => (a.group || 'General') === groupName
   )
 
@@ -270,7 +227,7 @@ const toggleGroup = groupName => {
         defaultRoom: item.defaultRoom || 'General',
         quantity: parseFloat(item.totalOutputQty) || 1,
         unit: item.unitType || 'each',
-        rawAssembly: item
+        rawlineItems: item
       }
     }
   })
@@ -281,20 +238,20 @@ const toggleGroup = groupName => {
 const getItemUnitPrice = item => {
   let unitVal = 0
 
-  ;(item.laborRequired || []).forEach(r => {
-    const role = appStore.getLaborById(r.classId) || { rate: r.rate || 0 }
-    unitVal += (r.unitHours || 0) * (role.rate || 0)
-  })
+    ; (item.laborRequired || []).forEach(r => {
+      const role = appStore.getLaborById(r.classId) || { rate: r.rate || 0 }
+      unitVal += (r.unitHours || 0) * (role.rate || 0)
+    })
 
-  ;(item.materialRequired || []).forEach(r => {
-    const mat = appStore.getMaterialById(r.materialId) || { netPrice: r.price || 0 }
-    unitVal += (r.qty || 0) * (mat.netPrice || 0)
-  })
+    ; (item.materialRequired || []).forEach(r => {
+      const mat = appStore.getMaterialById(r.materialId) || { netPrice: r.price || 0 }
+      unitVal += (r.qty || 0) * (mat.netPrice || 0)
+    })
 
-  ;(item.equipmentRequired || []).forEach(r => {
-    const eq = appStore.getEquipmentById(r.equipmentId) || { netPrice: r.price || 0 }
-    unitVal += (r.qty || 0) * (eq.netPrice || 0)
-  })
+    ; (item.equipmentRequired || []).forEach(r => {
+      const eq = appStore.getEquipmentById(r.equipmentId) || { netPrice: r.price || 0 }
+      unitVal += (r.qty || 0) * (eq.netPrice || 0)
+    })
 
   return unitVal
 }
@@ -307,8 +264,20 @@ const formatMoney = val =>
 </script>
 
 <style scoped>
-.qty-field{max-width:90px}
-.qty-field :deep(.v-field__input){text-align:center;padding:4px 8px}
-.cursor-pointer{cursor:pointer}
-.transition-all{transition:all .2s ease-in-out}
+.qty-field {
+  max-width: 90px
+}
+
+.qty-field :deep(.v-field__input) {
+  text-align: center;
+  padding: 4px 8px
+}
+
+.cursor-pointer {
+  cursor: pointer
+}
+
+.transition-all {
+  transition: all .2s ease-in-out
+}
 </style>

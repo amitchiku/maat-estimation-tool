@@ -18,9 +18,9 @@
           "defaultRoom": "Hallway",
           "quantity": 5,
           "unit": "each",
-          "type": "assembly",
+          "type": "lineItems",
           "isAllowanceFull": false,
-          "assemblyData": {
+          "lineItemsData": {
             "id": "L1",
             "category": "Doors - Interior",
             "name": "Interior Double Door Solid Core - Pre-hung Unit",
@@ -85,9 +85,9 @@
           "defaultRoom": "Living Room",
           "quantity": 1,
           "unit": "SF",
-          "type": "assembly",
+          "type": "lineItems",
           "isAllowanceFull": false,
-          "assemblyData": {
+          "lineItemsData": {
             "id": "L2",
             "category": "Drywall & Plaster",
             "name": "Standard 1/2in Drywall Installation (per SF)",
@@ -150,9 +150,9 @@
           "defaultRoom": "Living Room",
           "quantity": 1,
           "unit": "SF",
-          "type": "assembly",
+          "type": "lineItems",
           "isAllowanceFull": false,
-          "assemblyData": {
+          "lineItemsData": {
             "id": "L3",
             "category": "Painting",
             "name": "Standard Ceiling & Wall Painting (per SF)",

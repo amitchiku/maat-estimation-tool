@@ -4760,7 +4760,7 @@
       "rate": 125
     }
   ],
-  "assemblies": [
+  "lineItems": [
     {
       "id": "I1",
       "category": "Doors - Interior",

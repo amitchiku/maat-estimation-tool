@@ -117,8 +117,8 @@
                 variant="outlined" density="compact"></v-select>
             </v-col>
             <v-col cols="12" sm="6">
-              <v-combobox v-model="form.category" label="Category" :items="categories" variant="outlined"
-                density="compact"></v-combobox>
+              <v-autocomplete v-model="form.category" label="Category" :items="categories" variant="outlined"
+                density="compact" :input-props="{ autocomplete: 'new-password', role: 'presentation' }"></v-autocomplete>
             </v-col>
             <v-col cols="12">
               <v-text-field v-model="form.name" label="Item Name *" variant="outlined" density="compact"></v-text-field>

@@ -312,7 +312,7 @@ const saveLineItem = async () => {
   }
 
   try {
-    await appStore.upsertCatalog('line_items', appStore.lineItems);
+    await appStore.upsertCatalog('lineItems', appStore.lineItems);
     isEditingLineItem.value = false;
   } catch (err) {
     appStore.error = `Error saving line item: ${err.message}`;
@@ -323,7 +323,7 @@ const executeDeleteLineItem = async (itemToDelete) => {
   if (itemToDelete) {
     appStore.lineItems = appStore.lineItems.filter(a => a.id !== itemToDelete.id);
     try {
-      await appStore.upsertCatalog('line_items', appStore.lineItems);
+      await appStore.upsertCatalog('lineItems', appStore.lineItems);
     } catch (err) {
       appStore.error = `Error deleting line item: ${err.message}`;
     }

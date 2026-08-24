@@ -16,7 +16,7 @@ Sycamore Design Build Estimation Tool — a Vue 3, Vite, Vuetify 3, and Pinia we
   - `LineItems.vue`: Clean parent orchestrator (~160 lines).
 
 ### 2. Line Item Grouping & Catalog Search Controls
-- **Line Item Group Property**: Added `group` property to line item assemblies.
+- **Line Item Group Property**: Added `group` property to line item lineItems.
 - **Top Dropdown Filters**: Added `Default Room` and `Group` dropdown filters alongside line items search bar in `LineItemsList.vue`.
 - **Group Table Column**: Displayed color-coded `Group` chips in the master catalog table.
 
@@ -65,7 +65,7 @@ Implemented a 4-step wizard workflow in `QuoteBuilder.vue`:
   - **Allowance Price** = `Net Price + Tax` = `Net Price * (1 + Tax)`
   - **Gross Price (Client Price)** = `Net Price + Tax + Markup` = `Net Price * (1 + Tax) * (1 + Markup)`
 - **Updated Components & Data Stores**:
-  - `src/stores/app.js`: Updated `defaults`, `quoteTotals`, `roomTotals`, `addItemToRoom`, and `calculateAssemblyTotals`.
+  - `src/stores/app.js`: Updated `defaults`, `quoteTotals`, `roomTotals`, `addItemToRoom`, and `calculatelineItemsTotals`.
   - `src/components/CatalogManager.vue`: Updated form inputs (`Tax %`, `Markup %`), table headers, dialog pricing computeds, and save logic.
   - `src/components/line-items/LineItemRequirementsEditor.vue`: Updated recipe table headers, cells, and helper price functions.
   - `src/components/line-items/LineItemPricingSummary.vue` & `LineItems.vue`: Updated summary rollups for `Allowance Price` (`Price + Tax`) and `Gross Price` (`Price + Tax + Markup`).

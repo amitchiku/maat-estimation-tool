@@ -18,9 +18,9 @@
           "defaultRoom": "Hallway",
           "quantity": 1,
           "unit": "each",
-          "type": "assembly",
+          "type": "lineItems",
           "isAllowanceFull": false,
-          "assemblyData": {
+          "lineItemsData": {
             "id": "I1",
             "category": "Appliances",
             "group": "",

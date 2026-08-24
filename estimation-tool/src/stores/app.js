@@ -194,8 +194,8 @@ export const useAppStore = defineStore("app", () => {
       room.items.forEach((item) => {
         const itemQty = parseFloat(item.quantity) || 0;
 
-        if (item.type === "assembly") {
-          const rollup = calculateAssemblyTotals(item.assemblyData, itemQty);
+        if (item.type === "lineItems") {
+          const rollup = calculatelineItemsTotals(item.lineItemsData, itemQty);
           netCost += rollup.netCost;
           clientPrice +=
             item.allowanceOverride !== null && item.allowanceOverride !== undefined && item.allowanceOverride !== ""
@@ -251,8 +251,8 @@ export const useAppStore = defineStore("app", () => {
     room.items.forEach((item) => {
       const itemQty = parseFloat(item.quantity) || 0;
 
-      if (item.type === "assembly") {
-        const rollup = calculateAssemblyTotals(item.assemblyData, itemQty);
+      if (item.type === "lineItems") {
+        const rollup = calculatelineItemsTotals(item.lineItemsData, itemQty);
         netCost += rollup.netCost;
         clientPrice +=
           item.allowanceOverride !== null && item.allowanceOverride !== undefined && item.allowanceOverride !== ""
@@ -469,7 +469,7 @@ export const useAppStore = defineStore("app", () => {
     }
   };
 
-  const addItemToRoom = (roomId, catalogItem, isAssembly = false) => {
+  const addItemToRoom = (roomId, catalogItem, islineItems = false) => {
     if (!currentQuote.value) return;
     const room = currentQuote.value.rooms.find((r) => r.id === roomId);
     if (!room) return;
@@ -478,14 +478,14 @@ export const useAppStore = defineStore("app", () => {
       id: `item_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
       name: catalogItem.name,
       category: catalogItem.category,
-      type: isAssembly ? "assembly" : catalogItem.type || "material",
+      type: islineItems ? "lineItems" : catalogItem.type || "material",
       quantity: 1,
       allowanceOverride: null,
     };
 
-    if (isAssembly) {
+    if (islineItems) {
       quoteItem.unit = catalogItem.unitType || "each";
-      quoteItem.assemblyData = {
+      quoteItem.lineItemsData = {
         laborRequired: (catalogItem.laborRequired || []).map((req) => {
           const role = labor.value.find((l) => l.id === req.classId) || {};
           return {
@@ -548,7 +548,7 @@ export const useAppStore = defineStore("app", () => {
     equipments,
     labors,
     lineItems,
-    assemblies: computed(() => lineItems.value),
+    lineItems: computed(() => lineItems.value),
     quotes,
     currentQuote,
     isLoading,
@@ -578,17 +578,17 @@ export const useAppStore = defineStore("app", () => {
   };
 });
 
-// Helper calculation to roll up nested assembly costs
-export function calculateAssemblyTotals(assemblyData, assemblyQty) {
+// Helper calculation to roll up nested lineItems costs
+export function calculatelineItemsTotals(lineItemsData, lineItemsQty) {
   let netCost = 0;
   let clientPrice = 0;
   let allowanceTotal = 0;
 
-  if (!assemblyData) return { netCost, clientPrice, allowanceTotal };
+  if (!lineItemsData) return { netCost, clientPrice, allowanceTotal };
 
   // Labor
-  (assemblyData.laborRequired || []).forEach((req) => {
-    const totalHours = req.unitHours * assemblyQty + req.baseHours;
+  (lineItemsData.laborRequired || []).forEach((req) => {
+    const totalHours = req.unitHours * lineItemsQty + req.baseHours;
     const cost = totalHours * req.rate;
     netCost += cost;
     clientPrice += cost;
@@ -597,7 +597,7 @@ export function calculateAssemblyTotals(assemblyData, assemblyQty) {
     if (mode === "BOTH") {
       allowanceTotal += cost;
     } else if (mode === "UNIT" || mode === "ONLY UNIT HR") {
-      allowanceTotal += req.unitHours * assemblyQty * req.rate;
+      allowanceTotal += req.unitHours * lineItemsQty * req.rate;
     } else if (mode === "BASE" || mode === "ONLY BASE HR") {
       allowanceTotal += req.baseHours * req.rate;
     }
@@ -606,8 +606,8 @@ export function calculateAssemblyTotals(assemblyData, assemblyQty) {
   // Materials: Tax defaults to 6%, Markup defaults to 25%
   // Allowance Price = Price + Tax = Price * (1 + Tax)
   // Gross Price = Price + Tax + Markup = Price * (1 + Tax) * (1 + Markup)
-  (assemblyData.materialRequired || []).forEach((req) => {
-    const totalQty = req.base ? req.qty : req.qty * assemblyQty;
+  (lineItemsData.materialRequired || []).forEach((req) => {
+    const totalQty = req.base ? req.qty : req.qty * lineItemsQty;
     const itemNet = req.price * totalQty;
     const itemTax = req.tax !== undefined ? req.tax : 0.06;
     const itemMarkup = req.markup !== undefined ? req.markup : 0.25;
@@ -623,8 +623,8 @@ export function calculateAssemblyTotals(assemblyData, assemblyQty) {
   // Equipment: Tax defaults to 0%, Markup defaults to 25%
   // Allowance Price = Price + Tax = Price * (1 + Tax)
   // Gross Price = Price + Tax + Markup = Price * (1 + Tax) * (1 + Markup)
-  (assemblyData.equipmentRequired || []).forEach((req) => {
-    const totalQty = req.base ? req.qty : req.qty * assemblyQty;
+  (lineItemsData.equipmentRequired || []).forEach((req) => {
+    const totalQty = req.base ? req.qty : req.qty * lineItemsQty;
     const itemNet = req.price * totalQty;
     const itemTax = req.tax !== undefined ? req.tax : 0.0;
     const itemMarkup = req.markup !== undefined ? req.markup : 0.25;
