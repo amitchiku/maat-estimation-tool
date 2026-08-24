@@ -16,7 +16,7 @@
     <v-card class="form-card" elevation="0">
       <v-row dense>
         <v-col cols="12" md="6">
-          <v-text-field v-model="quote.name" label="Proposal name / title *" variant="outlined" hide-details class="estimate-field" />
+          <v-text-field v-model="quote.name" label="Proposal Name / Title *" variant="outlined" hide-details class="estimate-field" />
         </v-col>
 
         <v-col cols="12" md="6">
@@ -26,27 +26,27 @@
         <v-col cols="12" class="prepared-title">Prepared For:</v-col>
 
         <v-col cols="12" md="6">
-          <v-text-field v-model="quote.clientName" label="Customer name *" prepend-inner-icon="mdi-account-outline" variant="outlined" hide-details class="estimate-field" />
+          <v-text-field v-model="quote.clientName" label="Customer Name *" prepend-inner-icon="mdi-account-outline" variant="outlined" hide-details class="estimate-field" />
         </v-col>
 
         <v-col cols="12" md="6">
-          <v-text-field v-model="quote.clientStreet" label="Customer street address *" prepend-inner-icon="mdi-map-marker-outline" variant="outlined" hide-details class="estimate-field" />
+          <v-text-field v-model="quote.clientStreet" label="Customer Street Address *" prepend-inner-icon="mdi-map-marker-outline" variant="outlined" hide-details class="estimate-field" />
         </v-col>
 
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="6">
           <v-text-field v-model="quote.clientCityState" label="City *" prepend-inner-icon="mdi-city-variant-outline" variant="outlined" hide-details class="estimate-field" />
         </v-col>
 
-        <v-col cols="12" md="4">
-          <v-text-field label="State *" prepend-inner-icon="mdi-map-outline" append-inner-icon="mdi-chevron-down" variant="outlined" hide-details class="estimate-field" />
+        <v-col cols="12" sm="6" md="3">
+          <v-text-field v-model="quote.clientState" label="State *" prepend-inner-icon="mdi-map-outline" append-inner-icon="mdi-chevron-down" variant="outlined" hide-details class="estimate-field" />
         </v-col>
 
-        <v-col cols="12" md="4">
-          <v-text-field label="ZIP *" prepend-inner-icon="mdi-email-outline" variant="outlined" hide-details class="estimate-field" />
+        <v-col cols="12" sm="6" md="3">
+          <v-text-field v-model="quote.clientZip" label="Zip *" prepend-inner-icon="mdi-email-outline" variant="outlined" hide-details class="estimate-field" />
         </v-col>
 
         <v-col cols="12" md="10">
-          <v-text-field v-model="quote.projectAddress" label="Project address *" prepend-inner-icon="mdi-map-marker-outline" variant="outlined" hide-details class="estimate-field" />
+          <v-text-field v-model="quote.projectAddress" label="Project Address *" prepend-inner-icon="mdi-map-marker-outline" variant="outlined" hide-details class="estimate-field" />
         </v-col>
 
         <v-col cols="12" md="2" class="copy-wrapper">
@@ -56,11 +56,11 @@
         </v-col>
 
         <v-col cols="12" md="6">
-          <v-text-field v-model="quote.preparedBy" label="Prepared by *" prepend-inner-icon="mdi-account-outline" variant="outlined" hide-details class="estimate-field" />
+          <v-text-field v-model="quote.preparedBy" label="Prepared By *" prepend-inner-icon="mdi-account-outline" variant="outlined" hide-details class="estimate-field" />
         </v-col>
 
         <v-col cols="12" md="6">
-          <v-text-field v-model="quote.preparedByPhone" label="Prepared by phone number (optional)" prepend-inner-icon="mdi-phone-outline" variant="outlined" hide-details class="estimate-field" />
+          <v-text-field v-model="quote.preparedByPhone" label="Prepared By Phone Number (Optional)" prepend-inner-icon="mdi-phone-outline" variant="outlined" hide-details class="estimate-field" />
         </v-col>
       </v-row>
     </v-card>
@@ -96,7 +96,9 @@ onMounted(() => {
 const copyCustomerAddress = async () => {
   const street = props.quote.clientStreet?.trim() || ''
   const city = props.quote.clientCityState?.trim() || ''
-  const address = [street, city].filter(Boolean).join(', ')
+  const state = props.quote.clientState?.trim() || ''
+  const zip = props.quote.clientZip?.trim() || ''
+  const address = [street, city, state, zip].filter(Boolean).join(', ')
   if (!address) return
 
   try {

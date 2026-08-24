@@ -39,7 +39,7 @@
         <v-text-field
           v-model="search"
           prepend-inner-icon="mdi-magnify"
-          label="Search line items by name, group, room..."
+          label="Search Line Items by Name, Group, Room..."
           variant="outlined"
           density="compact"
           hide-details
