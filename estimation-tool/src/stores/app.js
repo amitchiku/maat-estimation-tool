@@ -548,6 +548,7 @@ export const useAppStore = defineStore("app", () => {
     equipments,
     labors,
     lineItems,
+    assemblies: computed(() => lineItems.value),
     quotes,
     currentQuote,
     isLoading,

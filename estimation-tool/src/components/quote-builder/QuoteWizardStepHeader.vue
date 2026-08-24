@@ -14,7 +14,7 @@
     </div>
 
     <v-card class="form-card" elevation="0">
-      <v-row dense>
+      <v-row density="compact">
         <v-col cols="12" md="6">
           <v-text-field v-model="quote.name" label="Proposal Name / Title *" variant="outlined" hide-details
             class="estimate-field" />
@@ -59,19 +59,9 @@
         </v-col>
 
         <v-col cols="12" sm="6" md="3">
-          <v-combobox
-            v-model="quote.clientState"
-            :items="usStates"
-            item-title="title"
-            item-value="value"
-            :return-object="false"
-            label="State *"
-            prepend-inner-icon="mdi-map-outline"
-            variant="outlined"
-            hide-details
-            class="estimate-field"
-            :input-props="{ autocomplete: 'new-password', role: 'presentation' }"
-          />
+          <v-combobox v-model="quote.clientState" :items="usStates" item-title="title" item-value="value"
+            :return-object="false" label="State *" prepend-inner-icon="mdi-map-outline" variant="outlined" hide-details
+            class="estimate-field" :input-props="{ autocomplete: 'new-password', role: 'presentation' }" />
         </v-col>
 
         <v-col cols="12" sm="6" md="3">

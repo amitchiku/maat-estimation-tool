@@ -140,7 +140,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useAppStore } from '@/stores/app'
 
 const props = defineProps({
@@ -153,7 +153,13 @@ const search = ref('')
 const filterGroup = ref('All')
 const filterCategory = ref('All')
 
-const allAssemblies = computed(() => appStore.assemblies || [])
+onMounted(() => {
+  if (!appStore.lineItems || appStore.lineItems.length === 0) {
+    appStore.loadCatalog()
+  }
+})
+
+const allAssemblies = computed(() => (appStore.lineItems && appStore.lineItems.length) ? appStore.lineItems : (appStore.assemblies || []))
 
 const groupOptions = computed(() => {
   const set = new Set()
@@ -173,12 +179,16 @@ const filteredAssemblies = computed(() => allAssemblies.value.filter(item => {
   if (filterCategory.value !== 'All' && (item.category || 'General') !== filterCategory.value) return false
   if (!search.value) return true
 
-  const q = search.value.toLowerCase()
+  const q = search.value.toLowerCase().trim()
   return (
     (item.name && item.name.toLowerCase().includes(q)) ||
     (item.group && item.group.toLowerCase().includes(q)) ||
     (item.category && item.category.toLowerCase().includes(q)) ||
-    (item.defaultRoom && item.defaultRoom.toLowerCase().includes(q))
+    (item.defaultRoom && item.defaultRoom.toLowerCase().includes(q)) ||
+    (item.activity && item.activity.toLowerCase().includes(q)) ||
+    (item.tradePartner && item.tradePartner.toLowerCase().includes(q)) ||
+    (item.desc && item.desc.toLowerCase().includes(q)) ||
+    (item.id && item.id.toLowerCase().includes(q))
   )
 }))
 
