@@ -59,11 +59,12 @@
         </v-col>
 
         <v-col cols="12" sm="6" md="3">
-          <v-select
+          <v-combobox
             v-model="quote.clientState"
             :items="usStates"
             item-title="title"
             item-value="value"
+            :return-object="false"
             label="State *"
             prepend-inner-icon="mdi-map-outline"
             variant="outlined"
