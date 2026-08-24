@@ -1,5 +1,14 @@
 <template>
-  <div v-if="appStore.currentQuote" class="wizard-page">
+  <div v-if="appStore.isLoading" class="text-center py-12">
+    <v-progress-circular indeterminate color="teal" size="64"></v-progress-circular>
+    <div class="mt-4 text-subtitle-1 text-medium-emphasis">Loading Estimate...</div>
+  </div>
+  <div v-else-if="!appStore.currentQuote" class="text-center py-12">
+    <v-icon icon="mdi-alert-circle-outline" size="64" color="grey-darken-1"></v-icon>
+    <div class="mt-4 text-h6 text-medium-emphasis">Estimate Not Found</div>
+    <v-btn color="teal" class="mt-4" @click="router.push({ name: 'quotes' })">Return to Quotes Dashboard</v-btn>
+  </div>
+  <div v-else class="wizard-page">
     <!-- Header -->
     <div class="wizard-header no-print">
       <div class="wizard-heading">
@@ -50,12 +59,22 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useAppStore } from '@/stores/app'
 import QuoteWizardStepHeader from '@/components/quote-builder/QuoteWizardStepHeader.vue'
 import QuoteWizardStepSelector from '@/components/quote-builder/QuoteWizardStepSelector.vue'
 import QuoteWizardStepRooms from '@/components/quote-builder/QuoteWizardStepRooms.vue'
 import QuoteProposalWorksheet from '@/components/quote-builder/QuoteProposalWorksheet.vue'
 
+const props = defineProps({
+  id: {
+    type: String,
+    default: ''
+  }
+})
+
+const route = useRoute()
+const router = useRouter()
 const appStore = useAppStore()
 const currentStep = ref(1)
 
@@ -99,7 +118,32 @@ const initSelectedItemsMap = () => {
   selectedItemsMap.value = map
 }
 
-onMounted(initSelectedItemsMap)
+const syncRouteQuote = async () => {
+  const targetId = props.id || route.params.id
+  if (targetId) {
+    if (appStore.currentQuote?.id !== targetId) {
+      await appStore.loadQuote(targetId)
+    }
+  } else if (appStore.currentQuote?.id) {
+    router.replace({ name: 'quote-builder', params: { id: appStore.currentQuote.id } })
+  } else {
+    router.push({ name: 'quotes' })
+  }
+  initSelectedItemsMap()
+}
+
+onMounted(async () => {
+  await syncRouteQuote()
+})
+
+watch(
+  () => props.id || route.params.id,
+  async (newId) => {
+    if (newId) {
+      await syncRouteQuote()
+    }
+  }
+)
 
 watch(
   () => appStore.currentQuote,

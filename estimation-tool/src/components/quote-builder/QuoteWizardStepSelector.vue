@@ -2,11 +2,6 @@
   <v-card border elevation="0" class="rounded-xl pa-3">
     <!-- Quick Group Selection -->
     <div class="mb-4">
-      <div class="text-subtitle-2 font-weight-bold text-slate-800 mb-2">
-        <v-icon icon="mdi-thunder-outline" color="amber-darken-2" class="mr-1" />
-        Quick 1-Click Group Selection
-      </div>
-
       <v-row density="compact">
         <v-col v-for="grp in groupCards" :key="grp.name" cols="6" sm="4" md="3">
           <v-card border elevation="0" :color="grp.allSelected ? 'teal-lighten-5' : 'white'"
@@ -49,7 +44,6 @@
         <thead>
           <tr>
             <th class="text-center" style="width:50px">Select</th>
-            <th class="font-weight-bold">Group</th>
             <th class="font-weight-bold">Item Name</th>
             <th class="font-weight-bold">Default Room</th>
             <th class="font-weight-bold text-right">Unit Price</th>
@@ -68,12 +62,6 @@
             <td class="text-center">
               <v-checkbox-btn :model-value="isSelected(item.id)" color="teal" density="compact"
                 @update:model-value="toggleItem(item)" />
-            </td>
-
-            <td>
-              <v-chip size="x-small" color="teal-lighten-4" class="text-teal-darken-3 font-weight-medium">
-                {{ item.group || 'General' }}
-              </v-chip>
             </td>
 
             <td class="font-weight-medium">{{ item.name }}</td>
@@ -132,8 +120,8 @@ const categoryOptions = computed(() => {
 })
 
 const filteredlineItems = computed(() => alllineItems.value.filter(item => {
-  if (filterGroup.value !== 'All' && (item.group || 'General') !== filterGroup.value) return false
-  if (filterCategory.value !== 'All' && (item.category || 'General') !== filterCategory.value) return false
+  if (filterGroup.value !== 'All' && (item.group) !== filterGroup.value) return false
+  if (filterCategory.value !== 'All' && (item.category) !== filterCategory.value) return false
   if (!search.value) return true
 
   const q = search.value.toLowerCase().trim()
@@ -153,7 +141,8 @@ const groupCards = computed(() => {
   const map = {}
 
   alllineItems.value.forEach(item => {
-    const grp = item.group || 'General'
+    const grp = item.group
+    if (!grp) return
     if (!map[grp]) map[grp] = { total: 0, selected: 0 }
     map[grp].total++
     if (props.selectedItemsMap[item.id]) map[grp].selected++
@@ -174,7 +163,7 @@ const groupCards = computed(() => {
 const selectedItemsCount = computed(() => Object.keys(props.selectedItemsMap).length)
 
 const isSelected = id => !!props.selectedItemsMap[id]
-const getItemQuantity = id => props.selectedItemsMap[id]?.quantity || 1
+const getItemQuantity = id => props.selectedItemsMap[id]?.quantity
 
 const toggleItem = item => {
   const next = { ...props.selectedItemsMap }
@@ -185,9 +174,9 @@ const toggleItem = item => {
     next[item.id] = {
       id: item.id,
       name: item.name,
-      group: item.group || 'General',
-      category: item.category || 'General',
-      defaultRoom: item.defaultRoom || 'General',
+      group: item.group,
+      category: item.category,
+      defaultRoom: item.defaultRoom,
       quantity: parseFloat(item.totalOutputQty) || 1,
       unit: item.unitType || 'each',
       rawlineItems: item
@@ -209,7 +198,7 @@ const updateItemQuantity = (item, val) => {
 
 const toggleGroup = groupName => {
   const groupItems = alllineItems.value.filter(
-    a => (a.group || 'General') === groupName
+    a => (a.group) === groupName
   )
 
   const allInGroupSelected = groupItems.every(a => isSelected(a.id))
@@ -222,11 +211,11 @@ const toggleGroup = groupName => {
       next[item.id] = {
         id: item.id,
         name: item.name,
-        group: item.group || 'General',
-        category: item.category || 'General',
-        defaultRoom: item.defaultRoom || 'General',
+        group: item.group,
+        category: item.category,
+        defaultRoom: item.defaultRoom,
         quantity: parseFloat(item.totalOutputQty) || 1,
-        unit: item.unitType || 'each',
+        unit: item.unitType,
         rawlineItems: item
       }
     }

@@ -11,18 +11,18 @@
 
       <v-list density="compact" nav>
         <v-list-item prepend-icon="mdi-file-document-multiple" title="Quotes Dashboard" value="quotes"
-          :active="appStore.activeTab === 'quotes'" @click="appStore.activeTab = 'quotes'"></v-list-item>
+          :to="{ name: 'quotes' }"></v-list-item>
         <v-list-item v-if="appStore.currentQuote" prepend-icon="mdi-hammer-wrench" title="Quote Builder" value="builder"
-          :active="appStore.activeTab === 'builder'" @click="appStore.activeTab = 'builder'"></v-list-item>
+          :to="{ name: 'quote-builder', params: { id: appStore.currentQuote.id } }"></v-list-item>
 
         <v-list-item prepend-icon="mdi-playlist-plus" title="Line Items" value="line-items"
-          :active="appStore.activeTab === 'line-items'" @click="appStore.activeTab = 'line-items'"></v-list-item>
-        <v-list-item prepend-icon="mdi-format-list-bulleted-triangle" title="Materials and Equiments" value="catalog"
-          :active="appStore.activeTab === 'catalog'" @click="appStore.activeTab = 'catalog'"></v-list-item>
+          :to="{ name: 'line-items' }"></v-list-item>
+        <v-list-item prepend-icon="mdi-format-list-bulleted-triangle" title="Materials and Equipments" value="catalog"
+          :to="{ name: 'catalog' }"></v-list-item>
         <v-list-item prepend-icon="mdi-account-cash" title="Labor Rates" value="labor"
-          :active="appStore.activeTab === 'labor'" @click="appStore.activeTab = 'labor'"></v-list-item>
+          :to="{ name: 'labor' }"></v-list-item>
         <v-list-item prepend-icon="mdi-cog" title="Settings" value="settings"
-          :active="appStore.activeTab === 'settings'" @click="appStore.activeTab = 'settings'"></v-list-item>
+          :to="{ name: 'settings' }"></v-list-item>
       </v-list>
 
       <!-- Minimize / Maximize Drawer Footer -->
@@ -63,32 +63,8 @@
           {{ appStore.error }}
         </v-alert>
 
-        <!-- Dynamic Components -->
-        <v-window v-model="appStore.activeTab">
-          <v-window-item value="quotes">
-            <QuoteList />
-          </v-window-item>
-
-          <v-window-item value="builder">
-            <QuoteBuilder />
-          </v-window-item>
-
-          <v-window-item value="catalog">
-            <CatalogManager />
-          </v-window-item>
-
-          <v-window-item value="labor">
-            <LaborRates />
-          </v-window-item>
-
-          <v-window-item value="line-items">
-            <LineItems />
-          </v-window-item>
-
-          <v-window-item value="settings">
-            <SettingsManager />
-          </v-window-item>
-        </v-window>
+        <!-- Router View -->
+        <router-view />
       </v-container>
     </v-main>
   </v-app>
@@ -97,14 +73,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useAppStore } from '@/stores/app';
-
-// Components
-import QuoteList from '@/components/QuoteList.vue';
-import QuoteBuilder from '@/components/QuoteBuilder.vue';
-import CatalogManager from '@/components/CatalogManager.vue';
-import LaborRates from '@/components/LaborRates.vue';
-import LineItems from '@/components/LineItems.vue';
-import SettingsManager from '@/components/SettingsManager.vue';
 
 const appStore = useAppStore();
 const theme = ref(localStorage.getItem('theme') || 'dark');

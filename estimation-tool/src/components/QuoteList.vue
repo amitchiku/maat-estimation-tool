@@ -122,9 +122,11 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { useAppStore } from '@/stores/app';
 import { api } from '@/services/api';
 
+const router = useRouter();
 const appStore = useAppStore();
 const search = ref('');
 const statusFilter = ref('All');
@@ -151,11 +153,12 @@ const filteredQuotes = computed(() => {
 });
 
 const createNewQuote = () => {
-  appStore.newQuote();
+  const newId = appStore.newQuote();
+  router.push({ name: 'quote-builder', params: { id: newId } });
 };
 
 const editQuote = (id) => {
-  appStore.loadQuote(id);
+  router.push({ name: 'quote-builder', params: { id } });
 };
 
 const duplicateQuote = async (id) => {
