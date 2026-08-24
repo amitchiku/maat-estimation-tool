@@ -191,6 +191,10 @@ app.delete("/api/quotes/:id", (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Mock Estimating Server listening on port ${PORT}`);
+});
+
+server.on("error", (err) => {
+  console.error("SERVER ERROR:", err);
 });
