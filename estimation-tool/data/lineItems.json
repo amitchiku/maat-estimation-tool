@@ -5215,7 +5215,7 @@
   },
   {
     "id": "I197",
-    "category": "Painting",
+    "category": "Appliances",
     "name": "! Paint walls/ceilings - two coats",
     "desc": "Paint walls/ceilings - 2 coats",
     "activity": "Supply & Install",
@@ -5244,7 +5244,10 @@
       }
     ],
     "equipmentRequired": [],
-    "totalOutputQty": 250
+    "totalOutputQty": 250,
+    "group": "Plumbing",
+    "updatedAt": "2026-08-24T12:14:07.732Z",
+    "createdAt": "2026-08-24T12:14:02.174Z"
   },
   {
     "id": "I198",
@@ -13638,7 +13641,10 @@
       }
     ],
     "equipmentRequired": [],
-    "totalOutputQty": 250
+    "totalOutputQty": 250,
+    "group": "Framing & Drywall",
+    "updatedAt": "2026-08-24T12:14:52.238Z",
+    "createdAt": "2026-08-24T12:14:52.238Z"
   },
   {
     "id": "I541",

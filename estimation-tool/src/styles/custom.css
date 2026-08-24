@@ -11,6 +11,11 @@
 }
 
 /* Glassmorphism scrollbar */
+.v-table__wrapper {
+  padding-bottom: 10px !important;
+  margin-bottom: 8px !important;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -19,6 +24,7 @@
 ::-webkit-scrollbar-track {
   background: var(--scrollbar-track);
   border-radius: 4px;
+  margin: 2px 4px;
 }
 
 ::-webkit-scrollbar-thumb {

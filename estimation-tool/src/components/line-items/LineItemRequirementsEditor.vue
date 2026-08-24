@@ -21,7 +21,7 @@
       </v-tab>
     </v-tabs>
 
-    <v-window v-model="editorTab" class="px-4 pt-4 pb-2" style="min-height: 320px;">
+    <v-window v-model="editorTab" class="px-4 pt-4 pb-4" style="min-height: 320px;">
       <!-- Labor Inputs -->
       <v-window-item value="labor">
         <v-row class="align-center mb-4">
@@ -37,51 +37,53 @@
           </v-col>
         </v-row>
 
-        <v-table density="compact">
-          <thead>
-            <tr>
-              <th>Role Name</th>
-              <th>Rate</th>
-              <th class="text-center" style="width: 125px;">Unit Hours</th>
-              <th class="text-center" style="width: 125px;">Base Hours</th>
-              <th class="text-right">Total</th>
-              <th class="text-center" style="width: 165px;">Allowance</th>
-              <th class="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="form.laborRequired.length === 0">
-              <td colspan="7" class="text-center py-4 text-medium-emphasis">No labor roles added yet.</td>
-            </tr>
-            <tr v-for="(req, idx) in form.laborRequired" :key="req.classId">
-              <td>{{ getLaborName(req.classId) }}</td>
-              <td>${{ getLaborRate(req.classId) }}/hr</td>
-              <td>
-                <v-text-field v-model.number="req.unitHours" type="number" variant="outlined" density="compact"
-                  hide-details class="ghost-cell-input"></v-text-field>
-              </td>
-              <td>
-                <v-text-field v-model.number="req.baseHours" type="number" variant="outlined" density="compact"
-                  hide-details class="ghost-cell-input"></v-text-field>
-              </td>
-              <td class="text-right font-weight-medium">
-                ${{ formatMoney((req.unitHours + req.baseHours) * getLaborRate(req.classId)) }}
-              </td>
-              <td class="text-center">
-                <select v-model="req.allowMode" class="ghost-cell-native-select mx-auto">
-                  <option value="NONE">None</option>
-                  <option value="UNIT">Only Unit Hr</option>
-                  <option value="BASE">Only Base Hr</option>
-                  <option value="BOTH">Both</option>
-                </select>
-              </td>
-              <td class="text-center">
-                <v-btn icon="mdi-delete" variant="flat" color="red-lighten-5" size="small" density="comfortable"
-                  class="text-red-darken-1 rounded-lg" @click="form.laborRequired.splice(idx, 1)"></v-btn>
-              </td>
-            </tr>
-          </tbody>
-        </v-table>
+        <div class="requirements-table-wrapper mb-3">
+          <v-table density="compact">
+            <thead>
+              <tr>
+                <th>Role Name</th>
+                <th>Rate</th>
+                <th class="text-center" style="width: 125px;">Unit Hours</th>
+                <th class="text-center" style="width: 125px;">Base Hours</th>
+                <th class="text-right">Total</th>
+                <th class="text-center" style="width: 165px;">Allowance</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="form.laborRequired.length === 0">
+                <td colspan="7" class="text-center py-4 text-medium-emphasis">No labor roles added yet.</td>
+              </tr>
+              <tr v-for="(req, idx) in form.laborRequired" :key="req.classId">
+                <td>{{ getLaborName(req.classId) }}</td>
+                <td>${{ getLaborRate(req.classId) }}/hr</td>
+                <td>
+                  <v-text-field v-model.number="req.unitHours" type="number" variant="outlined" density="compact"
+                    hide-details class="ghost-cell-input"></v-text-field>
+                </td>
+                <td>
+                  <v-text-field v-model.number="req.baseHours" type="number" variant="outlined" density="compact"
+                    hide-details class="ghost-cell-input"></v-text-field>
+                </td>
+                <td class="text-right font-weight-medium">
+                  ${{ formatMoney((req.unitHours + req.baseHours) * getLaborRate(req.classId)) }}
+                </td>
+                <td class="text-center">
+                  <select v-model="req.allowMode" class="ghost-cell-native-select mx-auto">
+                    <option value="NONE">None</option>
+                    <option value="UNIT">Only Unit Hr</option>
+                    <option value="BASE">Only Base Hr</option>
+                    <option value="BOTH">Both</option>
+                  </select>
+                </td>
+                <td class="text-center">
+                  <v-btn icon="mdi-delete" variant="flat" color="red-lighten-5" size="small" density="comfortable"
+                    class="text-red-darken-1 rounded-lg" @click="form.laborRequired.splice(idx, 1)"></v-btn>
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
+        </div>
       </v-window-item>
 
       <!-- Materials Requirements -->
@@ -100,53 +102,55 @@
           </v-col>
         </v-row>
 
-        <v-table density="compact">
-          <thead>
-            <tr>
-              <th>Material</th>
-              <th class="text-right">Net Price</th>
-              <th class="text-center" style="width: 110px;">Required Qty</th>
-              <th class="text-center">Base Flat?</th>
-              <th class="text-right">Allowance</th>
-              <th class="text-center">Use Allowance?</th>
-              <th class="text-right">Gross Total</th>
-              <th class="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="form.materialRequired.length === 0">
-              <td colspan="8" class="text-center py-4 text-medium-emphasis">No materials added yet.</td>
-            </tr>
-            <tr v-for="(req, idx) in form.materialRequired" :key="req.materialId">
-              <td class="font-weight-medium" style="width: 220px; min-width: 220px; max-width: 220px; white-space: normal; word-break: break-word;">{{ getMaterialName(req.materialId) }}</td>
-              <td class="text-right">${{ formatMoney(appStore.getMaterialById(req.materialId)?.netPrice || 0) }}</td>
-              <td>
-                <v-text-field v-model.number="req.qty" type="number" variant="outlined" density="compact" hide-details
-                  class="ghost-cell-input"></v-text-field>
-              </td>
-              <td class="text-center">
-                <div class="d-flex justify-center align-center">
-                  <v-checkbox-btn v-model="req.base" color="blue" class="ma-0"></v-checkbox-btn>
-                </div>
-              </td>
-              <td class="text-right font-weight-medium text-amber-darken-3">
-                ${{ formatMoney((req.qty || 1) * getMaterialAllowancePrice(req.materialId)) }}
-              </td>
-              <td class="text-center">
-                <div class="d-flex justify-center align-center">
-                  <v-checkbox-btn v-model="req.allow" color="teal" class="ma-0"></v-checkbox-btn>
-                </div>
-              </td>
-              <td class="text-right font-weight-bold text-teal">
-                ${{ formatMoney((req.qty || 1) * getMaterialGrossPrice(req.materialId)) }}
-              </td>
-              <td class="text-center">
-                <v-btn icon="mdi-delete" variant="flat" color="red-lighten-5" size="small" density="comfortable"
-                  class="text-red-darken-1 rounded-lg" @click="form.materialRequired.splice(idx, 1)"></v-btn>
-              </td>
-            </tr>
-          </tbody>
-        </v-table>
+        <div class="requirements-table-wrapper mb-3">
+          <v-table density="compact">
+            <thead>
+              <tr>
+                <th>Material</th>
+                <th class="text-right">Net Price</th>
+                <th class="text-center" style="width: 110px;">Required Qty</th>
+                <th class="text-center">Base Flat?</th>
+                <th class="text-right">Allowance</th>
+                <th class="text-center">Use Allowance?</th>
+                <th class="text-right">Gross Total</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="form.materialRequired.length === 0">
+                <td colspan="8" class="text-center py-4 text-medium-emphasis">No materials added yet.</td>
+              </tr>
+              <tr v-for="(req, idx) in form.materialRequired" :key="req.materialId">
+                <td class="font-weight-medium" style="width: 220px; min-width: 220px; max-width: 220px; white-space: normal; word-break: break-word;">{{ getMaterialName(req.materialId) }}</td>
+                <td class="text-right">${{ formatMoney(appStore.getMaterialById(req.materialId)?.netPrice || 0) }}</td>
+                <td>
+                  <v-text-field v-model.number="req.qty" type="number" variant="outlined" density="compact" hide-details
+                    class="ghost-cell-input"></v-text-field>
+                </td>
+                <td class="text-center">
+                  <div class="d-flex justify-center align-center">
+                    <v-checkbox-btn v-model="req.base" color="blue" class="ma-0"></v-checkbox-btn>
+                  </div>
+                </td>
+                <td class="text-right font-weight-medium text-amber-darken-3">
+                  ${{ formatMoney((req.qty || 1) * getMaterialAllowancePrice(req.materialId)) }}
+                </td>
+                <td class="text-center">
+                  <div class="d-flex justify-center align-center">
+                    <v-checkbox-btn v-model="req.allow" color="teal" class="ma-0"></v-checkbox-btn>
+                  </div>
+                </td>
+                <td class="text-right font-weight-bold text-teal">
+                  ${{ formatMoney((req.qty || 1) * getMaterialGrossPrice(req.materialId)) }}
+                </td>
+                <td class="text-center">
+                  <v-btn icon="mdi-delete" variant="flat" color="red-lighten-5" size="small" density="comfortable"
+                    class="text-red-darken-1 rounded-lg" @click="form.materialRequired.splice(idx, 1)"></v-btn>
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
+        </div>
       </v-window-item>
 
       <!-- Equipment Requirements -->
@@ -166,53 +170,55 @@
           </v-col>
         </v-row>
 
-        <v-table density="compact">
-          <thead>
-            <tr>
-              <th>Equipment</th>
-              <th class="text-right">Net Price</th>
-              <th class="text-center" style="width: 110px;">Required Qty</th>
-              <th class="text-center">Base Flat?</th>
-              <th class="text-right">Allowance</th>
-              <th class="text-center">Use Allowance?</th>
-              <th class="text-right">Gross Total</th>
-              <th class="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="form.equipmentRequired.length === 0">
-              <td colspan="8" class="text-center py-4 text-medium-emphasis">No equipment added yet.</td>
-            </tr>
-            <tr v-for="(req, idx) in form.equipmentRequired" :key="req.equipmentId">
-              <td class="font-weight-medium" style="width: 220px; min-width: 220px; max-width: 220px; white-space: normal; word-break: break-word;">{{ getEquipmentName(req.equipmentId) }}</td>
-              <td class="text-right">${{ formatMoney(appStore.getEquipmentById(req.equipmentId)?.netPrice || 0) }}</td>
-              <td>
-                <v-text-field v-model.number="req.qty" type="number" variant="outlined" density="compact" hide-details
-                  class="ghost-cell-input"></v-text-field>
-              </td>
-              <td class="text-center">
-                <div class="d-flex justify-center align-center">
-                  <v-checkbox-btn v-model="req.base" color="blue" class="ma-0"></v-checkbox-btn>
-                </div>
-              </td>
-              <td class="text-right font-weight-medium text-amber-darken-3">
-                ${{ formatMoney((req.qty || 1) * getEquipmentAllowancePrice(req.equipmentId)) }}
-              </td>
-              <td class="text-center">
-                <div class="d-flex justify-center align-center">
-                  <v-checkbox-btn v-model="req.allow" color="teal" class="ma-0"></v-checkbox-btn>
-                </div>
-              </td>
-              <td class="text-right font-weight-bold text-teal">
-                ${{ formatMoney((req.qty || 1) * getEquipmentGrossPrice(req.equipmentId)) }}
-              </td>
-              <td class="text-center">
-                <v-btn icon="mdi-delete" variant="flat" color="red-lighten-5" size="small" density="comfortable"
-                  class="text-red-darken-1 rounded-lg" @click="form.equipmentRequired.splice(idx, 1)"></v-btn>
-              </td>
-            </tr>
-          </tbody>
-        </v-table>
+        <div class="requirements-table-wrapper mb-3">
+          <v-table density="compact">
+            <thead>
+              <tr>
+                <th>Equipment</th>
+                <th class="text-right">Net Price</th>
+                <th class="text-center" style="width: 110px;">Required Qty</th>
+                <th class="text-center">Base Flat?</th>
+                <th class="text-right">Allowance</th>
+                <th class="text-center">Use Allowance?</th>
+                <th class="text-right">Gross Total</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="form.equipmentRequired.length === 0">
+                <td colspan="8" class="text-center py-4 text-medium-emphasis">No equipment added yet.</td>
+              </tr>
+              <tr v-for="(req, idx) in form.equipmentRequired" :key="req.equipmentId">
+                <td class="font-weight-medium" style="width: 220px; min-width: 220px; max-width: 220px; white-space: normal; word-break: break-word;">{{ getEquipmentName(req.equipmentId) }}</td>
+                <td class="text-right">${{ formatMoney(appStore.getEquipmentById(req.equipmentId)?.netPrice || 0) }}</td>
+                <td>
+                  <v-text-field v-model.number="req.qty" type="number" variant="outlined" density="compact" hide-details
+                    class="ghost-cell-input"></v-text-field>
+                </td>
+                <td class="text-center">
+                  <div class="d-flex justify-center align-center">
+                    <v-checkbox-btn v-model="req.base" color="blue" class="ma-0"></v-checkbox-btn>
+                  </div>
+                </td>
+                <td class="text-right font-weight-medium text-amber-darken-3">
+                  ${{ formatMoney((req.qty || 1) * getEquipmentAllowancePrice(req.equipmentId)) }}
+                </td>
+                <td class="text-center">
+                  <div class="d-flex justify-center align-center">
+                    <v-checkbox-btn v-model="req.allow" color="teal" class="ma-0"></v-checkbox-btn>
+                  </div>
+                </td>
+                <td class="text-right font-weight-bold text-teal">
+                  ${{ formatMoney((req.qty || 1) * getEquipmentGrossPrice(req.equipmentId)) }}
+                </td>
+                <td class="text-center">
+                  <v-btn icon="mdi-delete" variant="flat" color="red-lighten-5" size="small" density="comfortable"
+                    class="text-red-darken-1 rounded-lg" @click="form.equipmentRequired.splice(idx, 1)"></v-btn>
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
+        </div>
       </v-window-item>
     </v-window>
   </v-card>
@@ -333,9 +339,15 @@ const addEquipmentRequirement = () => {
 </script>
 
 <style scoped>
-:deep(.v-table__wrapper),
-:deep(.v-table) {
-  margin-bottom: 0 !important;
+.requirements-table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+}
+
+:deep(.v-table__wrapper) {
+  padding-bottom: 10px !important;
+  margin-bottom: 8px !important;
 }
 
 .ghost-cell-input {
