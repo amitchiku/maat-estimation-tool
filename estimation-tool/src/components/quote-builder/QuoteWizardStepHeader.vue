@@ -14,7 +14,7 @@
     </div>
 
     <v-card class="form-card" elevation="0">
-      <v-row density="compact">
+      <v-row class="header-form-row">
         <v-col cols="12" md="6">
           <v-text-field v-model="quote.name" label="Proposal Name / Title *" variant="outlined" hide-details
             class="estimate-field" />
@@ -308,9 +308,14 @@ const copyCustomerAddress = async () => {
   color: var(--wizard-icon)
 }
 
+.header-form-row > :deep(.v-col) {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
 .prepared-title {
-  padding-top: 17px !important;
-  padding-bottom: 7px !important;
+  padding-top: 24px !important;
+  padding-bottom: 12px !important;
   color: var(--wizard-heading);
   font-size: 18px;
   font-weight: 700
