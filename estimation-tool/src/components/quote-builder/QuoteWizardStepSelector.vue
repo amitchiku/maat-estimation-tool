@@ -1,22 +1,34 @@
 <template>
   <v-card border elevation="0" class="rounded-xl pa-3">
-    <!-- Quick Group Selection -->
-    <div class="mb-4">
-      <v-row density="compact">
-        <v-col v-for="grp in groupCards" :key="grp.name" cols="6" sm="4" md="3">
-          <v-card border elevation="0" :color="grp.allSelected ? 'teal-lighten-5' : 'white'"
-            class="pa-3 rounded-lg cursor-pointer transition-all" @click="toggleGroup(grp.name)">
-            <div class="d-flex align-center justify-space-between mb-1">
-              <span class="font-weight-bold text-body-2 text-truncate">{{ grp.name }}</span>
-              <v-checkbox-btn :model-value="grp.allSelected" :indeterminate="grp.partiallySelected" color="teal"
-                density="compact" />
-            </div>
-            <div class="text-caption text-medium-emphasis">
-              {{ grp.selectedCount }} / {{ grp.totalCount }} Items
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
+    <!-- Quick Group Selection Chips -->
+    <div class="d-flex align-center flex-wrap ga-2 mb-4">
+      <div class="text-caption font-weight-medium text-medium-emphasis mr-1">
+        Quick Group Filter:
+      </div>
+      <v-chip
+        v-for="grp in groupCards"
+        :key="grp.name"
+        size="small"
+        :color="grp.allSelected ? 'teal' : (grp.partiallySelected ? 'teal-darken-2' : 'grey-darken-1')"
+        :variant="grp.allSelected || grp.partiallySelected ? 'flat' : 'outlined'"
+        class="cursor-pointer font-weight-medium"
+        @click="toggleGroup(grp.name)"
+      >
+        <v-icon
+          v-if="grp.allSelected"
+          icon="mdi-check"
+          size="14"
+          class="mr-1"
+        />
+        <v-icon
+          v-else-if="grp.partiallySelected"
+          icon="mdi-minus"
+          size="14"
+          class="mr-1"
+        />
+        {{ grp.name }}
+        <span class="ml-1 opacity-70">({{ grp.selectedCount }}/{{ grp.totalCount }})</span>
+      </v-chip>
     </div>
 
     <!-- Search & Filter Controls -->
@@ -39,7 +51,7 @@
     </v-row>
 
     <!-- Line Items Table -->
-    <v-card border elevation="0" class="rounded-lg overflow-hidden">
+    <v-card border elevation="0" class="rounded-lg overflow-hidden mb-3">
       <v-table density="compact" class="items-select-table">
         <thead>
           <tr>
@@ -53,22 +65,22 @@
 
         <tbody>
           <tr v-if="filteredlineItems.length === 0">
-            <td colspan="6" class="text-center py-6 text-medium-emphasis">
+            <td colspan="5" class="text-center py-6 text-medium-emphasis">
               No matching line items found.
             </td>
           </tr>
 
-          <tr v-for="item in filteredlineItems" :key="item.id" :class="{ 'bg-teal-lighten-5': isSelected(item.id) }">
+          <tr v-for="item in paginatedlineItems" :key="item.id" :class="{ 'bg-teal-lighten-5': isSelected(item.id) }">
             <td class="text-center">
               <v-checkbox-btn :model-value="isSelected(item.id)" color="teal" density="compact"
                 @update:model-value="toggleItem(item)" />
             </td>
 
-            <td class="font-weight-medium">{{ item.name }}</td>
+            <td class="font-weight-regular">{{ item.name }}</td>
 
             <td class="text-medium-emphasis">{{ item.defaultRoom || '-' }}</td>
 
-            <td class="text-right font-weight-medium">
+            <td class="text-right font-weight-regular">
               ${{ formatMoney(getItemUnitPrice(item)) }}
             </td>
 
@@ -81,11 +93,30 @@
         </tbody>
       </v-table>
     </v-card>
+
+    <!-- Table Pagination Footer -->
+    <div class="d-flex align-center justify-space-between flex-wrap ga-2 pt-1 px-1">
+      <div class="text-caption text-medium-emphasis">
+        Showing {{ pageStartItem }} - {{ pageEndItem }} of {{ filteredlineItems.length }} items
+        <span v-if="selectedItemsCount > 0" class="ml-2 text-teal font-weight-regular">
+          ({{ selectedItemsCount }} selected)
+        </span>
+      </div>
+
+      <v-pagination
+        v-if="totalPages > 1"
+        v-model="page"
+        :length="totalPages"
+        total-visible="5"
+        density="compact"
+        color="teal"
+      />
+    </div>
   </v-card>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useAppStore } from '@/stores/app'
 
 const props = defineProps({
@@ -98,10 +129,19 @@ const search = ref('')
 const filterGroup = ref('All')
 const filterCategory = ref('All')
 
+// Pagination State
+const page = ref(1)
+const itemsPerPage = 10
+
 onMounted(() => {
   if (!appStore.lineItems || appStore.lineItems.length === 0) {
     appStore.loadCatalog()
   }
+})
+
+// Reset pagination when search or filters change
+watch([search, filterGroup, filterCategory], () => {
+  page.value = 1
 })
 
 const alllineItems = computed(() => (appStore.lineItems && appStore.lineItems.length) ? appStore.lineItems : (appStore.lineItems || []))
@@ -136,6 +176,16 @@ const filteredlineItems = computed(() => alllineItems.value.filter(item => {
     (item.id && item.id.toLowerCase().includes(q))
   )
 }))
+
+const totalPages = computed(() => Math.ceil(filteredlineItems.value.length / itemsPerPage) || 1)
+
+const paginatedlineItems = computed(() => {
+  const start = (page.value - 1) * itemsPerPage
+  return filteredlineItems.value.slice(start, start + itemsPerPage)
+})
+
+const pageStartItem = computed(() => filteredlineItems.value.length === 0 ? 0 : (page.value - 1) * itemsPerPage + 1)
+const pageEndItem = computed(() => Math.min(page.value * itemsPerPage, filteredlineItems.value.length))
 
 const groupCards = computed(() => {
   const map = {}

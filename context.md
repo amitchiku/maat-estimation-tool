@@ -57,12 +57,25 @@ Estimation tool for construction and renovation projects built with Vue 3, Vueti
   - Confined vertical scrolling strictly within `<v-main>` below the top navigation bar (`html, body { overflow: hidden; }` and `.v-main { height: calc(100vh - 64px); overflow-y: auto; }`).
   - Applied `scrollbar-gutter: stable;` to eliminate horizontal layout shifts when expanding/collapsing room accordions.
 
+### 6. Step 2 (Items & Groups) Pagination & Typography Refinements
+- **Compact Group Selection Chips**: Replaced grid cards with space-efficient `<v-chip>` filter chips with live counts `(selected/total)` and selection state icons (`mdi-check`, `mdi-minus`).
+- **Table Pagination**: Added client-side pagination (10 items per page) with `<v-pagination>` and page footer counter (`Showing X-Y of Z items`).
+- **Typography Polish**: Removed bold font weights from `Item Name` and `Unit Price` table cells (`font-weight-regular`), keeping bold strictly on `<th>` headers.
+
+### 7. Stage 4 (Proposal Worksheet) UI/UX Refinements
+- **2 Decimal Place Money Formatting**: Enforced `formatMoney(...)` on room row allowance values.
+- **Rotating Triangular Arrow**: Room accordions use filled downward triangle (`mdi-triangle-down`) with smooth CSS rotation (`transform: rotate(-90deg)`) when collapsed.
+- **Consolidated Bulk Toggle Button**: Combined `Expand All` and `Collapse All` into a single dynamic toggle button (`Expand All` by default).
+- **Border Cleanups**: Removed outer card border wrapper from proposal worksheet and wizard stepper header.
+- **LocalStorage Persisted Switch Toggles**: Converted `Show Customer Details` to a `<v-switch color="teal">` matching `Show Internal Costs`, with both preferences saved in `localStorage`.
+- **Background Dialog Loading**: Defer-mounted `<LineItemSelectDialog>` in the background for 0ms instantaneous Step 3 → Step 4 page transitions.
+
 ## Core Component Map
 - `src/components/QuoteBuilder.vue`: Proposal wizard parent view and step navigation.
 - `src/components/quote-builder/QuoteWizardStepHeader.vue`: Step 1 header info form.
-- `src/components/quote-builder/QuoteWizardStepSelector.vue`: Step 2 items selection.
+- `src/components/quote-builder/QuoteWizardStepSelector.vue`: Step 2 items selection with compact chips and pagination.
 - `src/components/quote-builder/QuoteWizardStepRooms.vue`: Step 3 item room assignment table with multi-room combobox.
-- `src/components/quote-builder/QuoteProposalWorksheet.vue`: Stage 4 worksheet view with sticky headers, search, and bottom summary.
+- `src/components/quote-builder/QuoteProposalWorksheet.vue`: Stage 4 worksheet view with sticky headers, search, switches, and bottom summary.
 - `src/components/quote-builder/LineItemSelectDialog.vue`: Standalone modal dialog for multi-selecting line items or adding custom items.
 - `src/components/LineItems.vue`: Parent line item catalog view.
 - `src/components/line-items/LineItemsList.vue`: Paginated line items table view with column sorting and fixed styling.

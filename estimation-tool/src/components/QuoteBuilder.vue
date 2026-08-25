@@ -10,7 +10,7 @@
   </div>
   <div v-else>
     <!-- Top Bar & Stepper Card -->
-    <v-card border elevation="0" class="pa-4 mb-4 no-print">
+    <v-card elevation="0" class="pa-4 mb-4 no-print">
       <div class="d-flex align-center justify-space-between flex-wrap ga-3 mb-4">
         <div class="d-flex align-center ga-2">
           <span class="text-subtitle-1 font-weight-bold">Proposal Builder Wizard</span>

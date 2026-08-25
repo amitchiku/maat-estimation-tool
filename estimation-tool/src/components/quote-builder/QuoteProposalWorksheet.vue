@@ -9,9 +9,10 @@
 
         <!-- Bulk Controls & Cost Toggle -->
         <div class="d-flex align-center flex-wrap ga-2">
-          <v-btn variant="text" size="small" class="text-none font-weight-medium" @click="expandAll">Expand All</v-btn>
-          <v-btn variant="text" size="small" class="text-none font-weight-medium" @click="collapseAll">Collapse
-            All</v-btn>
+          <v-btn variant="text" size="small" class="text-none font-weight-medium" @click="toggleAllRooms">
+            <v-icon :icon="isEverythingExpanded ? 'mdi-unfold-less-horizontal' : 'mdi-unfold-more-horizontal'" size="18" class="mr-1" />
+            {{ isEverythingExpanded ? 'Collapse All' : 'Expand All' }}
+          </v-btn>
 
           <v-divider vertical class="mx-1" />
 
@@ -20,25 +21,14 @@
 
           <v-divider vertical class="mx-1" />
 
-          <v-btn variant="tonal" color="teal" size="small" class="text-none font-weight-medium"
-            @click="isHeaderCollapsed = !isHeaderCollapsed">
-            <v-icon :icon="isHeaderCollapsed ? 'mdi-chevron-down' : 'mdi-chevron-up'" size="18" class="mr-1" />
-            {{ isHeaderCollapsed ? 'Show Details' : 'Hide Details' }}
-          </v-btn>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="d-flex align-center ga-2">
-          <v-btn variant="tonal" color="blue" size="small" prepend-icon="mdi-printer" class="text-none"
-            @click="$emit('print')">Print / PDF</v-btn>
-          <v-btn color="teal" size="small" prepend-icon="mdi-content-save" class="text-none font-weight-bold"
-            @click="$emit('save')">Save Draft</v-btn>
+          <v-switch :model-value="!isHeaderCollapsed" @update:model-value="val => isHeaderCollapsed = !val"
+            label="Show Customer Details" color="teal" density="compact" hide-details class="ms-1" />
         </div>
       </div>
     </v-card>
 
-    <!-- Main Worksheet Card -->
-    <v-card border elevation="0" class="rounded-lg pa-4 mb-4">
+    <!-- Main Worksheet Container -->
+    <div class="mb-4">
       <!-- Collapsible Header Info -->
       <v-expand-transition>
         <div v-show="!isHeaderCollapsed" class="mb-4">
@@ -95,7 +85,7 @@
             <div class="d-flex align-center flex-wrap ga-2 pt-3 mt-3 border-t text-caption text-medium-emphasis">
               <strong>Prepared By:</strong>
               <span class="text-high-emphasis">{{ quote.preparedBy || appStore.settings?.preparedBy?.name || 'M. Webb'
-                }}</span>
+              }}</span>
               <span>|</span>
               <strong>Ph:</strong>
               <span class="text-high-emphasis">{{ quote.preparedByPhone || appStore.settings?.preparedBy?.phone ||
@@ -113,8 +103,8 @@
             @click="toggleRoomCollapse(room.name)">
             <!-- Left Header -->
             <div class="d-flex align-center ga-2">
-              <v-icon :icon="collapsedRooms[room.name] ? 'mdi-triangle-right' : 'mdi-triangle-down'" size="14"
-                color="teal" />
+              <v-icon icon="mdi-triangle-down" size="12" color="teal" class="accordion-arrow"
+                :class="{ 'is-collapsed': !!collapsedRooms[room.name] }" />
               <span class="font-weight-bold text-body-1 text-slate-900">{{ room.name }}</span>
               <v-chip size="x-small" color="teal" variant="tonal" class="font-weight-bold ml-1">
                 {{ room.items.length }} {{ room.items.length === 1 ? 'item' : 'items' }}
@@ -203,8 +193,8 @@
 
                     <!-- Allowance -->
                     <td class="text-right font-mono">
-                      {{ getItemPricing(item).allowanceAmount ? '$' + getItemPricing(item).allowanceAmount : '-' }}
-
+                      {{ getItemPricing(item).allowanceAmount ? '$' + formatMoney(getItemPricing(item).allowanceAmount)
+                      : '—' }}
                     </td>
 
                     <!-- Actions (3 Visible Actions: Allowance, Strike, Delete) -->
@@ -267,7 +257,7 @@
           <span v-else class="text-caption text-medium-emphasis">No tags</span>
         </div>
       </v-card>
-    </v-card>
+    </div>
 
     <!-- 4. Sticky Summary Bottom Bar -->
     <v-card border elevation="4" class="sticky-bottom-bar rounded-lg pa-3 no-print">
@@ -283,7 +273,7 @@
         <div class="d-flex align-center ga-2 text-body-2 text-amber-darken-3">
           <v-icon icon="mdi-shield-check-outline" size="20" />
           <span>Allowance Rollup: <strong class="text-subtitle-1">${{ formatMoney(proposalTotals.allowance)
-              }}</strong></span>
+          }}</strong></span>
         </div>
 
         <!-- Right Grand Total & Primary Action Buttons -->
@@ -291,7 +281,7 @@
           <div class="d-flex align-baseline ga-2 mr-2">
             <span class="text-caption text-medium-emphasis uppercase">Grand Total</span>
             <span class="text-h5 font-weight-bold text-teal-darken-3">${{ formatMoney(proposalTotals.grandTotal)
-              }}</span>
+            }}</span>
           </div>
 
           <v-btn variant="outlined" color="teal" class="text-none font-weight-medium" @click="$emit('save')">
@@ -310,13 +300,13 @@
       </div>
     </v-card>
 
-    <!-- Add Line Item Pop-up Dialog Component -->
-    <LineItemSelectDialog v-model="itemDialog" :target-room-name="targetRoomName" @add-items="handleAddDialogItems" />
+    <!-- Add Line Item Pop-up Dialog Component (Loaded in background) -->
+    <LineItemSelectDialog v-if="isDialogMounted" v-model="itemDialog" :target-room-name="targetRoomName" @add-items="handleAddDialogItems" />
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useAppStore } from '@/stores/app'
 import LineItemSelectDialog from './LineItemSelectDialog.vue'
 
@@ -327,30 +317,54 @@ const props = defineProps({
 
 const emit = defineEmits(['save', 'print', 'update:selectedItemsMap'])
 const appStore = useAppStore()
-const isHeaderCollapsed = ref(false)
+
+// LocalStorage persisted UI toggles
+const isHeaderCollapsed = ref(localStorage.getItem('worksheet_hide_customer_details') === 'true')
+const showInternalCosts = ref(localStorage.getItem('worksheet_show_internal_costs') === 'true')
+
+watch(isHeaderCollapsed, (val) => {
+  localStorage.setItem('worksheet_hide_customer_details', String(val))
+})
+
+watch(showInternalCosts, (val) => {
+  localStorage.setItem('worksheet_show_internal_costs', String(val))
+})
+
 const searchQuery = ref('')
-const showInternalCosts = ref(false)
 const collapsedRooms = ref({})
 const todayDate = new Date().toISOString().substring(0, 10)
 
-// Pop-up Item Dialog state
+// Pop-up Item Dialog state & Background Mount
 const itemDialog = ref(false)
+const isDialogMounted = ref(false)
 const targetRoomName = ref('')
 
+onMounted(() => {
+  // Load the dialog component in the background after worksheet renders
+  setTimeout(() => {
+    isDialogMounted.value = true
+  }, 200)
+})
+
 const toggleRoomCollapse = roomName => {
-  collapsedRooms.value[roomName] = !collapsedRooms.value[roomName]
+  collapsedRooms.value = {
+    ...collapsedRooms.value,
+    [roomName]: !collapsedRooms.value[roomName]
+  }
 }
 
-const expandAll = () => {
-  quoteRooms.value.forEach(r => {
-    collapsedRooms.value[r.name] = false
-  })
-}
+const isEverythingExpanded = computed(() => {
+  if (!quoteRooms.value.length) return false
+  return quoteRooms.value.every(r => collapsedRooms.value[r.name] === false)
+})
 
-const collapseAll = () => {
+const toggleAllRooms = () => {
+  const shouldCollapse = isEverythingExpanded.value
+  const next = {}
   quoteRooms.value.forEach(r => {
-    collapsedRooms.value[r.name] = true
+    next[r.name] = shouldCollapse
   })
+  collapsedRooms.value = next
 }
 
 const quoteRooms = computed(() => {
@@ -501,6 +515,7 @@ const duplicateItem = (item) => {
 
 const addItemToRoom = (roomName) => {
   targetRoomName.value = roomName
+  isDialogMounted.value = true
   itemDialog.value = true
 }
 
@@ -551,5 +566,13 @@ const formatMoney = value =>
 
 .font-mono {
   font-family: monospace, monospace;
+}
+
+.accordion-arrow {
+  transition: transform 0.2s ease-in-out;
+}
+
+.accordion-arrow.is-collapsed {
+  transform: rotate(-90deg);
 }
 </style>
