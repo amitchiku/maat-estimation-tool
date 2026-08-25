@@ -8,43 +8,53 @@
     <div class="mt-4 text-h6 text-medium-emphasis">Estimate Not Found</div>
     <v-btn color="teal" class="mt-4" @click="router.push({ name: 'quotes' })">Return to Quotes Dashboard</v-btn>
   </div>
-  <div v-else class="wizard-page">
-    <!-- Header -->
-    <div class="wizard-header no-print">
-      <div class="wizard-heading">
-        <div class="wizard-title">Proposal Builder Wizard</div>
-        <span class="wizard-dot">•</span>
-        <div class="wizard-id">{{ appStore.currentQuote.id }}</div>
-      </div>
-
-      <v-btn v-if="currentStep < 4" class="next-btn" elevation="0" @click="currentStep++">
-        Next
-        <v-icon icon="mdi-arrow-right" size="18" />
-      </v-btn>
-
-      <v-btn v-else class="save-final-btn" elevation="0" @click="saveQuote">
-        <v-icon icon="mdi-content-save-outline" size="19" class="save-icon" />
-        <span>Save Final Proposal</span>
-      </v-btn>
-    </div>
-
-    <!-- Steps -->
-    <div class="wizard-steps no-print">
-      <div v-for="s in wizardSteps" :key="s.step" class="wizard-step" :class="{
-        active: currentStep === s.step,
-        completed: currentStep > s.step
-      }" @click="currentStep = s.step">
-        <div class="step-track">
-          <div class="step-circle">{{ s.step }}</div>
-          <div v-if="s.step < 4" class="step-line"></div>
+  <div v-else>
+    <!-- Top Bar & Stepper Card -->
+    <v-card border elevation="0" class="pa-4 mb-4 no-print">
+      <div class="d-flex align-center justify-space-between flex-wrap ga-3 mb-4">
+        <div class="d-flex align-center ga-2">
+          <span class="text-subtitle-1 font-weight-bold">Proposal Builder Wizard</span>
+          <span class="text-medium-emphasis">•</span>
+          <span class="text-body-2 text-medium-emphasis">{{ appStore.currentQuote.id }}</span>
         </div>
 
-        <div class="step-label">{{ s.title }}</div>
+        <div>
+          <v-btn v-if="currentStep < 4" color="teal" class="text-none font-weight-bold" @click="currentStep++">
+            Next
+            <v-icon icon="mdi-arrow-right" class="ml-1" size="18" />
+          </v-btn>
+          <v-btn v-else color="teal" class="text-none font-weight-bold" prepend-icon="mdi-content-save-outline" @click="saveQuote">
+            Save Final Proposal
+          </v-btn>
+        </div>
       </div>
-    </div>
 
-    <!-- Content -->
-    <div class="wizard-body">
+      <!-- Stepper Navigation -->
+      <div class="d-flex align-center justify-space-between px-6 py-2">
+        <template v-for="(s, idx) in wizardSteps" :key="s.step">
+          <!-- Step Item -->
+          <div class="d-flex flex-column align-center cursor-pointer text-center" @click="currentStep = s.step">
+            <v-avatar :color="currentStep >= s.step ? 'teal' : 'grey-lighten-3'" size="32"
+              :class="currentStep >= s.step ? 'text-white font-weight-bold' : 'text-grey-darken-1 font-weight-bold'">
+              {{ s.step }}
+            </v-avatar>
+            <span class="text-caption mt-1"
+              :class="currentStep >= s.step ? 'text-teal-darken-2 font-weight-bold' : 'text-medium-emphasis'">
+              {{ s.title }}
+            </span>
+          </div>
+
+          <!-- Connecting Arrow Line -->
+          <div v-if="idx < wizardSteps.length - 1" class="step-connector d-flex align-center flex-grow-1 mx-3">
+            <div class="connector-line" :class="{ active: currentStep > s.step }"></div>
+            <v-icon icon="mdi-chevron-right" size="18" :color="currentStep > s.step ? 'teal' : 'grey-lighten-1'" class="ml-n2" />
+          </div>
+        </template>
+      </div>
+    </v-card>
+
+    <!-- Step Content -->
+    <div>
       <QuoteWizardStepHeader v-if="currentStep === 1" :quote="appStore.currentQuote" />
 
       <QuoteWizardStepSelector v-else-if="currentStep === 2" v-model:selected-items-map="selectedItemsMap" />
@@ -78,9 +88,6 @@ const router = useRouter()
 const appStore = useAppStore()
 const currentStep = ref(1)
 
-/* Details hidden by default */
-const isHeaderCollapsed = ref(true)
-
 const wizardSteps = [
   { step: 1, title: 'Header Info' },
   { step: 2, title: 'Items & Groups' },
@@ -97,20 +104,27 @@ const initSelectedItemsMap = () => {
 
   appStore.currentQuote.rooms.forEach(room => {
     ; (room.items || []).forEach(item => {
-      map[item.id] = {
-        id: item.id,
-        name: item.name,
-        group: item.group || item.category || 'General',
-        category: item.category || 'General',
-        defaultRoom: item.defaultRoom || room.name,
-        assignedRoom: room.name,
-        quantity: item.quantity || 1,
-        unit: item.unit || 'each',
-        isAllowanceFull: !!item.isAllowanceFull,
-        rawlineItems:
-          item.lineItemsData ||
-          appStore.lineItems?.find(a => a.id === item.id) ||
-          item
+      if (!map[item.id]) {
+        map[item.id] = {
+          id: item.id,
+          name: item.name,
+          group: item.group || item.category || 'General',
+          category: item.category || 'General',
+          defaultRoom: item.defaultRoom || room.name,
+          assignedRooms: [room.name],
+          assignedRoom: room.name,
+          quantity: item.quantity || 1,
+          unit: item.unit || 'each',
+          isAllowanceFull: !!item.isAllowanceFull,
+          rawlineItems:
+            item.lineItemsData ||
+            appStore.lineItems?.find(a => a.id === item.id) ||
+            item
+        }
+      } else {
+        if (!map[item.id].assignedRooms.includes(room.name)) {
+          map[item.id].assignedRooms.push(room.name)
+        }
       }
     })
   })
@@ -157,31 +171,32 @@ const syncQuoteWithStore = () => {
   const roomsMap = {}
 
   Object.values(selectedItemsMap.value).forEach(item => {
-    const roomName =
-      item.assignedRoom ||
-      item.defaultRoom ||
-      'General'
+    const assignedList = Array.isArray(item.assignedRooms) && item.assignedRooms.length
+      ? item.assignedRooms
+      : [item.assignedRoom || item.defaultRoom || 'General']
 
-    if (!roomsMap[roomName]) {
-      roomsMap[roomName] = {
-        id: `room_${roomName.toLowerCase().replace(/\s+/g, '_')}`,
-        name: roomName,
-        order: Object.keys(roomsMap).length + 1,
-        items: []
+    assignedList.forEach(roomName => {
+      if (!roomsMap[roomName]) {
+        roomsMap[roomName] = {
+          id: `room_${roomName.toLowerCase().replace(/\s+/g, '_')}`,
+          name: roomName,
+          order: Object.keys(roomsMap).length + 1,
+          items: []
+        }
       }
-    }
 
-    roomsMap[roomName].items.push({
-      id: item.id,
-      name: item.name,
-      group: item.group,
-      category: item.category,
-      defaultRoom: item.defaultRoom,
-      quantity: item.quantity,
-      unit: item.unit,
-      type: 'lineItems',
-      isAllowanceFull: !!item.isAllowanceFull,
-      lineItemsData: item.rawlineItems || {}
+      roomsMap[roomName].items.push({
+        id: item.id,
+        name: item.name,
+        group: item.group,
+        category: item.category,
+        defaultRoom: item.defaultRoom,
+        quantity: item.quantity,
+        unit: item.unit,
+        type: 'lineItems',
+        isAllowanceFull: !!item.isAllowanceFull,
+        lineItemsData: item.rawlineItems || {}
+      })
     })
   })
 
@@ -208,280 +223,28 @@ const exportPdf = () => {
 </script>
 
 <style scoped>
-.wizard-page {
-  width: 100%;
-  min-height: 100%;
-  padding: 1px 2px 5px;
-  box-sizing: border-box;
-  background: var(--wizard-page-bg);
-  color: var(--wizard-text);
-  transition: background-color .2s ease, color .2s ease;
-}
-
-:global(.v-theme--light) .wizard-page {
-  --wizard-page-bg: #fff;
-  --wizard-text: #26385f;
-  --wizard-heading: #111e43;
-  --wizard-muted: #617397;
-  --wizard-step-bg: #edf0f3;
-  --wizard-line: #d9dfe6;
-}
-
-:global(.v-theme--dark) .wizard-page {
-  --wizard-page-bg: #121212;
-  --wizard-text: #e3e6eb;
-  --wizard-heading: #fff;
-  --wizard-muted: #aeb5c0;
-  --wizard-step-bg: #2a2d31;
-  --wizard-line: #41454b;
-}
-
-.wizard-header {
-  width: 100%;
-  min-height: 46px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.wizard-heading {
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  white-space: nowrap;
-}
-
-.wizard-title {
-  color: var(--wizard-heading);
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.wizard-dot {
-  margin: 0 11px;
-  color: var(--wizard-muted);
-}
-
-.wizard-id {
-  color: var(--wizard-text);
-  font-size: 13px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.next-btn {
-  width: 110px;
-  min-width: 110px;
-  height: 42px !important;
-  border-radius: 9px;
-  background: #079a91 !important;
-  color: #fff !important;
-  font-size: 14px;
-  font-weight: 700;
-  text-transform: none;
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-
-.next-btn:hover {
-  background: #078b83 !important;
-  transform: translateY(-1px);
-  box-shadow: 0 5px 14px rgba(7, 154, 145, .22);
-}
-
-.next-btn .v-icon {
-  margin-left: 7px;
-}
-
-.save-final-btn {
-  width: 190px;
-  min-width: 190px;
-  height: 44px !important;
-  padding: 0 16px !important;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #079a91, #087f78) !important;
-  color: #fff !important;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: none;
-  white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(7, 154, 145, .18);
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-
-.save-final-btn:hover {
-  background: linear-gradient(135deg, #08a69b, #087f78) !important;
-  transform: translateY(-1px);
-  box-shadow: 0 7px 18px rgba(7, 154, 145, .28);
-}
-
-.save-final-btn .save-icon {
-  margin-right: 8px;
-}
-
-.wizard-steps {
-  width: 94%;
-  margin: 0 auto 31px;
-  display: flex;
-}
-
-.wizard-step {
-  position: relative;
-  flex: 1;
+.cursor-pointer {
   cursor: pointer;
-  text-align: center;
 }
 
-.step-track {
-  position: relative;
-  height: 30px;
-  display: flex;
-  align-items: center;
+.step-connector {
+  margin-top: -16px;
 }
 
-.step-circle {
-  position: relative;
-  z-index: 2;
-  width: 30px;
-  height: 30px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--wizard-step-bg);
-  color: var(--wizard-text);
-  font-size: 12px;
-  font-weight: 700;
+.connector-line {
+  flex: 1;
+  height: 2px;
+  background-color: #e0e0e0;
+  transition: background-color 0.2s ease;
 }
 
-.step-line {
-  position: absolute;
-  z-index: 1;
-  top: 14px;
-  left: 50%;
-  width: 100%;
-  height: 1px;
-  background: var(--wizard-line);
-}
-
-.wizard-step.active .step-circle,
-.wizard-step.completed .step-circle {
-  background: #0a9b91;
-  color: #fff;
-}
-
-.wizard-step.active .step-line,
-.wizard-step.completed .step-line {
-  background: #0a9b91;
-}
-
-.step-label {
-  margin-top: 8px;
-  color: var(--wizard-muted);
-  font-size: 12px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.wizard-step.active .step-label,
-.wizard-step.completed .step-label {
-  color: #079a91;
-}
-
-.wizard-step.active .step-label {
-  font-weight: 700;
-}
-
-.wizard-body {
-  width: 100%;
-}
-
-@media (max-width: 900px) {
-  .wizard-page {
-    padding: 10px 16px 40px;
-  }
-
-  .wizard-steps {
-    width: 100%;
-    margin-bottom: 28px;
-  }
-
-  .save-final-btn {
-    width: 175px;
-    min-width: 175px;
-  }
-}
-
-@media (max-width: 600px) {
-  .wizard-header {
-    gap: 10px;
-  }
-
-  .wizard-heading {
-    overflow: hidden;
-  }
-
-  .wizard-title,
-  .wizard-id {
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .wizard-title {
-    font-size: 14px;
-  }
-
-  .wizard-id {
-    font-size: 11px;
-  }
-
-  .wizard-dot {
-    margin: 0 7px;
-  }
-
-  .next-btn {
-    width: 90px;
-    min-width: 90px;
-  }
-
-  .save-final-btn {
-    width: 150px;
-    min-width: 150px;
-    height: 40px !important;
-    padding: 0 10px !important;
-    font-size: 11px;
-  }
-
-  .save-final-btn .save-icon {
-    margin-right: 5px;
-  }
-
-  .step-circle {
-    width: 27px;
-    height: 27px;
-    font-size: 11px;
-  }
-
-  .step-line {
-    top: 13px;
-  }
-
-  .step-label {
-    font-size: 10px;
-  }
+.connector-line.active {
+  background-color: #009688;
 }
 
 @media print {
   .no-print {
     display: none !important;
-  }
-
-  .wizard-page {
-    padding: 0;
-    background: #fff !important;
-    color: #000 !important;
   }
 }
 </style>

@@ -262,10 +262,6 @@ const formatMoney = val =>
   padding: 4px 8px
 }
 
-.cursor-pointer {
-  cursor: pointer
-}
-
 .transition-all {
   transition: all .2s ease-in-out
 }

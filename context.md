@@ -34,7 +34,36 @@ Estimation tool for construction and renovation projects built with Vue 3, Vueti
 - Disabled browser autofill popovers by adding `:input-props="{ autocomplete: 'new-password', role: 'presentation', name: '...' }"` to selection inputs across components.
 - Added `min-height: 380px` constraint to `LineItemRequirementsEditor.vue` card container to maintain layout stability during tab switches.
 
+### 4. Proposal Builder Wizard & Step Navigation
+- **Step Connector Lines**: Added horizontal connector tracks with right-pointing arrow chevrons (`mdi-chevron-right`) linking Step 1 → Step 2 → Step 3 → Step 4 in `QuoteBuilder.vue`. Active steps highlight in teal.
+- **Step 3 (Room Summary) Multi-Room Assignment**:
+  - Removed `Default Room` column.
+  - Replaced `Group` column with `Category`.
+  - Converted `Assigned Proposal Room(s)` to `<v-combobox multiple chips>`, allowing line items to be assigned to multiple rooms simultaneously.
+
+### 5. Stage 4 (Proposal Worksheet) Overhaul
+- **Workspace Top Toolbar**: Added live room/item search, `Expand All` / `Collapse All` bulk toggles, `Show Internal Costs` toggle switch, `Print / PDF`, and `Save Draft` buttons.
+- **Sticky Accordion Docking**: Room accordion headers use `#F8FAFC` background and `position: sticky; top: 0; z-index: 5` so headers stay pinned while scrolling long room lists.
+- **Cleaned Data Grid & Row Actions**:
+  - Line item names and Total column formatted with standard regular font weight (`font-weight-regular`).
+  - Replaced generic tooltips with native Vuetify 3 `<v-tooltip activator="parent" location="top">`.
+  - Added 3 visible tonal action buttons: **Allowance Toggle**, **Strike Toggle** (excludes struck rows from room and grand totals), and **Delete**.
+- **Sticky Bottom Summary Bar**: Fixed at `position: sticky; bottom: 12px; z-index: 10` displaying scope counter, total allowance rollup, 20px grand total, `Save Draft`, `Preview PDF`, and `Finalize Proposal`.
+- **Standalone `LineItemSelectDialog.vue` Component**:
+  - Extracted pop-up line item search into `src/components/quote-builder/LineItemSelectDialog.vue`.
+  - Ignored categories in search and item list display per user specification.
+  - Sliced catalog rendering to top-30 items for instant 0ms pop-up load time and lag-free live search filtering.
+- **Layout Shift & Page Scroll Fixes**:
+  - Confined vertical scrolling strictly within `<v-main>` below the top navigation bar (`html, body { overflow: hidden; }` and `.v-main { height: calc(100vh - 64px); overflow-y: auto; }`).
+  - Applied `scrollbar-gutter: stable;` to eliminate horizontal layout shifts when expanding/collapsing room accordions.
+
 ## Core Component Map
+- `src/components/QuoteBuilder.vue`: Proposal wizard parent view and step navigation.
+- `src/components/quote-builder/QuoteWizardStepHeader.vue`: Step 1 header info form.
+- `src/components/quote-builder/QuoteWizardStepSelector.vue`: Step 2 items selection.
+- `src/components/quote-builder/QuoteWizardStepRooms.vue`: Step 3 item room assignment table with multi-room combobox.
+- `src/components/quote-builder/QuoteProposalWorksheet.vue`: Stage 4 worksheet view with sticky headers, search, and bottom summary.
+- `src/components/quote-builder/LineItemSelectDialog.vue`: Standalone modal dialog for multi-selecting line items or adding custom items.
 - `src/components/LineItems.vue`: Parent line item catalog view.
 - `src/components/line-items/LineItemsList.vue`: Paginated line items table view with column sorting and fixed styling.
 - `src/components/line-items/LineItemFormSettings.vue`: Settings form for editing line item properties.

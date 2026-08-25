@@ -1,199 +1,324 @@
 <template>
-  <div class="proposal-wrapper">
-    <v-card border elevation="0" class="toolbar-card rounded-lg pa-2 mb-3">
-      <div class="d-flex align-center justify-space-between">
-        <v-btn variant="tonal" color="teal" size="small" class="text-none font-weight-medium"
-          @click="isHeaderCollapsed = !isHeaderCollapsed">
-          <v-icon :icon="isHeaderCollapsed ? 'mdi-chevron-down' : 'mdi-chevron-up'" size="18" class="mr-1" />
-          {{ isHeaderCollapsed ? 'Show Details' : 'Hide Details' }}
-        </v-btn>
+  <div>
+    <!-- 1. Workspace Controls (Top Toolbar) -->
+    <v-card border elevation="0" class="rounded-lg pa-3 mb-3 no-print">
+      <div class="d-flex align-center justify-space-between flex-wrap ga-3">
+        <!-- Live Search / Filter -->
+        <v-text-field v-model="searchQuery" label="Search room or item..." prepend-inner-icon="mdi-magnify"
+          variant="outlined" density="compact" hide-details clearable style="max-width: 280px;" />
 
+        <!-- Bulk Controls & Cost Toggle -->
+        <div class="d-flex align-center flex-wrap ga-2">
+          <v-btn variant="text" size="small" class="text-none font-weight-medium" @click="expandAll">Expand All</v-btn>
+          <v-btn variant="text" size="small" class="text-none font-weight-medium" @click="collapseAll">Collapse
+            All</v-btn>
+
+          <v-divider vertical class="mx-1" />
+
+          <v-switch v-model="showInternalCosts" label="Show Internal Costs" color="teal" density="compact" hide-details
+            class="ms-1" />
+
+          <v-divider vertical class="mx-1" />
+
+          <v-btn variant="tonal" color="teal" size="small" class="text-none font-weight-medium"
+            @click="isHeaderCollapsed = !isHeaderCollapsed">
+            <v-icon :icon="isHeaderCollapsed ? 'mdi-chevron-down' : 'mdi-chevron-up'" size="18" class="mr-1" />
+            {{ isHeaderCollapsed ? 'Show Details' : 'Hide Details' }}
+          </v-btn>
+        </div>
+
+        <!-- Action Buttons -->
         <div class="d-flex align-center ga-2">
           <v-btn variant="tonal" color="blue" size="small" prepend-icon="mdi-printer" class="text-none"
             @click="$emit('print')">Print / PDF</v-btn>
           <v-btn color="teal" size="small" prepend-icon="mdi-content-save" class="text-none font-weight-bold"
-            @click="$emit('save')">Save</v-btn>
+            @click="$emit('save')">Save Draft</v-btn>
         </div>
       </div>
     </v-card>
 
-    <v-card border elevation="0" class="worksheet-card rounded-lg pa-3">
+    <!-- Main Worksheet Card -->
+    <v-card border elevation="0" class="rounded-lg pa-4 mb-4">
+      <!-- Collapsible Header Info -->
       <v-expand-transition>
-        <div v-show="!isHeaderCollapsed" class="proposal-header mb-3">
-          <div class="header-main">
-            <div>
-              <div class="company-name">
-                {{ appStore.settings?.companyHeader?.companyName || 'Sycamore Design Build, Inc.' }}
+        <div v-show="!isHeaderCollapsed" class="mb-4">
+          <v-card border elevation="0" class="pa-4 rounded-lg bg-surface">
+            <!-- Header Main -->
+            <div class="d-flex align-center justify-space-between flex-wrap ga-3 pb-3 mb-3 border-b">
+              <div>
+                <div class="text-subtitle-1 font-weight-bold">
+                  {{ appStore.settings?.companyHeader?.companyName || 'Sycamore Design Build, Inc.' }}
+                </div>
+                <div class="text-caption text-medium-emphasis">
+                  {{ appStore.settings?.companyHeader?.address || '4427 Chestnut La. Rockville, MD 20853' }}
+                </div>
+                <div class="text-caption text-medium-emphasis">
+                  Ph: {{ appStore.settings?.companyHeader?.phone || '(301) 924-9322' }}
+                  <span class="mx-1">|</span>
+                  {{ appStore.settings?.companyHeader?.mhic || 'MHIC 68498' }}
+                </div>
               </div>
-              <div class="company-address">
-                {{ appStore.settings?.companyHeader?.address || '4427 Chestnut La. Rockville, MD 20853' }}
-              </div>
-              <div class="company-contact">
-                Ph: {{ appStore.settings?.companyHeader?.phone || '(301) 924-9322' }}
-                <span class="separator">|</span>
-                {{ appStore.settings?.companyHeader?.mhic || 'MHIC 68498' }}
+
+              <div class="text-right">
+                <div class="text-h6 font-weight-bold text-teal-darken-2">Proposal</div>
+                <div class="text-caption text-medium-emphasis"><strong>Date:</strong> {{ quote.date || todayDate }}
+                </div>
+                <div v-if="quote.dateOfLoss" class="text-caption text-medium-emphasis">
+                  <strong>Date of Loss:</strong> {{ quote.dateOfLoss }}
+                </div>
               </div>
             </div>
 
-            <div class="proposal-info">
-              <div class="proposal-title">Proposal</div>
-              <div class="proposal-date"><strong>Date:</strong> {{ quote.date || todayDate }}</div>
-              <div v-if="quote.dateOfLoss" class="proposal-date">
-                <strong>Date of Loss:</strong> {{ quote.dateOfLoss }}
-              </div>
-            </div>
-          </div>
+            <!-- Customer Grid -->
+            <v-row density="compact">
+              <v-col cols="12" md="6">
+                <v-card border elevation="0" class="pa-3 rounded-lg bg-amber-lighten-5">
+                  <div class="text-caption font-weight-bold text-uppercase text-medium-emphasis mb-1">Prepared For</div>
+                  <div class="text-caption"><strong>Customer:</strong> {{ quote.clientName || 'Customer' }}</div>
+                  <div class="text-caption"><strong>Address:</strong> {{ quote.clientStreet || 'Street Address' }}</div>
+                  <div class="text-caption"><strong>City, State:</strong> {{ quote.clientCityState || 'City, State' }}
+                  </div>
+                </v-card>
+              </v-col>
 
-          <div class="customer-grid">
-            <div class="customer-box">
-              <div class="box-title">Prepared For</div>
-              <div class="customer-row"><span>Customer</span><strong>{{ quote.clientName || 'Customer' }}</strong></div>
-              <div class="customer-row"><span>Address</span><span>{{ quote.clientStreet || 'Street Address' }}</span>
-              </div>
-              <div class="customer-row"><span>City, State</span><span>{{ quote.clientCityState || 'City, State'
-                  }}</span></div>
-            </div>
+              <v-col cols="12" md="6">
+                <v-card border elevation="0" class="pa-3 rounded-lg bg-amber-lighten-5">
+                  <div class="text-caption font-weight-bold text-uppercase text-medium-emphasis mb-1">Project</div>
+                  <div class="text-caption">
+                    <strong>Project Address:</strong> {{ quote.projectAddress || 'Same' }}
+                  </div>
+                </v-card>
+              </v-col>
+            </v-row>
 
-            <div class="customer-box">
-              <div class="box-title">Project</div>
-              <div class="customer-row">
-                <span>Project Address</span>
-                <strong>{{ quote.projectAddress || 'Same' }}</strong>
-              </div>
+            <!-- Prepared By Footer -->
+            <div class="d-flex align-center flex-wrap ga-2 pt-3 mt-3 border-t text-caption text-medium-emphasis">
+              <strong>Prepared By:</strong>
+              <span class="text-high-emphasis">{{ quote.preparedBy || appStore.settings?.preparedBy?.name || 'M. Webb'
+                }}</span>
+              <span>|</span>
+              <strong>Ph:</strong>
+              <span class="text-high-emphasis">{{ quote.preparedByPhone || appStore.settings?.preparedBy?.phone ||
+                '(301) 252 - 1355' }}</span>
             </div>
-          </div>
-
-          <div class="prepared-by">
-            <strong>Prepared By:</strong>
-            <span>{{ quote.preparedBy || appStore.settings?.preparedBy?.name || 'M. Webb' }}</span>
-            <span class="separator">|</span>
-            <strong>Ph:</strong>
-            <span>{{ quote.preparedByPhone || appStore.settings?.preparedBy?.phone || '(301) 252 - 1355' }}</span>
-          </div>
+          </v-card>
         </div>
       </v-expand-transition>
 
-      <div v-for="room in quoteRooms" :key="room.name" class="room-section mb-4">
-        <div class="room-header d-flex align-center justify-space-between px-3 py-2 rounded-t-lg cursor-pointer"
-          @click="toggleRoomCollapse(room.name)">
-          <div class="d-flex align-center">
-            <v-icon :icon="collapsedRooms[room.name] ? 'mdi-chevron-right' : 'mdi-chevron-down'" size="18"
-              class="mr-1" />
-            <span class="room-name">{{ room.name }}</span>
-            <v-chip size="x-small" color="teal" variant="tonal" class="ml-2 font-weight-bold">
-              {{ room.items.length }} {{ room.items.length === 1 ? 'Item' : 'Items' }}
-            </v-chip>
+      <!-- 2. Accordion Structure for High Room Counts -->
+      <div v-for="room in filteredQuoteRooms" :key="room.name" class="mb-4">
+        <v-card border elevation="0" class="rounded-lg overflow-hidden room-card">
+          <!-- Header Bar (Sticky Docking) -->
+          <div class="d-flex align-center justify-space-between px-4 py-2 sticky-room-header border-b cursor-pointer"
+            @click="toggleRoomCollapse(room.name)">
+            <!-- Left Header -->
+            <div class="d-flex align-center ga-2">
+              <v-icon :icon="collapsedRooms[room.name] ? 'mdi-triangle-right' : 'mdi-triangle-down'" size="14"
+                color="teal" />
+              <span class="font-weight-bold text-body-1 text-slate-900">{{ room.name }}</span>
+              <v-chip size="x-small" color="teal" variant="tonal" class="font-weight-bold ml-1">
+                {{ room.items.length }} {{ room.items.length === 1 ? 'item' : 'items' }}
+              </v-chip>
+            </div>
+
+            <!-- Right Financial Pills & Inline + Line Item Button -->
+            <div class="d-flex align-center ga-3" @click.stop>
+              <v-chip size="small" variant="outlined" color="amber-darken-3" class="font-weight-medium">
+                Allowance: ${{ formatMoney(getRoomTotals(room).allowance) }}
+              </v-chip>
+
+              <v-chip size="small" variant="flat" color="teal-lighten-5" class="text-teal-darken-3 font-weight-bold">
+                Room Total: ${{ formatMoney(getRoomTotals(room).total) }}
+              </v-chip>
+
+              <v-btn size="small" color="teal" prepend-icon="mdi-plus" variant="flat"
+                class="text-none font-weight-bold px-3" @click="addItemToRoom(room.name)">
+                Line Item
+              </v-btn>
+            </div>
           </div>
 
-          <div class="room-total">
-            <span>Total: <strong>${{ formatMoney(getRoomTotals(room).total) }}</strong></span>
-            <span class="allowance-text">Allowance: <strong>${{ formatMoney(getRoomTotals(room).allowance)
-                }}</strong></span>
-          </div>
-        </div>
+          <!-- 3. Data Grid Cleanup -->
+          <v-expand-transition>
+            <div v-show="!collapsedRooms[room.name]">
+              <v-table density="compact" class="bg-white">
+                <thead>
+                  <tr class="bg-grey-lighten-4">
+                    <th class="font-weight-bold">Description</th>
+                    <th class="text-center font-weight-bold" style="width:130px">Qty</th>
+                    <th v-if="showInternalCosts" class="text-right font-weight-bold" style="width:105px">Base Price</th>
+                    <th class="text-right font-weight-bold" style="width:105px">Unit Price</th>
+                    <th class="text-right font-weight-bold" style="width:115px">Total</th>
+                    <th v-if="showInternalCosts" class="text-right font-weight-bold" style="width:115px">Unit Allowance
+                    </th>
+                    <th class="text-right font-weight-bold" style="width:115px">Allowance</th>
+                    <th class="text-center font-weight-bold" style="width:140px">Actions</th>
+                  </tr>
+                </thead>
 
-        <v-expand-transition>
-          <div v-show="!collapsedRooms[room.name]" class="room-table-wrapper">
-            <v-table density="compact" class="proposal-table">
-              <thead>
-                <tr>
-                  <th>Description</th>
-                  <th class="text-center" style="width:65px">Qty</th>
-                  <th class="text-center" style="width:65px">U/M</th>
-                  <th class="text-right" style="width:95px">Base Price</th>
-                  <th class="text-right" style="width:95px">Unit Price</th>
-                  <th class="text-right" style="width:105px">Total</th>
-                  <th class="text-right" style="width:105px">Unit Allowance</th>
-                  <th class="text-right" style="width:105px">Allowance</th>
-                  <th class="text-center" style="width:45px">A</th>
-                  <th class="text-center" style="width:50px">Strike</th>
-                </tr>
-              </thead>
+                <tbody>
+                  <tr v-if="!room.items.length">
+                    <td :colspan="showInternalCosts ? 8 : 6" class="text-center py-4 text-medium-emphasis">
+                      No items in this room.
+                    </td>
+                  </tr>
 
-              <tbody>
-                <tr v-if="!room.items.length">
-                  <td colspan="10" class="empty-row">No items in this room.</td>
-                </tr>
+                  <tr v-for="item in room.items" :key="item.id"
+                    :class="{ 'opacity-50 text-decoration-line-through': item.isStruck }">
+                    <!-- Description -->
+                    <td class="py-2">
+                      <div class="text-body-2 font-weight-regular">{{ item.name }}</div>
+                      <div v-if="item.desc" class="text-caption text-medium-emphasis mt-n1">{{ item.desc }}</div>
+                    </td>
 
-                <tr v-for="item in room.items" :key="item.id" :class="{ 'strike-row': item.isStruck }">
-                  <td class="font-weight-medium">
-                    {{ item.name }}
-                    <div v-if="item.desc" class="item-description">{{ item.desc }}</div>
-                  </td>
+                    <!-- Qty -->
+                    <td class="text-center py-1">
+                      <div class="d-flex align-center justify-center ga-1">
+                        <v-text-field :model-value="item.quantity" type="number" min="1" density="compact"
+                          variant="outlined" hide-details style="width: 68px;" class="qty-field text-center"
+                          @update:model-value="val => updateItemQty(item, val)" />
+                        <span class="text-caption text-medium-emphasis">{{ item.unit || 'ea' }}</span>
+                      </div>
+                    </td>
 
-                  <td class="text-center">
-                    <input type="number" min="1" class="qty-input" :value="item.quantity"
-                      @change="e => updateItemQty(item, e.target.value)" />
-                  </td>
+                    <!-- Base Price (Internal) -->
+                    <td v-if="showInternalCosts" class="text-right font-mono">
+                      ${{ formatMoney(getItemPricing(item).basePrice) }}
+                    </td>
 
-                  <td class="text-center item-muted">{{ item.unit || 'each' }}</td>
-                  <td class="text-right item-muted">${{ formatMoney(getItemPricing(item).basePrice) }}</td>
-                  <td class="text-right">${{ formatMoney(getItemPricing(item).unitPrice) }}</td>
-                  <td class="text-right font-weight-bold">${{ formatMoney(getItemPricing(item).totalAmount) }}</td>
-                  <td class="text-right item-muted">${{ formatMoney(getItemPricing(item).unitAllowance) }}</td>
-                  <td class="text-right allowance-text font-weight-bold">${{
-                    formatMoney(getItemPricing(item).allowanceAmount) }}</td>
+                    <!-- Unit Price -->
+                    <td class="text-right font-mono">
+                      ${{ formatMoney(getItemPricing(item).unitPrice) }}
+                    </td>
 
-                  <td class="text-center">
-                    <v-checkbox-btn v-model="item.isAllowanceFull" color="teal" density="compact" />
-                  </td>
+                    <!-- Total (Regular Weight) -->
+                    <td class="text-right font-mono">
+                      ${{ formatMoney(getItemPricing(item).totalAmount) }}
+                    </td>
 
-                  <td class="text-center">
-                    <v-btn icon="mdi-close" size="x-small" color="red" variant="text" title="Remove Item"
-                      @click="removeItemFromRoom(room.name, item.id)" />
-                  </td>
-                </tr>
-              </tbody>
-            </v-table>
-          </div>
-        </v-expand-transition>
+                    <!-- Unit Allowance (Internal) -->
+                    <td v-if="showInternalCosts" class="text-right font-mono">
+                      ${{ formatMoney(getItemPricing(item).unitAllowance) }}
+                    </td>
+
+                    <!-- Allowance -->
+                    <td class="text-right font-mono">
+                      {{ getItemPricing(item).allowanceAmount ? '$' + getItemPricing(item).allowanceAmount : '-' }}
+
+                    </td>
+
+                    <!-- Actions (3 Visible Actions: Allowance, Strike, Delete) -->
+                    <td class="text-center py-1">
+                      <div class="d-flex align-center justify-center ga-1">
+                        <!-- 1. Allowance Toggle -->
+                        <v-btn icon size="x-small" variant="tonal"
+                          :color="item.isAllowanceFull ? 'amber-darken-3' : 'teal-lighten-4'"
+                          @click="toggleAllowanceFull(item)">
+                          <v-icon icon="mdi-shield-check-outline"
+                            :color="item.isAllowanceFull ? 'amber-darken-3' : 'teal-darken-2'" size="16" />
+                          <v-tooltip activator="parent" location="top">
+                            {{ item.isAllowanceFull ? 'Allowance: Full Total' : 'Allowance: Unit Rate' }}
+                          </v-tooltip>
+                        </v-btn>
+
+                        <!-- 2. Strike Toggle (Excludes from calculation) -->
+                        <v-btn icon size="x-small" variant="tonal"
+                          :color="item.isStruck ? 'red-lighten-4' : 'blue-grey-lighten-4'"
+                          @click="toggleItemStruck(item)">
+                          <v-icon icon="mdi-format-strikethrough-variant"
+                            :color="item.isStruck ? 'red-darken-2' : 'blue-grey-darken-2'" size="16" />
+                          <v-tooltip activator="parent" location="top">
+                            {{ item.isStruck ?
+                              'Unstrike Item (Include in Calculation)' :
+                              'Strike Item (Exclude from Calculation) ' }}
+                          </v-tooltip>
+                        </v-btn>
+
+                        <!-- 3. Delete -->
+                        <v-btn icon size="x-small" variant="tonal" color="red-lighten-4"
+                          @click="removeItemFromRoom(room.name, item.id)">
+                          <v-icon icon="mdi-delete-outline" color="red-darken-2" size="16" />
+                          <v-tooltip activator="parent" location="top">Delete Item</v-tooltip>
+                        </v-btn>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </v-table>
+            </div>
+          </v-expand-transition>
+        </v-card>
       </div>
 
-      <v-card border elevation="0" class="tags-card rounded-lg mb-3">
-        <div class="tags-inner">
-          <div class="tags-title">
+      <!-- Tags Card -->
+      <v-card border elevation="0" class="rounded-lg pa-3 mb-3 bg-surface">
+        <div class="d-flex align-center flex-wrap ga-2">
+          <div class="d-flex align-center ga-1 text-caption font-weight-bold mr-2">
             <v-icon icon="mdi-tag-multiple-outline" color="teal" size="17" />
             <span>Tags</span>
           </div>
 
-          <div v-if="tagSummaries.length" class="tag-list">
+          <div v-if="tagSummaries.length" class="d-flex flex-wrap ga-1">
             <v-chip v-for="tg in tagSummaries" :key="tg.name" size="x-small" color="teal" variant="tonal">
               {{ tg.name }}: {{ tg.count }} (${{ formatMoney(tg.total) }})
             </v-chip>
           </div>
 
-          <span v-else class="no-tags">No tags</span>
-        </div>
-      </v-card>
-
-      <v-card border elevation="0" class="totals-card rounded-lg">
-        <div class="totals-section">
-          <div class="summary-stat"><span>Total Rooms</span><strong>{{ quoteRooms.length }}</strong></div>
-          <div class="summary-divider" />
-          <div class="summary-stat"><span>Line Items</span><strong>{{ totalProposalItemsCount }}</strong></div>
-        </div>
-
-        <div class="totals-section totals-right">
-          <div class="allowance-summary">
-            <span>Allowance</span>
-            <strong>${{ formatMoney(proposalTotals.allowance) }}</strong>
-          </div>
-
-          <div class="summary-divider" />
-
-          <div class="grand-total">
-            <span>Grand Total</span>
-            <strong>${{ formatMoney(proposalTotals.grandTotal) }}</strong>
-          </div>
+          <span v-else class="text-caption text-medium-emphasis">No tags</span>
         </div>
       </v-card>
     </v-card>
+
+    <!-- 4. Sticky Summary Bottom Bar -->
+    <v-card border elevation="4" class="sticky-bottom-bar rounded-lg pa-3 no-print">
+      <div class="d-flex align-center justify-space-between flex-wrap ga-3">
+        <!-- Left Scope Counter -->
+        <div class="d-flex align-center ga-2 text-body-2 text-medium-emphasis">
+          <v-icon icon="mdi-home-city-outline" color="teal" size="20" />
+          <span>Total: <strong>{{ quoteRooms.length }} Rooms</strong> • <strong>{{ totalProposalItemsCount }} Line
+              Items</strong></span>
+        </div>
+
+        <!-- Middle Allowance Rollup -->
+        <div class="d-flex align-center ga-2 text-body-2 text-amber-darken-3">
+          <v-icon icon="mdi-shield-check-outline" size="20" />
+          <span>Allowance Rollup: <strong class="text-subtitle-1">${{ formatMoney(proposalTotals.allowance)
+              }}</strong></span>
+        </div>
+
+        <!-- Right Grand Total & Primary Action Buttons -->
+        <div class="d-flex align-center ga-3">
+          <div class="d-flex align-baseline ga-2 mr-2">
+            <span class="text-caption text-medium-emphasis uppercase">Grand Total</span>
+            <span class="text-h5 font-weight-bold text-teal-darken-3">${{ formatMoney(proposalTotals.grandTotal)
+              }}</span>
+          </div>
+
+          <v-btn variant="outlined" color="teal" class="text-none font-weight-medium" @click="$emit('save')">
+            Save Draft
+          </v-btn>
+
+          <v-btn variant="tonal" color="blue" class="text-none font-weight-medium" prepend-icon="mdi-eye-outline"
+            @click="$emit('print')">
+            Preview PDF
+          </v-btn>
+
+          <v-btn color="teal" class="text-none font-weight-bold" prepend-icon="mdi-check-all" @click="$emit('save')">
+            Finalize Proposal
+          </v-btn>
+        </div>
+      </div>
+    </v-card>
+
+    <!-- Add Line Item Pop-up Dialog Component -->
+    <LineItemSelectDialog v-model="itemDialog" :target-room-name="targetRoomName" @add-items="handleAddDialogItems" />
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import { useAppStore } from '@/stores/app'
+import LineItemSelectDialog from './LineItemSelectDialog.vue'
 
 const props = defineProps({
   quote: { type: Object, required: true },
@@ -203,11 +328,29 @@ const props = defineProps({
 const emit = defineEmits(['save', 'print', 'update:selectedItemsMap'])
 const appStore = useAppStore()
 const isHeaderCollapsed = ref(false)
+const searchQuery = ref('')
+const showInternalCosts = ref(false)
 const collapsedRooms = ref({})
 const todayDate = new Date().toISOString().substring(0, 10)
 
+// Pop-up Item Dialog state
+const itemDialog = ref(false)
+const targetRoomName = ref('')
+
 const toggleRoomCollapse = roomName => {
   collapsedRooms.value[roomName] = !collapsedRooms.value[roomName]
+}
+
+const expandAll = () => {
+  quoteRooms.value.forEach(r => {
+    collapsedRooms.value[r.name] = false
+  })
+}
+
+const collapseAll = () => {
+  quoteRooms.value.forEach(r => {
+    collapsedRooms.value[r.name] = true
+  })
 }
 
 const quoteRooms = computed(() => {
@@ -220,7 +363,35 @@ const quoteRooms = computed(() => {
   return Object.values(rooms)
 })
 
+const filteredQuoteRooms = computed(() => {
+  if (!searchQuery.value) return quoteRooms.value
+
+  const q = searchQuery.value.toLowerCase().trim()
+  return quoteRooms.value.map(room => {
+    const roomMatch = room.name.toLowerCase().includes(q)
+    if (roomMatch) return room
+
+    const filteredItems = room.items.filter(item =>
+      (item.name && item.name.toLowerCase().includes(q)) ||
+      (item.desc && item.desc.toLowerCase().includes(q)) ||
+      (item.category && item.category.toLowerCase().includes(q))
+    )
+
+    return { ...room, items: filteredItems }
+  }).filter(room => room.items.length > 0)
+})
+
 const getItemPricing = item => {
+  if (item.isStruck) {
+    return {
+      basePrice: 0,
+      unitPrice: 0,
+      totalAmount: 0,
+      unitAllowance: 0,
+      allowanceAmount: 0
+    }
+  }
+
   const qty = parseFloat(item.quantity) || 1
   const raw = item.rawlineItems || {}
   let baseVal = 0, unitVal = 0, unitAllow = 0
@@ -301,6 +472,46 @@ const updateItemQty = (item, value) => {
   }
 }
 
+const toggleAllowanceFull = (item) => {
+  const next = { ...props.selectedItemsMap }
+  if (next[item.id]) {
+    next[item.id] = { ...next[item.id], isAllowanceFull: !next[item.id].isAllowanceFull }
+    emit('update:selectedItemsMap', next)
+  }
+}
+
+const toggleItemStruck = (item) => {
+  const next = { ...props.selectedItemsMap }
+  if (next[item.id]) {
+    next[item.id] = { ...next[item.id], isStruck: !next[item.id].isStruck }
+    emit('update:selectedItemsMap', next)
+  }
+}
+
+const duplicateItem = (item) => {
+  const newId = `${item.id}_copy_${Date.now()}`
+  const next = { ...props.selectedItemsMap }
+  next[newId] = {
+    ...JSON.parse(JSON.stringify(item)),
+    id: newId,
+    name: `${item.name} (Copy)`
+  }
+  emit('update:selectedItemsMap', next)
+}
+
+const addItemToRoom = (roomName) => {
+  targetRoomName.value = roomName
+  itemDialog.value = true
+}
+
+const handleAddDialogItems = (newItems) => {
+  const next = { ...props.selectedItemsMap }
+  newItems.forEach(item => {
+    next[item.id] = item
+  })
+  emit('update:selectedItemsMap', next)
+}
+
 const removeItemFromRoom = (roomName, itemId) => {
   const next = { ...props.selectedItemsMap }
   delete next[itemId]
@@ -315,377 +526,30 @@ const formatMoney = value =>
 </script>
 
 <style scoped>
-.proposal-wrapper {
-  width: 100%
+.cursor-pointer {
+  cursor: pointer;
 }
 
-.toolbar-card,
-.worksheet-card {
-  background: rgb(var(--v-theme-surface));
-  color: rgb(var(--v-theme-on-surface))
+.room-card {
+  background-color: #f8fafc;
 }
 
-.proposal-header {
-  border: 1px solid rgba(var(--v-border-color), .25);
-  border-radius: 8px;
-  padding: 10px 12px;
-  background: rgba(var(--v-theme-on-surface), .025)
+.sticky-room-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background-color: #f8fafc;
 }
 
-.header-main {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(var(--v-border-color), .2)
+.sticky-bottom-bar {
+  position: sticky;
+  bottom: 12px;
+  z-index: 10;
+  background-color: #ffffff;
+  box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.08) !important;
 }
 
-.company-name {
-  font-size: 15px;
-  line-height: 1.2;
-  font-weight: 700;
-  color: rgb(var(--v-theme-on-surface))
-}
-
-.company-address {
-  margin-top: 2px;
-  font-size: 11px;
-  color: rgba(var(--v-theme-on-surface), .65)
-}
-
-.company-contact {
-  margin-top: 1px;
-  font-size: 10px;
-  color: rgba(var(--v-theme-on-surface), .55)
-}
-
-.proposal-info {
-  min-width: 150px;
-  text-align: right
-}
-
-.proposal-title {
-  font-size: 18px;
-  line-height: 1;
-  font-weight: 700;
-  color: rgb(var(--v-theme-on-surface));
-  margin-bottom: 5px
-}
-
-.proposal-date {
-  font-size: 10px;
-  color: rgba(var(--v-theme-on-surface), .65)
-}
-
-.proposal-date strong,
-.customer-row strong,
-.prepared-by strong {
-  color: rgb(var(--v-theme-on-surface))
-}
-
-.separator {
-  margin: 0 4px;
-  color: rgba(var(--v-theme-on-surface), .25)
-}
-
-.customer-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 8px
-}
-
-.customer-box {
-  border: 1px solid rgba(var(--v-border-color), .25);
-  border-radius: 6px;
-  padding: 7px 9px;
-  background: rgba(245, 158, 11, .06)
-}
-
-.box-title {
-  font-size: 10px;
-  font-weight: 700;
-  color: rgba(var(--v-theme-on-surface), .65);
-  margin-bottom: 3px;
-  text-transform: uppercase
-}
-
-.customer-row {
-  display: grid;
-  grid-template-columns: 90px 1fr;
-  gap: 5px;
-  font-size: 10px;
-  line-height: 1.5;
-  color: rgba(var(--v-theme-on-surface), .7)
-}
-
-.customer-row span:first-child {
-  font-weight: 600;
-  color: rgba(var(--v-theme-on-surface), .55)
-}
-
-.prepared-by {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 7px;
-  padding-top: 6px;
-  border-top: 1px solid rgba(var(--v-border-color), .2);
-  font-size: 10px;
-  color: rgba(var(--v-theme-on-surface), .65)
-}
-
-.room-header {
-  min-height: 40px;
-  background: rgba(16, 185, 129, .08);
-  border: 1px solid rgba(16, 185, 129, .25);
-  color: rgb(var(--v-theme-on-surface));
-  transition: .15s
-}
-
-.room-header:hover {
-  background: rgba(16, 185, 129, .14)
-}
-
-.room-name {
-  font-size: 13px;
-  font-weight: 700;
-  color: rgb(var(--v-theme-on-surface))
-}
-
-.room-total {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  font-size: 10px;
-  color: rgba(var(--v-theme-on-surface), .65)
-}
-
-.room-total strong {
-  color: rgb(var(--v-theme-on-surface))
-}
-
-.allowance-text {
-  color: #b45309 !important
-}
-
-.room-table-wrapper {
-  border: 1px solid rgba(var(--v-border-color), .25);
-  border-top: 0;
-  border-radius: 0 0 7px 7px;
-  overflow: hidden
-}
-
-.proposal-table {
-  background: transparent
-}
-
-.proposal-table th {
-  height: 38px !important;
-  background: rgba(16, 185, 129, .08);
-  color: rgb(var(--v-theme-on-surface)) !important;
-  white-space: nowrap;
-  font-size: 11px
-}
-
-.proposal-table td {
-  height: 45px !important;
-  font-size: 11px;
-  color: rgb(var(--v-theme-on-surface));
-  border-bottom: 1px solid rgba(var(--v-border-color), .15)
-}
-
-.proposal-table tbody tr:hover {
-  background: rgba(var(--v-theme-on-surface), .035)
-}
-
-.item-description,
-.item-muted {
-  color: rgba(var(--v-theme-on-surface), .55) !important
-}
-
-.empty-row {
-  text-align: center;
-  padding: 20px !important;
-  color: rgba(var(--v-theme-on-surface), .55) !important
-}
-
-.qty-input {
-  width: 48px;
-  height: 26px;
-  text-align: center;
-  border: 1px solid rgba(var(--v-border-color), .4);
-  border-radius: 4px;
-  padding: 2px 4px;
-  font-size: 11px;
-  color: rgb(var(--v-theme-on-surface));
-  background: rgb(var(--v-theme-surface))
-}
-
-.qty-input:focus {
-  outline: none;
-  border-color: rgb(var(--v-theme-primary))
-}
-
-.strike-row {
-  opacity: .5;
-  text-decoration: line-through
-}
-
-.tags-card {
-  background: rgba(var(--v-theme-on-surface), .025);
-  border-color: rgba(var(--v-border-color), .25) !important
-}
-
-.tags-inner {
-  min-height: 42px;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 7px 10px
-}
-
-.tags-title {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: rgb(var(--v-theme-on-surface));
-  font-size: 11px;
-  font-weight: 700
-}
-
-.tag-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px
-}
-
-.no-tags {
-  color: rgba(var(--v-theme-on-surface), .55) !important;
-  font-size: 10px
-}
-
-.totals-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 48px;
-  padding: 8px 12px;
-  background: rgba(20, 184, 166, .06);
-  border-color: rgba(20, 184, 166, .4) !important
-}
-
-.totals-section {
-  display: flex;
-  align-items: center;
-  gap: 14px
-}
-
-.totals-right {
-  justify-content: flex-end
-}
-
-.summary-stat {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10px;
-  color: rgba(var(--v-theme-on-surface), .6)
-}
-
-.summary-stat strong {
-  font-size: 12px;
-  color: rgb(var(--v-theme-on-surface))
-}
-
-.summary-divider {
-  width: 1px;
-  height: 22px;
-  background: rgba(var(--v-border-color), .35)
-}
-
-.allowance-summary {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10px;
-  color: #b45309
-}
-
-.allowance-summary strong {
-  font-size: 12px;
-  color: #b45309
-}
-
-.grand-total {
-  display: flex;
-  align-items: center;
-  gap: 6px
-}
-
-.grand-total span {
-  font-size: 10px;
-  color: rgba(var(--v-theme-on-surface), .6)
-}
-
-.grand-total strong {
-  font-size: 16px;
-  color: #0f766e
-}
-
-@media(max-width:800px) {
-  .header-main {
-    flex-direction: column;
-    gap: 8px
-  }
-
-  .proposal-info {
-    text-align: left
-  }
-
-  .customer-grid {
-    grid-template-columns: 1fr
-  }
-
-  .room-total {
-    display: none
-  }
-
-  .totals-card {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 8px
-  }
-
-  .totals-section {
-    width: 100%;
-    flex-wrap: wrap
-  }
-
-  .totals-right {
-    justify-content: flex-start
-  }
-}
-
-@media(max-width:600px) {
-  .worksheet-card {
-    padding: 8px !important
-  }
-
-  .customer-row {
-    grid-template-columns: 80px 1fr
-  }
-
-  .tags-inner {
-    align-items: flex-start;
-    flex-direction: column
-  }
-
-  .totals-section {
-    gap: 8px
-  }
+.font-mono {
+  font-family: monospace, monospace;
 }
 </style>

@@ -2,7 +2,7 @@
   "id": "quote_1787159118116",
   "name": "New Estimate",
   "createdAt": "2026-08-19T17:05:18.116Z",
-  "updatedAt": "2026-08-19T17:14:13.450Z",
+  "updatedAt": "2026-08-24T15:59:09.796Z",
   "status": "Draft",
   "rooms": [
     {
@@ -81,6 +81,411 @@
           }
         }
       ]
+    },
+    {
+      "id": "room_kitchen",
+      "name": "Kitchen",
+      "order": 2,
+      "items": [
+        {
+          "id": "I1",
+          "name": "Test",
+          "group": "General",
+          "category": "Appliances",
+          "defaultRoom": "Hallway",
+          "quantity": 1,
+          "unit": "each",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I1",
+            "category": "Appliances",
+            "group": "",
+            "name": "Test",
+            "desc": "Test",
+            "sampleDesc": "",
+            "totalOutputQty": 1,
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "each",
+            "costType": "Contract Work",
+            "defaultRoom": "Hallway",
+            "defaultQty": 1,
+            "tradePartner": "In-House",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L1",
+                "unitHours": 1,
+                "baseHours": 2,
+                "allowMode": "NONE"
+              },
+              {
+                "classId": "L2",
+                "unitHours": 1,
+                "baseHours": 1,
+                "allowMode": "BASE"
+              }
+            ],
+            "materialRequired": [
+              {
+                "materialId": "M1",
+                "qty": 2,
+                "base": true,
+                "allow": true,
+                "allowance": 0
+              }
+            ],
+            "equipmentRequired": [
+              {
+                "equipmentId": "E2",
+                "qty": 1,
+                "base": false,
+                "allow": true,
+                "allowance": 0
+              },
+              {
+                "equipmentId": "E5",
+                "qty": 1,
+                "base": false,
+                "allow": true,
+                "allowance": 0
+              }
+            ],
+            "createdAt": "2026-08-19T15:45:26.081Z",
+            "updatedAt": "2026-08-19T16:45:27.198Z"
+          }
+        }
+      ]
+    },
+    {
+      "id": "room_pr",
+      "name": "PR",
+      "order": 3,
+      "items": [
+        {
+          "id": "I1",
+          "name": "Test",
+          "group": "General",
+          "category": "Appliances",
+          "defaultRoom": "Hallway",
+          "quantity": 1,
+          "unit": "each",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I1",
+            "category": "Appliances",
+            "group": "",
+            "name": "Test",
+            "desc": "Test",
+            "sampleDesc": "",
+            "totalOutputQty": 1,
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "each",
+            "costType": "Contract Work",
+            "defaultRoom": "Hallway",
+            "defaultQty": 1,
+            "tradePartner": "In-House",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L1",
+                "unitHours": 1,
+                "baseHours": 2,
+                "allowMode": "NONE"
+              },
+              {
+                "classId": "L2",
+                "unitHours": 1,
+                "baseHours": 1,
+                "allowMode": "BASE"
+              }
+            ],
+            "materialRequired": [
+              {
+                "materialId": "M1",
+                "qty": 2,
+                "base": true,
+                "allow": true,
+                "allowance": 0
+              }
+            ],
+            "equipmentRequired": [
+              {
+                "equipmentId": "E2",
+                "qty": 1,
+                "base": false,
+                "allow": true,
+                "allowance": 0
+              },
+              {
+                "equipmentId": "E5",
+                "qty": 1,
+                "base": false,
+                "allow": true,
+                "allowance": 0
+              }
+            ],
+            "createdAt": "2026-08-19T15:45:26.081Z",
+            "updatedAt": "2026-08-19T16:45:27.198Z"
+          }
+        }
+      ]
+    },
+    {
+      "id": "room_general",
+      "name": "General",
+      "order": 4,
+      "items": [
+        {
+          "id": "I195",
+          "name": "! Paint door slab only - 2 coats (per side)",
+          "group": "Cabinets & Countertops",
+          "category": "Painting",
+          "defaultRoom": "General",
+          "quantity": 1,
+          "unit": "each",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I195",
+            "category": "Painting",
+            "name": "! Paint door slab only - 2 coats (per side)",
+            "desc": "Paint door slab only - 2 coats (per side)",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "each",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Painter",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L3",
+                "unitHours": 0.66,
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [
+              {
+                "materialId": "M237",
+                "qty": 0.2,
+                "base": false,
+                "allow": false
+              }
+            ],
+            "equipmentRequired": [],
+            "totalOutputQty": 1,
+            "group": "Cabinets & Countertops",
+            "updatedAt": "2026-08-24T12:11:43.871Z",
+            "createdAt": "2026-08-24T12:11:43.871Z"
+          }
+        },
+        {
+          "id": "I196",
+          "name": "! Paint door/window trim & jamb - 2 coats (per side)",
+          "group": "Framing & Drywall",
+          "category": "Painting",
+          "defaultRoom": "General",
+          "quantity": 1,
+          "unit": "each",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I196",
+            "category": "Painting",
+            "name": "! Paint door/window trim & jamb - 2 coats (per side)",
+            "desc": "Paint door/window trim & jamb - 2 coats (per side)",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "each",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "In-House",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L3",
+                "unitHours": 0.66,
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [
+              {
+                "materialId": "M237",
+                "qty": 0.1,
+                "base": false,
+                "allow": false
+              }
+            ],
+            "equipmentRequired": [],
+            "totalOutputQty": 1,
+            "group": "Framing & Drywall",
+            "updatedAt": "2026-08-24T12:11:54.421Z",
+            "createdAt": "2026-08-24T12:11:54.421Z"
+          }
+        },
+        {
+          "id": "I538",
+          "name": "! Prime walls/ceilings",
+          "group": "Framing & Drywall",
+          "category": "Painting",
+          "defaultRoom": "General",
+          "quantity": 250,
+          "unit": "s.f.",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I538",
+            "category": "Painting",
+            "name": "! Prime walls/ceilings",
+            "desc": "Prime walls/ceilings",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "s.f.",
+            "costType": "",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Painter",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L3",
+                "unitHours": 3.5,
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [
+              {
+                "materialId": "M236",
+                "qty": 1,
+                "base": false,
+                "allow": false
+              }
+            ],
+            "equipmentRequired": [],
+            "totalOutputQty": 250,
+            "group": "Framing & Drywall",
+            "updatedAt": "2026-08-24T12:14:52.238Z",
+            "createdAt": "2026-08-24T12:14:52.238Z"
+          }
+        },
+        {
+          "id": "I197",
+          "name": "! Paint walls/ceilings - two coats",
+          "group": "Plumbing",
+          "category": "Appliances",
+          "defaultRoom": "General",
+          "quantity": 250,
+          "unit": "s.f.",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I197",
+            "category": "Appliances",
+            "name": "! Paint walls/ceilings - two coats",
+            "desc": "Paint walls/ceilings - 2 coats",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "s.f.",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": "WC",
+            "tradePartner": "Painter",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L3",
+                "unitHours": 6,
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [
+              {
+                "materialId": "M235",
+                "qty": 1,
+                "base": false,
+                "allow": false
+              }
+            ],
+            "equipmentRequired": [],
+            "totalOutputQty": 250,
+            "group": "Plumbing",
+            "updatedAt": "2026-08-24T12:14:07.732Z",
+            "createdAt": "2026-08-24T12:14:02.174Z"
+          }
+        },
+        {
+          "id": "I195_copy_1787587076952",
+          "name": "! Paint door slab only - 2 coats (per side) (Copy)",
+          "group": "Cabinets & Countertops",
+          "category": "Painting",
+          "defaultRoom": "General",
+          "quantity": 1,
+          "unit": "each",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I195",
+            "category": "Painting",
+            "name": "! Paint door slab only - 2 coats (per side)",
+            "desc": "Paint door slab only - 2 coats (per side)",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "each",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Painter",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L3",
+                "unitHours": 0.66,
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [
+              {
+                "materialId": "M237",
+                "qty": 0.2,
+                "base": false,
+                "allow": false
+              }
+            ],
+            "equipmentRequired": [],
+            "totalOutputQty": 1,
+            "group": "Cabinets & Countertops",
+            "updatedAt": "2026-08-24T12:11:43.871Z",
+            "createdAt": "2026-08-24T12:11:43.871Z"
+          }
+        }
+      ]
     }
-  ]
+  ],
+  "date": "2026-08-24",
+  "clientState": "MD",
+  "clientName": "Partha Sarathi Sahoo",
+  "clientStreet": "28, First Floor, First Cross",
+  "clientCityState": "Bengaluru",
+  "clientZip": "560077",
+  "projectAddress": "28, First Floor, First Cross",
+  "preparedByPhone": "08249486681",
+  "preparedBy": "Test"
 }

@@ -37,18 +37,14 @@
             </th>
 
             <th class="font-weight-bold">
-              Group
-            </th>
-
-            <th class="font-weight-bold">
-              Default Room
+              Category
             </th>
 
             <th
               class="font-weight-bold"
-              style="width: 260px;"
+              style="width: 320px;"
             >
-              Assigned Proposal Room
+              Assigned Proposal Room(s)
             </th>
 
             <th
@@ -64,7 +60,7 @@
           <!-- Empty State -->
           <tr v-if="selectedItemsList.length === 0">
             <td
-              colspan="5"
+              colspan="4"
               class="text-center py-8"
             >
               <div class="empty-state">
@@ -96,37 +92,31 @@
               {{ item.name }}
             </td>
 
-            <!-- Group -->
+            <!-- Category -->
             <td>
               <v-chip
                 size="x-small"
                 color="teal-lighten-4"
                 class="text-teal-darken-3 font-weight-medium"
               >
-                {{ item.group || 'General' }}
+                {{ item.category || item.group || 'General' }}
               </v-chip>
             </td>
 
-            <!-- Default Room -->
-            <td class="text-medium-emphasis">
-              {{ item.defaultRoom || '-' }}
-            </td>
-
-            <!-- Assigned Room -->
+            <!-- Assigned Room(s) -->
             <td class="py-1">
               <v-combobox
-                :model-value="
-                  item.assignedRoom ||
-                  item.defaultRoom ||
-                  'General'
-                "
+                :model-value="getItemAssignedRooms(item)"
                 :items="predefinedRoomsList"
+                multiple
+                chips
+                closable-chips
                 variant="outlined"
                 density="compact"
                 hide-details
-                placeholder="Select room"
+                placeholder="Select room(s)"
                 @update:model-value="
-                  val => updateAssignedRoom(item.id, val)
+                  val => updateAssignedRooms(item.id, val)
                 "
               />
             </td>
@@ -175,22 +165,31 @@ const predefinedRoomsList = computed(() => {
   )
 })
 
-const updateAssignedRoom = (id, newRoom) => {
-  const targetRoom =
-    typeof newRoom === 'object'
-      ? (
-          newRoom?.value ||
-          newRoom?.title ||
-          newRoom
-        )
-      : newRoom
+const getItemAssignedRooms = (item) => {
+  if (Array.isArray(item.assignedRooms) && item.assignedRooms.length) {
+    return item.assignedRooms
+  }
+  if (Array.isArray(item.assignedRoom)) {
+    return item.assignedRoom
+  }
+  if (item.assignedRoom) {
+    return [item.assignedRoom]
+  }
+  return [item.defaultRoom || 'General']
+}
+
+const updateAssignedRooms = (id, newRooms) => {
+  const roomsArr = Array.isArray(newRooms)
+    ? newRooms.map(r => (typeof r === 'object' ? (r?.value || r?.title || r) : r))
+    : [newRooms]
 
   const next = {
     ...props.selectedItemsMap
   }
 
   if (next[id]) {
-    next[id].assignedRoom = targetRoom
+    next[id].assignedRooms = roomsArr
+    next[id].assignedRoom = roomsArr[0] || 'General'
 
     emit(
       'update:selectedItemsMap',

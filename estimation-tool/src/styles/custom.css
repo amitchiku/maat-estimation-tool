@@ -10,6 +10,23 @@
   --scrollbar-track: rgba(15, 23, 42, 0.05);
 }
 
+/* Fix scrolling strictly inside v-main below top app bar & prevent horizontal layout shift */
+html, body {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+
+.v-application {
+  height: 100vh !important;
+  overflow: hidden !important;
+}
+
+.v-main {
+  height: calc(100vh - 64px) !important;
+  overflow-y: auto !important;
+  scrollbar-gutter: stable;
+}
+
 /* Glassmorphism scrollbar */
 .v-table__wrapper {
   padding-bottom: 10px !important;
