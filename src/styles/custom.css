@@ -1,0 +1,184 @@
+/* Custom Styles for Construction Estimating Engine */
+
+/* Premium Slate-Teal Design Tokens */
+:root {
+  --primary-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  --accent-gradient: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --scrollbar-thumb: rgba(13, 148, 136, 0.4);
+  --scrollbar-track: rgba(15, 23, 42, 0.05);
+}
+
+/* Fix scrolling strictly inside v-main below top app bar & prevent horizontal layout shift */
+html, body {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+
+.v-application {
+  height: 100vh !important;
+  overflow: hidden !important;
+}
+
+.v-main {
+  height: calc(100vh - 64px) !important;
+  overflow-y: auto !important;
+  scrollbar-gutter: stable;
+}
+
+/* Glassmorphism scrollbar */
+.v-table__wrapper {
+  padding-bottom: 10px !important;
+  margin-bottom: 8px !important;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: 4px;
+  margin: 2px 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(13, 148, 136, 0.6);
+}
+
+/* Smooth Hover Animations (Flat layout, no elevation or translation) */
+.hover-card {
+  transition: border-color 0.2s ease !important;
+}
+
+.hover-card:hover {
+  border-color: rgba(13, 148, 136, 0.4) !important;
+}
+
+.glow-btn {
+  background: var(--accent-gradient) !important;
+  color: white !important;
+  box-shadow: 0 4px 14px 0 rgba(13, 148, 136, 0.3) !important;
+  transition: all 0.25s ease !important;
+}
+
+.glow-btn:hover {
+  box-shadow: 0 6px 20px 0 rgba(13, 148, 136, 0.5) !important;
+  transform: scale(1.02);
+}
+
+/* Room header glass effect */
+.room-header-card {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border) !important;
+}
+
+/* Tab indicator animation */
+.v-tab--selected {
+  font-weight: 700 !important;
+}
+
+/* Print/PDF Export Formatting rules */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 11pt !important;
+  }
+
+  /* Hide navigation, actions, controls, drawers, buttons */
+  .no-print,
+  .v-navigation-drawer,
+  .v-app-bar,
+  .v-btn,
+  .v-icon,
+  .v-field__append-inner,
+  .v-input__append,
+  .v-input__prepend,
+  .v-menu,
+  .v-overlay-container,
+  .v-dialog,
+  header,
+  footer,
+  aside,
+  button,
+  .room-actions {
+    display: none !important;
+  }
+
+  /* Force content container to full page print dimensions */
+  .v-main {
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: auto !important;
+  }
+
+  .v-container {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Keep printable wrapper visible and expand */
+  .printable-area {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Avoid splitting table rows and rooms across pages */
+  .print-page-break {
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .print-avoid-break {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .print-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  .print-table th, 
+  .print-table td {
+    border: 1px solid #ddd !important;
+    padding: 6px !important;
+    text-align: left !important;
+  }
+
+  .print-table th {
+    background-color: #f2f2f2 !important;
+    color: black !important;
+  }
+
+  /* Ensure colors read clearly in black-and-white printouts */
+  .text-primary, .text-success, .text-info, .text-warning, .text-error {
+    color: black !important;
+  }
+}
+
+/* Prevent Vuetify overlay scrollbar toggle & horizontal layout shift */
+html.v-overlay-scroll-blocked,
+body.v-overlay-scroll-blocked {
+  overflow: initial !important;
+  padding-right: 0 !important;
+  margin-right: 0 !important;
+}
