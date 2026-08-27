@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="printable-area">
     <!-- 1. Workspace Controls (Top Toolbar) -->
     <v-card border elevation="0" class="rounded-lg pa-3 mb-3 no-print">
       <div class="d-flex align-center justify-space-between flex-wrap ga-3">
@@ -257,6 +257,89 @@
           <span v-else class="text-caption text-medium-emphasis">No tags</span>
         </div>
       </v-card>
+      <!-- PDF Calculation Section -->
+<div class="pdf-calculation-section">
+
+  <div class="pdf-calculation-title">
+    Room Total Allowances
+  </div>
+
+  <table class="pdf-calculation-table">
+
+    <thead>
+      <tr>
+        <th>Room</th>
+        <th class="text-right">Total</th>
+        <th class="text-right">Allowances</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr
+        v-for="room in quoteRooms"
+        :key="'pdf-calculation-' + room.name"
+      >
+        <td>
+          {{ room.name }}
+        </td>
+
+        <td class="text-right">
+          ${{ formatMoney(getRoomTotals(room).total) }}
+        </td>
+
+        <td class="text-right">
+          ${{ formatMoney(getRoomTotals(room).allowance) }}
+        </td>
+      </tr>
+
+      <tr class="pdf-calculation-total">
+        <td>Totals</td>
+
+        <td class="text-right">
+          ${{ formatMoney(proposalTotals.grandTotal) }}
+        </td>
+
+        <td class="text-right">
+          ${{ formatMoney(proposalTotals.allowance) }}
+        </td>
+      </tr>
+
+    </tbody>
+
+  </table>
+
+  <div class="pdf-final-calculation">
+
+    <div class="pdf-final-row">
+      <span>Estimate Total</span>
+      <strong>
+        ${{ formatMoney(proposalTotals.grandTotal) }}
+      </strong>
+    </div>
+
+    <div class="pdf-final-row">
+      <span>- Allowances</span>
+      <strong>
+        ${{ formatMoney(proposalTotals.allowance) }}
+      </strong>
+    </div>
+
+    <div class="pdf-contract-total">
+      <span>Contract Total</span>
+
+      <strong>
+        ${{
+          formatMoney(
+            proposalTotals.grandTotal - proposalTotals.allowance
+          )
+        }}
+      </strong>
+    </div>
+
+  </div>
+
+</div>
     </div>
 
     <!-- 4. Sticky Summary Bottom Bar -->
@@ -574,5 +657,117 @@ const formatMoney = value =>
 
 .accordion-arrow.is-collapsed {
   transform: rotate(-90deg);
+}
+.pdf-calculation-section {
+  margin-top: 35px;
+  padding-top: 20px;
+  border-top: 2px solid #222;
+  width: 100%;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.pdf-calculation-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #000;
+}
+
+.pdf-calculation-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 25px;
+}
+
+.pdf-calculation-table th,
+.pdf-calculation-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid #999;
+  font-size: 11px;
+  color: #000;
+}
+
+.pdf-calculation-table th {
+  font-weight: 700;
+  text-align: left;
+  background: #f2f2f2;
+}
+
+.pdf-calculation-table .text-right {
+  text-align: right;
+}
+
+.pdf-calculation-total td {
+  font-weight: 700;
+  border-top: 2px solid #222;
+  background: #f2f2f2;
+}
+
+.pdf-final-calculation {
+  width: 45%;
+  margin-left: auto;
+  margin-top: 20px;
+}
+
+.pdf-final-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 12px;
+  color: #000;
+}
+
+.pdf-contract-total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px solid #222;
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+}
+/* =========================================
+   PDF PRINT FIX
+   ========================================= */
+
+@media print {
+
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .printable-area {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .pdf-calculation-section {
+    display: block !important;
+    width: 100% !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
 }
 </style>

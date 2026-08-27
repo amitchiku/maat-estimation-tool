@@ -88,8 +88,52 @@ html, body {
   font-weight: 700 !important;
 }
 
-/* Print/PDF Export Formatting rules */
+/* =========================================================
+   PRINT / PDF EXPORT ONLY
+   ========================================================= */
+
 @media print {
+
+  /*
+   * FIX:
+   * Your normal application uses 100vh + overflow hidden.
+   * Those rules prevent the printable content from flowing
+   * naturally across multiple PDF pages.
+   *
+   * These overrides ONLY apply while printing.
+   */
+
+  html,
+  body {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .v-application {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .v-application__wrap {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .v-main {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
   body {
     background: white !important;
     color: black !important;
@@ -120,48 +164,116 @@ html, body {
   .v-main {
     padding: 0 !important;
     margin: 0 !important;
-    min-height: auto !important;
+    min-height: 0 !important;
   }
 
   .v-container {
     max-width: 100% !important;
     width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
     padding: 0 !important;
     margin: 0 !important;
+    overflow: visible !important;
   }
 
-  /* Keep printable wrapper visible and expand */
+  /*
+   * FIX:
+   * Printable content must stay in normal document flow.
+   * The old position:absolute caused pagination problems.
+   */
   .printable-area {
     display: block !important;
-    position: absolute;
-    left: 0;
-    top: 0;
+    position: static !important;
+
+    left: auto !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+
     width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+
+    overflow: visible !important;
+
     margin: 0 !important;
     padding: 0 !important;
   }
 
-  /* Avoid splitting table rows and rooms across pages */
+  /*
+   * Vuetify table wrappers can create internal scrolling.
+   * Disable that only during PDF generation.
+   */
+  .v-table,
+  .v-table__wrapper {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /*
+   * Explicit page break utility
+   */
   .print-page-break {
     page-break-after: always;
     break-after: page;
   }
 
+  /*
+   * IMPORTANT:
+   * Allow a large room/section to continue onto
+   * the next PDF page.
+   */
   .print-avoid-break {
-    page-break-inside: avoid;
-    break-inside: avoid;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
   }
 
+  /*
+   * Print table
+   */
   .print-table {
     width: 100% !important;
+    height: auto !important;
     border-collapse: collapse !important;
+    table-layout: auto !important;
   }
 
-  .print-table th, 
+  /*
+   * Keep individual table rows together.
+   * The room itself can break, but an individual
+   * item row should not be split between pages.
+   */
+  .print-table tr {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /*
+   * Repeat table header when the table continues
+   * onto another PDF page.
+   */
+  .print-table thead {
+    display: table-header-group !important;
+  }
+
+  /*
+   * Keep table footer correctly grouped if present.
+   */
+  .print-table tfoot {
+    display: table-footer-group !important;
+  }
+
+  .print-table th,
   .print-table td {
     border: 1px solid #ddd !important;
     padding: 6px !important;
     text-align: left !important;
+    vertical-align: top !important;
   }
 
   .print-table th {
@@ -169,8 +281,37 @@ html, body {
     color: black !important;
   }
 
-  /* Ensure colors read clearly in black-and-white printouts */
-  .text-primary, .text-success, .text-info, .text-warning, .text-error {
+  /*
+   * Prevent Vuetify rows/columns from creating
+   * fixed-height or overflow problems during print.
+   */
+  .v-row,
+  .v-col {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /*
+   * Allow cards/sheets to expand naturally.
+   */
+  .v-card,
+  .v-sheet {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /*
+   * Ensure colors read clearly in black-and-white
+   * printouts.
+   */
+  .text-primary,
+  .text-success,
+  .text-info,
+  .text-warning,
+  .text-error {
     color: black !important;
   }
 }

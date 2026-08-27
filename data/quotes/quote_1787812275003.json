@@ -1,0 +1,991 @@
+{
+  "id": "quote_1787812275003",
+  "name": "New Estimate",
+  "createdAt": "2026-08-27T06:31:15.003Z",
+  "updatedAt": "2026-08-27T09:58:08.413Z",
+  "status": "Draft",
+  "rooms": [
+    {
+      "id": "room_general",
+      "name": "General",
+      "order": 1,
+      "items": [
+        {
+          "id": "I2",
+          "name": "Backfill by hand - No compaction",
+          "group": "Excavation",
+          "category": "Excavation",
+          "defaultRoom": "General",
+          "quantity": 216,
+          "unit": "cu. ft.",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I2",
+            "category": "Excavation",
+            "name": "Backfill by hand - No compaction",
+            "desc": "Backfill. No compaction.",
+            "activity": "Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "cu. ft.",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "In-House",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L11",
+                "unitHours": 4,
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [],
+            "equipmentRequired": [
+              {
+                "equipmentId": "E22",
+                "qty": 0.1,
+                "base": false,
+                "allow": false
+              }
+            ],
+            "totalOutputQty": 216
+          }
+        },
+        {
+          "id": "I1",
+          "name": "Excavate by hand",
+          "group": "Excavation",
+          "category": "Excavation",
+          "defaultRoom": "General",
+          "quantity": 216,
+          "unit": "cu. ft.",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I1",
+            "category": "Excavation",
+            "name": "Excavate by hand",
+            "desc": "Excavate by hand. Rock, shale, unmarked utilites shall be considered sight unseen and are subject to additional costs to the customer.",
+            "activity": "Remove",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "cu. ft.",
+            "costType": "Labor",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "In-House",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L11",
+                "unitHours": 16,
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [],
+            "equipmentRequired": [
+              {
+                "equipmentId": "E22",
+                "qty": 0.1,
+                "base": false,
+                "allow": false
+              },
+              {
+                "equipmentId": "E5",
+                "qty": 0.1,
+                "base": false,
+                "allow": false
+              }
+            ],
+            "totalOutputQty": 216
+          }
+        },
+        {
+          "id": "I195",
+          "name": "! Paint door slab only - 2 coats (per side)",
+          "group": "Cabinets & Countertops",
+          "category": "Painting",
+          "defaultRoom": "General",
+          "quantity": 1,
+          "unit": "each",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I195",
+            "category": "Painting",
+            "name": "! Paint door slab only - 2 coats (per side)",
+            "desc": "Paint door slab only - 2 coats (per side)",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "each",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Painter",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L3",
+                "unitHours": 0.66,
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [
+              {
+                "materialId": "M237",
+                "qty": 0.2,
+                "base": false,
+                "allow": false
+              }
+            ],
+            "equipmentRequired": [],
+            "totalOutputQty": 1,
+            "group": "Cabinets & Countertops",
+            "updatedAt": "2026-08-24T12:11:43.871Z",
+            "createdAt": "2026-08-24T12:11:43.871Z"
+          }
+        },
+        {
+          "id": "I196",
+          "name": "! Paint door/window trim & jamb - 2 coats (per side)",
+          "group": "Framing & Drywall",
+          "category": "Painting",
+          "defaultRoom": "General",
+          "quantity": 1,
+          "unit": "each",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I196",
+            "category": "Painting",
+            "name": "! Paint door/window trim & jamb - 2 coats (per side)",
+            "desc": "Paint door/window trim & jamb - 2 coats (per side)",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "each",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "In-House",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L3",
+                "unitHours": 0.66,
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [
+              {
+                "materialId": "M237",
+                "qty": 0.1,
+                "base": false,
+                "allow": false
+              }
+            ],
+            "equipmentRequired": [],
+            "totalOutputQty": 1,
+            "group": "Framing & Drywall",
+            "updatedAt": "2026-08-24T12:11:54.421Z",
+            "createdAt": "2026-08-24T12:11:54.421Z"
+          }
+        },
+        {
+          "id": "I538",
+          "name": "! Prime walls/ceilings",
+          "group": "Framing & Drywall",
+          "category": "Painting",
+          "defaultRoom": "General",
+          "quantity": 250,
+          "unit": "s.f.",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I538",
+            "category": "Painting",
+            "name": "! Prime walls/ceilings",
+            "desc": "Prime walls/ceilings",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "s.f.",
+            "costType": "",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Painter",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L3",
+                "unitHours": 3.5,
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [
+              {
+                "materialId": "M236",
+                "qty": 1,
+                "base": false,
+                "allow": false
+              }
+            ],
+            "equipmentRequired": [],
+            "totalOutputQty": 250,
+            "group": "Framing & Drywall",
+            "updatedAt": "2026-08-24T12:14:52.238Z",
+            "createdAt": "2026-08-24T12:14:52.238Z"
+          }
+        },
+        {
+          "id": "I197",
+          "name": "! Paint walls/ceilings - two coats",
+          "group": "Plumbing",
+          "category": "Appliances",
+          "defaultRoom": "General",
+          "quantity": 250,
+          "unit": "s.f.",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I197",
+            "category": "Appliances",
+            "name": "! Paint walls/ceilings - two coats",
+            "desc": "Paint walls/ceilings - 2 coats",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "s.f.",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": "WC",
+            "tradePartner": "Painter",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L3",
+                "unitHours": 6,
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [
+              {
+                "materialId": "M235",
+                "qty": 1,
+                "base": false,
+                "allow": false
+              }
+            ],
+            "equipmentRequired": [],
+            "totalOutputQty": 250,
+            "group": "Plumbing",
+            "updatedAt": "2026-08-24T12:14:07.732Z",
+            "createdAt": "2026-08-24T12:14:02.174Z"
+          }
+        },
+        {
+          "id": "I6",
+          "name": "Dump truck and operator - 10 ton",
+          "group": "Excavation",
+          "category": "Excavation",
+          "defaultRoom": "General",
+          "quantity": 1,
+          "unit": "hours",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I6",
+            "category": "Excavation",
+            "name": "Dump truck and operator - 10 ton",
+            "desc": "Tandem dump truck and operator for haulling dirt/gravel.",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "hours",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Excavator",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L11",
+                "unitHours": "",
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [],
+            "equipmentRequired": [],
+            "totalOutputQty": ""
+          }
+        },
+        {
+          "id": "I7",
+          "name": "Skid steer loader and operator",
+          "group": "Excavation",
+          "category": "Excavation",
+          "defaultRoom": "General",
+          "quantity": 1,
+          "unit": "hours",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I7",
+            "category": "Excavation",
+            "name": "Skid steer loader and operator",
+            "desc": "Skid steer and operator.",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "hours",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Excavator",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L11",
+                "unitHours": 0,
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [],
+            "equipmentRequired": [
+              {
+                "equipmentId": "E7",
+                "qty": 1,
+                "base": false,
+                "allow": false
+              },
+              {
+                "equipmentId": "E17",
+                "qty": 1,
+                "base": true,
+                "allow": false
+              }
+            ],
+            "totalOutputQty": 1
+          }
+        },
+        {
+          "id": "I8",
+          "name": "Walk behind plate compactor and operator",
+          "group": "Excavation",
+          "category": "Excavation",
+          "defaultRoom": "General",
+          "quantity": 1,
+          "unit": "hours",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I8",
+            "category": "Excavation",
+            "name": "Walk behind plate compactor and operator",
+            "desc": "Walk behind plate compactor and operator",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "hours",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Excavator",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L11",
+                "unitHours": "",
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [],
+            "equipmentRequired": [],
+            "totalOutputQty": ""
+          }
+        },
+        {
+          "id": "I9",
+          "name": "Concrete pier or footing",
+          "group": "Foundation",
+          "category": "Foundation",
+          "defaultRoom": "General",
+          "quantity": 1,
+          "unit": "each",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I9",
+            "category": "Foundation",
+            "name": "Concrete pier or footing",
+            "desc": "Pour concrete pier or footing - up to 16\"x16\"x 3'",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "each",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Concrete",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L18",
+                "unitHours": 1,
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [
+              {
+                "materialId": "M185",
+                "qty": 0.6,
+                "base": false,
+                "allow": false
+              }
+            ],
+            "equipmentRequired": [],
+            "totalOutputQty": 1
+          }
+        },
+        {
+          "id": "I10",
+          "name": "Concrete slab on grade - 4\" - 750 SF min.",
+          "group": "Foundation",
+          "category": "Foundation",
+          "defaultRoom": "General",
+          "quantity": 795,
+          "unit": "s.f.",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I10",
+            "category": "Foundation",
+            "name": "Concrete slab on grade - 4\" - 750 SF min.",
+            "desc": "Concrete slab on grade - 4\" - finished in place",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "s.f.",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Concrete",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L18",
+                "unitHours": 32,
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [
+              {
+                "materialId": "M185",
+                "qty": 25,
+                "base": false,
+                "allow": false
+              }
+            ],
+            "equipmentRequired": [],
+            "totalOutputQty": 795
+          }
+        },
+        {
+          "id": "I19",
+          "name": "Concrete slab on grade - 6\" - finished in place",
+          "group": "Foundation",
+          "category": "Foundation",
+          "defaultRoom": "General",
+          "quantity": 1,
+          "unit": "s.f.",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I19",
+            "category": "Foundation",
+            "name": "Concrete slab on grade - 6\" - finished in place",
+            "desc": "Concrete slab on grade - 6\" - finished in place",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "s.f.",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Concrete",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L18",
+                "unitHours": "",
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [],
+            "equipmentRequired": [],
+            "totalOutputQty": ""
+          }
+        },
+        {
+          "id": "I18",
+          "name": "Concrete wall - 8\" x 8' - No rebar or ledge",
+          "group": "Foundation",
+          "category": "Foundation",
+          "defaultRoom": "General",
+          "quantity": 65,
+          "unit": "l.f.",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I18",
+            "category": "Foundation",
+            "name": "Concrete wall - 8\" x 8' - No rebar or ledge",
+            "desc": "Form & pour 8\" x 8' concrete wall",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "l.f.",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Concrete",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L18",
+                "unitHours": 60,
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [
+              {
+                "materialId": "M185",
+                "qty": 20,
+                "base": false,
+                "allow": false
+              }
+            ],
+            "equipmentRequired": [],
+            "totalOutputQty": 65
+          }
+        },
+        {
+          "id": "I17",
+          "name": "Footings - step charge add on - up to 4' rise",
+          "group": "Foundation",
+          "category": "Foundation",
+          "defaultRoom": "General",
+          "quantity": 1,
+          "unit": "each",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I17",
+            "category": "Foundation",
+            "name": "Footings - step charge add on - up to 4' rise",
+            "desc": "Footings - step charge add on - up to 4' rise",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "each",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Concrete",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L18",
+                "unitHours": "",
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [],
+            "equipmentRequired": [],
+            "totalOutputQty": ""
+          }
+        },
+        {
+          "id": "I15",
+          "name": "Concrete slab on grade - 2\" - finished in place",
+          "group": "Foundation",
+          "category": "Foundation",
+          "defaultRoom": "General",
+          "quantity": 1,
+          "unit": "s.f.",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I15",
+            "category": "Foundation",
+            "name": "Concrete slab on grade - 2\" - finished in place",
+            "desc": "Concrete slab on grade - 2\" - finished in place",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "s.f.",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Concrete",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L18",
+                "unitHours": "",
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [],
+            "equipmentRequired": [],
+            "totalOutputQty": ""
+          }
+        },
+        {
+          "id": "I14",
+          "name": "Concrete slab reinforcement - 6\" x 6\", #10 wire mesh",
+          "group": "Foundation",
+          "category": "Foundation",
+          "defaultRoom": "General",
+          "quantity": 1,
+          "unit": "s.f.",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I14",
+            "category": "Foundation",
+            "name": "Concrete slab reinforcement - 6\" x 6\", #10 wire mesh",
+            "desc": "Concrete slab reinforcement - 6\" x 6\", #10 wire mesh",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "s.f.",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Concrete",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L18",
+                "unitHours": "",
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [],
+            "equipmentRequired": [],
+            "totalOutputQty": ""
+          }
+        },
+        {
+          "id": "I12",
+          "name": "Concrete step - labor & material",
+          "group": "Foundation",
+          "category": "Foundation",
+          "defaultRoom": "General",
+          "quantity": 1,
+          "unit": "cu. yd.",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I12",
+            "category": "Foundation",
+            "name": "Concrete step - labor & material",
+            "desc": "Concrete step - labor & material",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "cu. yd.",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Concrete",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L18",
+                "unitHours": "",
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [],
+            "equipmentRequired": [],
+            "totalOutputQty": ""
+          }
+        },
+        {
+          "id": "I11",
+          "name": "Gravel under slab - in place",
+          "group": "Foundation",
+          "category": "Foundation",
+          "defaultRoom": "General",
+          "quantity": 795,
+          "unit": "s.f.",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I11",
+            "category": "Foundation",
+            "name": "Gravel under slab - in place",
+            "desc": "Gravel under slab - in place",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "s.f.",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Concrete",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L18",
+                "unitHours": 6,
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [
+              {
+                "materialId": "M100",
+                "qty": 1,
+                "base": false,
+                "allow": false
+              }
+            ],
+            "equipmentRequired": [],
+            "totalOutputQty": 795
+          }
+        },
+        {
+          "id": "I20",
+          "name": "Shoring for suspended concrete",
+          "group": "Foundation",
+          "category": "Foundation",
+          "defaultRoom": "General",
+          "quantity": 1,
+          "unit": "s.f.",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I20",
+            "category": "Foundation",
+            "name": "Shoring for suspended concrete",
+            "desc": "Shoring for suspended concrete",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "s.f.",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Concrete",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L18",
+                "unitHours": "",
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [],
+            "equipmentRequired": [],
+            "totalOutputQty": ""
+          }
+        },
+        {
+          "id": "I21",
+          "name": "Concrete slab - turned down edge",
+          "group": "Foundation",
+          "category": "Foundation",
+          "defaultRoom": "General",
+          "quantity": 1,
+          "unit": "cu. yd.",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I21",
+            "category": "Foundation",
+            "name": "Concrete slab - turned down edge",
+            "desc": "Concrete slab - turned down edge",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "cu. yd.",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Concrete",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L18",
+                "unitHours": "",
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [],
+            "equipmentRequired": [],
+            "totalOutputQty": ""
+          }
+        },
+        {
+          "id": "I22",
+          "name": "Joist - 2x8 floor or ceiling system - treated - 16\" oc",
+          "group": "Deck Framing",
+          "category": "Deck Framing",
+          "defaultRoom": "General",
+          "quantity": 288,
+          "unit": "s.f.",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I22",
+            "category": "Deck Framing",
+            "name": "Joist - 2x8 floor or ceiling system - treated - 16\" oc",
+            "desc": "Joist - 2x8 floor or ceiling system - treated - 16\" oc",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "s.f.",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "In-House",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L4",
+                "unitHours": "",
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [
+              {
+                "materialId": "M167",
+                "qty": 24,
+                "base": false,
+                "allow": false
+              },
+              {
+                "materialId": "M186",
+                "qty": 1,
+                "base": false,
+                "allow": false
+              }
+            ],
+            "equipmentRequired": [],
+            "totalOutputQty": 288
+          }
+        },
+        {
+          "id": "I28",
+          "name": "Concrete slab - suspended - 6\" - finished in place",
+          "group": "Foundation",
+          "category": "Foundation",
+          "defaultRoom": "General",
+          "quantity": 1,
+          "unit": "s.f.",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I28",
+            "category": "Foundation",
+            "name": "Concrete slab - suspended - 6\" - finished in place",
+            "desc": "Concrete slab - suspended - 6\" - finished in place",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "s.f.",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Concrete",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L18",
+                "unitHours": "",
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [],
+            "equipmentRequired": [],
+            "totalOutputQty": ""
+          }
+        },
+        {
+          "id": "I29",
+          "name": "Spiral wound fiberboard tube - 16\"",
+          "group": "Foundation",
+          "category": "Foundation",
+          "defaultRoom": "General",
+          "quantity": 1,
+          "unit": "l.f.",
+          "type": "lineItems",
+          "isAllowanceFull": false,
+          "lineItemsData": {
+            "id": "I29",
+            "category": "Foundation",
+            "name": "Spiral wound fiberboard tube - 16\"",
+            "desc": "Spiral wound fiberboard tube - 16\"",
+            "activity": "Supply & Install",
+            "acctCode": "4100 - Contract Work - Flat rate",
+            "unitType": "l.f.",
+            "costType": "Subcontract",
+            "defaultRoom": "",
+            "defaultQty": 1,
+            "tradePartner": "Concrete",
+            "url": "",
+            "tag": "",
+            "laborRequired": [
+              {
+                "classId": "L18",
+                "unitHours": "",
+                "baseHours": "",
+                "allowMode": "NONE"
+              }
+            ],
+            "materialRequired": [],
+            "equipmentRequired": [],
+            "totalOutputQty": ""
+          }
+        }
+      ]
+    }
+  ],
+  "date": "2026-08-27",
+  "clientState": "MD",
+  "clientName": "amit nayak",
+  "clientStreet": "jagatsinghpur",
+  "clientCityState": "jagatsinghpur",
+  "clientZip": "754103",
+  "dateOfLoss": "2026-08-11",
+  "projectAddress": "jagatsinghpur",
+  "preparedBy": "chiku",
+  "preparedByPhone": "8984678191"
+}
