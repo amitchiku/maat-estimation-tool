@@ -276,34 +276,22 @@
 
     <tbody>
 
-      <tr
-        v-for="room in quoteRooms"
-        :key="'pdf-calculation-' + room.name"
-      >
-        <td>
-          {{ room.name }}
-        </td>
+     <tr
+  v-for="group in pdfGroups"
+  :key="'pdf-calculation-' + group.name"
+>
+  <td>
+    {{ group.name }}
+  </td>
 
-        <td class="text-right">
-          ${{ formatMoney(getRoomTotals(room).total) }}
-        </td>
+  <td class="text-right">
+    ${{ formatMoney(group.total) }}
+  </td>
 
-        <td class="text-right">
-          ${{ formatMoney(getRoomTotals(room).allowance) }}
-        </td>
-      </tr>
-
-      <tr class="pdf-calculation-total">
-        <td>Totals</td>
-
-        <td class="text-right">
-          ${{ formatMoney(proposalTotals.grandTotal) }}
-        </td>
-
-        <td class="text-right">
-          ${{ formatMoney(proposalTotals.allowance) }}
-        </td>
-      </tr>
+  <td class="text-right">
+    ${{ formatMoney(group.allowance) }}
+  </td>
+</tr>
 
     </tbody>
 
@@ -458,6 +446,33 @@ const quoteRooms = computed(() => {
     rooms[name].items.push(item)
   })
   return Object.values(rooms)
+})
+
+
+const pdfGroups = computed(() => {
+  const groups = {}
+
+  Object.values(props.selectedItemsMap || {}).forEach(item => {
+    const groupName =
+      item.group ||
+      item.category ||
+      'General'
+
+    if (!groups[groupName]) {
+      groups[groupName] = {
+        name: groupName,
+        total: 0,
+        allowance: 0
+      }
+    }
+
+    const pricing = getItemPricing(item)
+
+    groups[groupName].total += pricing.totalAmount
+    groups[groupName].allowance += pricing.allowanceAmount
+  })
+
+  return Object.values(groups)
 })
 
 const filteredQuoteRooms = computed(() => {
